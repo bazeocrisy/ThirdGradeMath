@@ -3,31 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Third Grade Multiplication</title>
+<title>Multiplication Mission</title>
+<link rel="icon" href="logo.png">
+<meta name="theme-color" content="#0B1F5B">
 <style>
+  /* ===================================================================
+     MULTIPLICATION MISSION — design system
+     Brand      navy #0B1F5B · deep blue #123A8C · teal #20D6D2
+                cyan #7EEBFF · yellow #FFC928 · orange #FF8A3D · coral #FF6B57
+     Surfaces   navy space background, white cards, cyan-tinted panels
+     Type       Trebuchet MS display / Verdana body
+     Buttons    primary = yellow on navy text · secondary = white on navy
+     =================================================================== */
   :root{
-    --theme:#0EA5A5; --theme-soft:#E6F7F7; --on-theme:#fff;
-    --paper:#E8F3F7; --card:#FFFCF3; --ink:#22243B; --ink-soft:#6A6E90; --line:#DFE0EE;
-    --right:#12A150; --right-bg:#E6F8EE; --wrong:#E5484D; --wrong-bg:#FDEBEB;
+    --navy:#0B1F5B; --navy2:#123A8C; --teal:#20D6D2; --cyan:#7EEBFF;
+    --yellow:#FFC928; --orange:#FF8A3D; --coral:#FF6B57; --sky:#EAF8FF;
+    --card:#FFFFFF; --ink:#0B1F5B; --ink-soft:#5A6B96; --line:#D6E4F5;
+    --right:#0B7A44; --right-bg:#E2F8EE; --wrong:#C62719; --wrong-bg:#FFECEA;
+    --theme:#20D6D2; --theme-soft:#20D6D21A; --on-theme:#0B1F5B;
     --display:"Trebuchet MS","Segoe UI",Verdana,sans-serif;
     --ui:Verdana,Geneva,"DejaVu Sans",sans-serif;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{background:var(--paper);
-    background-image:radial-gradient(#FFFFFF66 2.5px, transparent 3px),
-                     linear-gradient(170deg,#E8F3F7 0%,#EDEBFA 55%,#FDF1E7 100%);
-    background-size:26px 26px, 100% 100%;
+  html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden}
+  body{
+    background:var(--navy);
+    background-image:
+      radial-gradient(#FFFFFF55 1.4px, transparent 1.6px),
+      radial-gradient(#7EEBFF44 1.1px, transparent 1.4px),
+      linear-gradient(180deg,#0B1F5B 0%,#123A8C 60%,#0B1F5B 100%);
+    background-size:120px 120px, 70px 70px, 100% 100%;
+    background-position:0 0, 40px 30px, 0 0;
+    background-attachment:fixed;
     color:var(--ink);font-family:var(--ui);
-    min-height:100vh;display:flex;justify-content:center;padding:16px 12px 34px}
+    min-height:100vh;display:flex;justify-content:center;padding:16px 12px 34px;
+  }
   .shell{width:100%;max-width:640px}
-  .card{background:var(--card);border:3px solid var(--ink);border-radius:22px;
-    box-shadow:0 8px 0 rgba(34,36,59,.15);padding:20px;overflow:hidden}
+  .card{background:var(--card);border:3px solid var(--navy);border-radius:24px;
+    box-shadow:0 10px 0 rgba(11,31,91,.45);padding:20px;overflow:hidden}
   .banner{background:var(--theme);color:var(--on-theme);margin:-20px -20px 18px;
-    padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .banner h1,.banner h2{font-family:var(--display);margin:0;font-size:25px}
-  .badge{background:rgba(255,255,255,.24);border-radius:999px;padding:6px 13px;
+    padding:15px 20px;display:flex;align-items:center;justify-content:space-between;
+    gap:10px;border-bottom:3px solid var(--navy)}
+  .banner h1,.banner h2{font-family:var(--display);margin:0;font-size:24px}
+  .badge{background:rgba(11,31,91,.14);border-radius:999px;padding:6px 13px;
     font-size:13px;font-weight:bold;white-space:nowrap}
+  .banner .badge.link{background:rgba(11,31,91,.14);color:inherit;text-decoration:none}
   h1,h2,h3{font-family:var(--display)}
   p{line-height:1.55;margin:0 0 12px}
   .sub{color:var(--ink-soft);font-size:14px}
@@ -35,26 +55,48 @@
   .step{font-size:12px;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;
     color:var(--ink-soft);margin-bottom:10px}
   label{display:block;font-size:12px;font-weight:bold;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--ink-soft);margin:18px 0 9px}
-  input[type=text]{width:100%;font-family:var(--display);font-size:22px;padding:14px;
+    text-transform:uppercase;color:var(--ink-soft);margin:16px 0 8px}
+  input[type=text]{width:100%;font-family:var(--display);font-size:21px;padding:14px;
     border:3px solid var(--line);border-radius:14px;background:#fff;color:var(--ink)}
-  input[type=text]:focus{outline:none;border-color:var(--theme)}
+  input[type=text]:focus{outline:none;border-color:var(--teal)}
+  /* ---------- buttons ---------- */
   .btn{font-family:var(--display);font-size:19px;font-weight:bold;cursor:pointer;
-    padding:15px 20px;border-radius:16px;border:3px solid var(--ink);
-    background:var(--theme);color:var(--on-theme);box-shadow:0 5px 0 rgba(34,36,59,.28)}
-  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(34,36,59,.28)}
-  .btn.quiet{background:#fff;color:var(--ink);box-shadow:0 5px 0 rgba(34,36,59,.14)}
+    padding:15px 20px;border-radius:16px;border:3px solid var(--navy);
+    background:var(--yellow);color:var(--navy);box-shadow:0 5px 0 var(--navy);
+    transition:transform .08s ease, filter .12s ease}
+  .btn:hover{filter:brightness(1.06)}
+  .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--navy)}
+  .btn.quiet{background:#fff;color:var(--navy)}
+  .btn.go{background:var(--orange);color:var(--navy)}
   .btn.block{width:100%;margin-top:12px}
-  .btn:focus-visible,.tile:focus-visible,input:focus-visible,.key:focus-visible{
-    outline:4px solid var(--ink);outline-offset:3px}
+  .btn:focus-visible,.tile:focus-visible,input:focus-visible,.key:focus-visible,
+  .link:focus-visible{outline:4px solid var(--teal);outline-offset:3px}
+  /* ---------- entry screen ---------- */
+  .logowrap{background:linear-gradient(180deg,#0B1F5B,#123A8C);
+    margin:-20px -20px 0;padding:18px 16px 16px;border-bottom:3px solid var(--navy);
+    text-align:center}
+  .logo{display:block;width:100%;max-width:420px;height:auto;margin:0 auto}
+  .wordmark{display:none;font-family:var(--display);font-size:26px;font-weight:bold;
+    color:#fff;line-height:1.15}
+  .wordmark b{color:var(--yellow);display:block}
+  .hero{text-align:center;padding:16px 0 2px}
+  .tagline{font-family:var(--display);font-size:20px;line-height:1.45;margin:0 0 4px}
+  .bubbles{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+  .bubble{width:42px;height:42px;border-radius:50%;border:3px solid var(--navy);
+    color:#fff;font-family:var(--display);font-size:19px;font-weight:bold;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 0 rgba(11,31,91,.3);animation:bob 2.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  /* ---------- menu ---------- */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
   .tile{font-family:var(--display);font-size:32px;font-weight:bold;color:#fff;cursor:pointer;
-    padding:22px 6px;border:3px solid var(--ink);border-radius:18px;
-    box-shadow:0 5px 0 rgba(34,36,59,.26)}
-  .tile:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(34,36,59,.26)}
+    padding:20px 6px;border:3px solid var(--navy);border-radius:18px;
+    box-shadow:0 5px 0 rgba(11,31,91,.35);transition:transform .08s ease}
+  .tile:hover{transform:translateY(-2px)}
+  .tile:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(11,31,91,.35)}
   .tile.wide{grid-column:span 2;font-size:21px}
-  .hint{background:var(--theme-soft);border:3px dashed var(--theme);
-    border-radius:18px;padding:16px 18px}
+  /* ---------- panels ---------- */
+  .hint{background:var(--sky);border:3px solid var(--teal);border-radius:18px;padding:16px 18px}
   .hint b{display:block;font-family:var(--display);font-size:20px;margin-bottom:6px}
   .example{margin-top:12px;background:#fff;border-radius:12px;padding:11px 13px;
     font-family:var(--display);font-size:18px;font-weight:bold;line-height:1.5}
@@ -62,17 +104,20 @@
     font-size:13px;font-weight:bold;color:var(--ink-soft);margin-bottom:10px}
   .link{cursor:pointer;text-decoration:underline;color:var(--ink-soft);
     background:none;border:none;font-family:var(--ui);font-size:13px;font-weight:bold}
-  .track{height:14px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:18px}
-  .fill{height:100%;width:0;background:var(--theme);border-radius:999px;transition:width .3s ease}
-  .problem{display:flex;justify-content:center}
-  .stack{min-width:200px;text-align:right;font-family:var(--display);font-weight:bold;
+  .track{height:16px;background:var(--line);border-radius:999px;overflow:hidden;
+    margin-bottom:18px;border:2px solid var(--navy)}
+  .fill{height:100%;width:0;background:var(--theme);transition:width .3s ease}
+  /* ---------- the problem ---------- */
+  .problem{display:flex;justify-content:center;background:var(--sky);
+    border:3px solid var(--line);border-radius:20px;padding:14px 10px 8px}
+  .stack{min-width:190px;text-align:right;font-family:var(--display);font-weight:bold;
     font-size:58px;line-height:1.16;font-variant-numeric:tabular-nums;padding-right:10px}
-  .stack .sign{float:left;padding-left:16px;color:var(--theme)}
-  .ruleline{border-bottom:6px solid var(--ink);padding-bottom:2px}
+  .stack .sign{float:left;padding-left:14px;color:var(--orange)}
+  .ruleline{border-bottom:6px solid var(--navy);padding-bottom:2px}
   .answer{margin-top:12px;width:100%;text-align:right;font-family:var(--display);
     font-size:54px;font-weight:bold;padding:2px 10px 8px 0;border:none;
-    border-bottom:6px dashed var(--line);background:transparent;color:var(--theme)}
-  .answer:focus{outline:none;border-bottom-color:var(--theme)}
+    border-bottom:6px dashed #B9CEE8;background:transparent;color:var(--navy2)}
+  .answer:focus{outline:none;border-bottom-color:var(--teal)}
   .answer.ok{color:var(--right);border-bottom-color:var(--right)}
   .answer.no{color:var(--wrong);border-bottom-color:var(--wrong)}
   .pop{animation:pop .35s ease}
@@ -82,70 +127,68 @@
   .verdict{min-height:34px;text-align:center;font-family:var(--display);
     font-weight:bold;font-size:19px;margin:12px 0 2px}
   .verdict.ok{color:var(--right)} .verdict.no{color:var(--wrong)}
+  /* ---------- keypad ---------- */
   .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
   .key{font-family:var(--display);font-size:24px;font-weight:bold;padding:15px 0;cursor:pointer;
-    background:#fff;border:3px solid var(--ink);border-radius:16px;color:var(--ink);
-    box-shadow:0 4px 0 rgba(34,36,59,.16)}
-  .key:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(34,36,59,.16)}
-  .key.go{background:var(--theme);color:var(--on-theme);font-size:18px}
-  /* teaching panel */
-  .teach{border:3px solid var(--wrong);border-radius:20px;padding:18px;background:var(--wrong-bg)}
+    background:#fff;border:3px solid var(--navy);border-radius:16px;color:var(--navy);
+    box-shadow:0 4px 0 rgba(11,31,91,.28);transition:transform .06s ease}
+  .key:hover{background:var(--sky)}
+  .key:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(11,31,91,.28)}
+  .key.word{font-size:18px}
+  .key.go{background:var(--orange);color:var(--navy);font-size:18px}
+  /* ---------- teaching panel ---------- */
+  .teach{border:3px solid var(--coral);border-radius:20px;padding:18px;background:var(--wrong-bg)}
   .teach h3{margin:0 0 4px;font-size:22px;color:var(--wrong)}
   .teach .said{font-family:var(--display);font-size:19px;margin-bottom:14px}
   .groups{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:6px 0 14px}
-  .group{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:9px;
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(16px,16px));gap:5px;
-    justify-content:center;min-width:44px;min-height:44px;align-content:center}
+  .group{background:#fff;border:3px solid var(--navy);border-radius:14px;padding:9px;
+    display:grid;gap:5px;justify-content:center;min-width:44px;min-height:44px;align-content:center}
   .group.empty{border-style:dashed;color:var(--ink-soft);display:flex;
     align-items:center;justify-content:center;font-size:22px;font-family:var(--display)}
   .dot{width:16px;height:16px;border-radius:50%;background:var(--theme)}
-  .mathline{font-family:var(--display);font-size:22px;font-weight:bold;text-align:center;
+  .mathline{font-family:var(--display);font-size:21px;font-weight:bold;text-align:center;
     background:#fff;border-radius:12px;padding:12px 10px;margin-bottom:6px;
     word-break:break-word;line-height:1.5}
-  .stars{font-size:44px;letter-spacing:6px;color:#FFC300;text-align:center;margin:6px 0}
+  /* ---------- results ---------- */
+  .stars{font-size:44px;letter-spacing:6px;color:var(--yellow);text-align:center;margin:6px 0}
   .stars .off{color:var(--line)}
   .score{font-family:var(--display);font-size:52px;font-weight:bold;text-align:center;margin:0 0 4px}
   .misslist{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:9px}
   .misslist li{background:var(--wrong-bg);border:3px solid var(--wrong);color:var(--wrong);
     border-radius:14px;padding:8px 12px;font-family:var(--display);font-weight:bold;font-size:17px}
-  .foot{margin-top:14px;font-size:12px;color:var(--ink-soft);text-align:center;line-height:1.6}
+  /* ---------- footer ---------- */
+  .foot{margin-top:16px;font-size:12px;color:#BBD5F2;text-align:center;line-height:1.7}
+  .foot .brandline{display:block;font-family:var(--display);font-size:14px;
+    color:#fff;letter-spacing:.04em;margin-bottom:2px}
+  .foot .brandline b{color:var(--yellow)}
+  .foot .credit{display:inline-block;margin-top:4px;font-family:var(--display);
+    font-size:13px;color:var(--cyan)}
   .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9}
   .bit{position:absolute;width:11px;height:16px;border-radius:3px;animation:fall 1s ease-out forwards}
   @keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1}
     100%{transform:translateY(150px) rotate(320deg);opacity:0}}
-  /* ===== entry page ===== */
-  .rainbow{background:linear-gradient(90deg,#0EA5A5,#3A86FF)}
-  .hero{text-align:center;padding:4px 0 2px}
-  .hero .kicker{font-family:var(--display);font-size:15px;font-weight:bold;
-    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
-  .hero .big{font-family:var(--display);font-size:46px;font-weight:bold;line-height:1.02;margin:0}
-  .hero .big span:nth-child(1){color:#0EA5A5}
-  .hero .big span:nth-child(2){color:#12A150}
-  .hero .big span:nth-child(3){color:#3A86FF}
-  .hero .big span:nth-child(4){color:#0EA5A5}
-  .hero .big span:nth-child(5){color:#5E60CE}
-  .bubbles{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:18px 0 14px}
-  .bubble{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);
-    color:#fff;font-family:var(--display);font-size:21px;font-weight:bold;
-    display:flex;align-items:center;justify-content:center;
-    box-shadow:0 4px 0 rgba(34,36,59,.25);animation:bob 2.6s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-  .tagline{font-family:var(--display);font-size:20px;line-height:1.45;margin:6px 0 2px}
-  .signs{font-family:var(--display);font-size:26px;letter-spacing:14px;
-    color:var(--ink-soft);margin:10px 0 0;opacity:.6}
   .hidden{display:none}
-  @media (max-width:420px){
-    .hero .big{font-size:36px}
-    .bubble{width:40px;height:40px;font-size:18px}
-    .tagline{font-size:18px}
-  }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-  @media (max-width:420px){
-    .stack{font-size:48px;min-width:158px}
-    .answer{font-size:44px}
-    .banner h1,.banner h2{font-size:21px}
-    .tile{font-size:27px;padding:18px 4px}
-    .mathline{font-size:19px}
+  @media (max-width:430px){
+    .card{padding:16px;border-radius:20px}
+    .banner{margin:-16px -16px 16px;padding:13px 16px}
+    .banner h1,.banner h2{font-size:20px}
+    .logowrap{margin:-16px -16px 0;padding:14px 12px 12px}
+    .logo{max-width:300px}
+    .hero{padding:12px 0 0}
+    .tagline{font-size:17px}
+    .bubble{width:34px;height:34px;font-size:16px;border-width:2px}
+    .bubbles{gap:6px;margin:10px 0 2px}
+    .stack{font-size:46px;min-width:150px}
+    .answer{font-size:42px}
+    .tile{font-size:27px;padding:17px 4px}
+    .mathline{font-size:18px}
+  }
+  @media (max-height:700px){
+    .logo{max-width:250px}
+    .bubbles{margin:8px 0 0}
+    .bubble{width:30px;height:30px;font-size:15px}
+    .tagline{font-size:16px}
   }
 </style>
 </head>
@@ -153,49 +196,50 @@
 <div class="confetti" id="confetti"></div>
 <div class="shell">
 
-  <!-- WELCOME -->
+  <!-- ===== ENTRY ===== -->
   <section id="welcome" class="card">
-    <div class="banner rainbow" style="justify-content:center">
-      <h1 style="font-size:19px;letter-spacing:.06em">&times; TIMES TABLE HQ &times;</h1>
+    <div class="logowrap">
+      <img src="logo.png" alt="Multiplication Mission" class="logo" id="logo"
+           width="900" height="619">
+      <div class="wordmark" id="wordmark">Multiplication<b>Mission</b></div>
     </div>
     <div class="hero">
-      <p class="kicker">Welcome to</p>
-      <h2 class="big"><span>Third</span> <span>Grade</span><br><span>Multi</span><span>plica</span><span>tion</span></h2>
-      <div class="bubbles" id="bubbles"></div>
       <p class="tagline">Pick a number.<br>Practice it. Then beat your score.</p>
-      <p class="signs">&times; &times; &times;</p>
+      <div class="bubbles" id="bubbles"></div>
     </div>
     <label for="name">What's your name?</label>
     <input type="text" id="name" placeholder="Type your name" autocomplete="off" maxlength="40">
-    <button class="btn block" id="enter">Let's go</button>
-    <p class="foot">Your name stays on this device only. Tap "I'm all done" when you finish to clear it.</p>
+    <button class="btn block" id="enter">Start the mission</button>
+    <p class="sub center" style="margin-top:12px;font-size:12px">
+      Your name stays on this device only.</p>
   </section>
 
-  <!-- MENU -->
+  <!-- ===== MENU ===== -->
   <section id="menu" class="card hidden">
     <div class="banner">
       <h2 id="hello">Pick a number</h2>
-      <button class="badge link" id="signOut" style="color:#fff">I'm all done</button>
+      <button class="badge link" id="signOut">I'm all done</button>
     </div>
     <p class="step">Step 1 of 2 &middot; Choose a number</p>
     <div class="grid" id="tiles"></div>
   </section>
 
-  <!-- MODE -->
+  <!-- ===== PRACTICE OR TEST ===== -->
   <section id="hub" class="card hidden">
     <div class="banner">
       <h2 id="hubTitle">The 2s</h2>
-      <button class="badge link" data-go="menu" style="color:#fff">&larr; Menu</button>
+      <button class="badge link" data-go="menu">&larr; Menu</button>
     </div>
     <p class="step">Step 2 of 2 &middot; Practice or test</p>
     <div class="hint"><b id="hubRuleHead"></b><span id="hubRuleBody"></span>
       <div class="example" id="hubExample"></div></div>
     <button class="btn block" id="toPractice">Practice</button>
     <button class="btn block quiet" id="toTest">Test me</button>
-    <p class="foot">Practice shows you how to work a problem when you miss it. The test waits until the end.</p>
+    <p class="sub center" style="margin-top:14px;font-size:12px">
+      Practice shows you how to work a problem when you miss it. The test waits until the end.</p>
   </section>
 
-  <!-- QUIZ -->
+  <!-- ===== QUIZ ===== -->
   <section id="quiz" class="card hidden">
     <div class="banner">
       <h2 id="quizTitle">The 2s</h2>
@@ -214,7 +258,8 @@
         <div class="stack">
           <div id="top">2</div>
           <div class="ruleline"><span class="sign">&times;</span><span id="bottom">7</span></div>
-          <input class="answer" id="answer" inputmode="numeric" autocomplete="off" aria-label="Your answer" placeholder="?">
+          <input class="answer" id="answer" inputmode="numeric" autocomplete="off"
+                 aria-label="Your answer" placeholder="?">
         </div>
       </div>
       <div class="verdict" id="verdict"></div>
@@ -222,29 +267,28 @@
         <button class="key">1</button><button class="key">2</button><button class="key">3</button>
         <button class="key">4</button><button class="key">5</button><button class="key">6</button>
         <button class="key">7</button><button class="key">8</button><button class="key">9</button>
-        <button class="key" data-act="del">&larr;</button>
+        <button class="key word" data-act="del">Erase</button>
         <button class="key">0</button>
         <button class="key go" data-act="enter" id="enterKey">Check</button>
       </div>
     </div>
 
-    <!-- teaching panel -->
     <div id="teach" class="teach hidden">
-      <h3 id="teachTitle">Not quite</h3>
+      <h3 id="teachTitle">Let's work it out</h3>
       <div class="said" id="teachSaid"></div>
       <div class="mathline" id="teachGroups"></div>
       <div class="groups" id="groupBox"></div>
       <div class="mathline" id="teachAdd"></div>
       <div class="mathline" id="teachAnswer"></div>
-      <button class="btn block" id="tryAgain">Try it again</button>
+      <button class="btn block go" id="tryAgain">Try it again</button>
     </div>
 
     <button class="btn block quiet" data-go="menu" style="margin-top:16px">Quit to menu</button>
   </section>
 
-  <!-- DONE -->
+  <!-- ===== RESULTS ===== -->
   <section id="done" class="card hidden">
-    <div class="banner"><h2 id="doneTitle">All finished!</h2></div>
+    <div class="banner"><h2 id="doneTitle">Mission complete!</h2></div>
     <div class="stars" id="stars"></div>
     <div class="score" id="finalScore"></div>
     <p class="sub center" id="doneDetail"></p>
@@ -258,18 +302,24 @@
     <button class="btn block quiet" id="allDone">I'm all done</button>
   </section>
 
-  <p class="foot">Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
-  <span style="display:inline-block;margin-top:6px;font-family:var(--display);font-size:13px;color:var(--ink)">
-  Inspired by Christopher Bazemore II</span></p>
+  <p class="foot">
+    <span class="brandline">Multiplication <b>Mission</b></span>
+    Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
+    <span class="credit">Inspired by Christopher Bazemore II</span>
+  </p>
 </div>
 
 <script>
 (function(){
   "use strict";
 
-  var COLORS = {0:"#EF476F",1:"#F77F00",2:"#0EA5A5",3:"#8AC926",4:"#12A150",
-    5:"#06AED5",6:"#3A86FF",7:"#7B4BFF",8:"#B5179E",9:"#E0479E",
-    10:"#00A6A6",11:"#E4572E",12:"#5E60CE",mixall:"#6247AA"};
+  /* number colors, drawn from the logo family */
+  var COLORS = {0:"#FF6B57",1:"#FF8A3D",2:"#FFC928",3:"#2FBF7B",4:"#20D6D2",
+    5:"#7EEBFF",6:"#2A6BE0",7:"#6C5CE7",8:"#C44BE0",9:"#FF4F81",
+    10:"#12B3A8",11:"#F49E1B",12:"#123A8C",mixall:"#7A3DFF"};
+  /* colors light enough to need navy text on top */
+  /* swatches bright enough that navy text reads better than white */
+  var LIGHT = {0:1, 1:1, 2:1, 3:1, 4:1, 5:1, 8:1, 9:1, 10:1, 11:1};
 
   var RULES = {
     0:{h:"Any number \u00D7 0 = 0",b:"Zero means none. If every group is empty, there is nothing to count \u2014 no matter how many groups you have.",
@@ -317,11 +367,18 @@
   var S = {name:"", table:2, mode:"practice", problems:[], idx:0, correct:0, streak:0,
            best:0, misses:[], answered:false, start:0, retry:false};
 
+  /* if the logo file is missing, fall back to a text wordmark */
+  el("logo").onerror = function(){
+    this.style.display="none";
+    el("wordmark").style.display="block";
+  };
+
   function label(t){ return t==="mixall" ? "All mixed" : "The " + t + "s"; }
   function theme(t){
-    var c = COLORS[t] || "#0EA5A5", r = document.documentElement.style;
+    var c = COLORS[t] || "#20D6D2", r = document.documentElement.style;
     r.setProperty("--theme", c);
     r.setProperty("--theme-soft", c + "1A");
+    r.setProperty("--on-theme", LIGHT[t] ? "#0B1F5B" : "#FFFFFF");
   }
   function show(id){
     ["welcome","menu","hub","quiz","done"].forEach(function(s){
@@ -335,7 +392,7 @@
   }
   function burst(){
     if (reduced) return;
-    var box=el("confetti"), pal=["#EF476F","#FFC300","#8AC926","#06AED5","#7B4BFF","#F77F00"];
+    var box=el("confetti"), pal=["#FFC928","#20D6D2","#FF8A3D","#7EEBFF","#FF6B57","#2FBF7B"];
     for (var i=0;i<16;i++){
       var b=document.createElement("div");
       b.className="bit"; b.style.background=pal[i%pal.length];
@@ -346,13 +403,14 @@
     }
   }
 
-  /* ---------- welcome ---------- */
+  /* ---------- entry ---------- */
   (function(){
     var box=el("bubbles");
     for (var i=0;i<=9;i++){
       var b=document.createElement("div");
       b.className="bubble"; b.textContent=i;
       b.style.background=COLORS[i];
+      if (LIGHT[i]) b.style.color="#0B1F5B";
       b.style.animationDelay=(i*0.13)+"s";
       b.setAttribute("aria-hidden","true");
       box.appendChild(b);
@@ -363,11 +421,15 @@
     var v = el("name").value.trim();
     if (!v){ el("name").focus(); return; }
     S.name = v.charAt(0).toUpperCase() + v.slice(1);
-    store.set("tt_name", S.name);
+    store.set("mm_name", S.name);
     openMenu();
   }
   el("enter").onclick = enterApp;
   el("name").addEventListener("keydown", function(e){ if (e.key==="Enter") enterApp(); });
+  el("name").addEventListener("focus", function(){
+    var n=el("name");
+    setTimeout(function(){ if (n.scrollIntoView) n.scrollIntoView({block:"center"}); }, 300);
+  });
 
   /* ---------- menu ---------- */
   var tiles = el("tiles");
@@ -375,6 +437,7 @@
     (function(num){
       var b=document.createElement("button");
       b.className="tile"; b.style.background=COLORS[num]; b.textContent=num;
+      if (LIGHT[num]) b.style.color="#0B1F5B";
       b.setAttribute("aria-label","Practice the "+num+"s");
       b.onclick=function(){ openHub(num); };
       tiles.appendChild(b);
@@ -390,7 +453,7 @@
     theme(2); show("menu");
   }
 
-  /* ---------- mode ---------- */
+  /* ---------- practice or test ---------- */
   function openHub(t){
     S.table=t; theme(t);
     el("hubTitle").textContent=label(t);
@@ -448,14 +511,12 @@
     a.readOnly=TOUCH; if(!TOUCH) a.focus();
   }
 
-  /* ---------- the teaching panel ---------- */
+  /* ---------- teaching panel ---------- */
   function teach(groups, size, wrongAnswer){
     var product = groups * size, i, j;
-    el("teachTitle").textContent = "Let's work it out";
     el("teachSaid").textContent = wrongAnswer !== "" ?
       ("You wrote " + wrongAnswer + ". Here is how this one works.") :
       "Here is how this one works.";
-
     el("teachGroups").textContent =
       groups + " \u00D7 " + size + " means " + groups + " group" + (groups===1?"":"s") +
       " of " + size + ".";
@@ -463,15 +524,13 @@
     var box = el("groupBox");
     box.innerHTML = "";
     var drawable = groups >= 1 && groups <= 8 && size <= 12 && product <= 72;
-
     if (groups === 0){
       box.innerHTML = '<div class="group empty" style="min-width:200px">no groups at all</div>';
     } else if (drawable){
       for (i=0;i<groups;i++){
         var g=document.createElement("div");
-        if (size === 0){
-          g.className="group empty"; g.textContent="0";
-        } else {
+        if (size === 0){ g.className="group empty"; g.textContent="0"; }
+        else {
           g.className="group";
           g.style.gridTemplateColumns="repeat("+Math.min(size,4)+",16px)";
           for (j=0;j<size;j++){
@@ -482,7 +541,6 @@
       }
     }
 
-    /* the addition or skip-count line */
     var addLine;
     if (groups === 0 || size === 0){
       addLine = "Nothing to add. The answer is 0.";
@@ -567,8 +625,8 @@
     var stars = pct>=90?3:pct>=70?2:1;
 
     el("doneTitle").textContent = S.name
-      ? (pct===100 ? ("Perfect, "+S.name+"!") : ("You're finished, "+S.name+"!"))
-      : "You're finished!";
+      ? (pct===100 ? ("Perfect, "+S.name+"!") : ("Mission complete, "+S.name+"!"))
+      : "Mission complete!";
     el("stars").innerHTML=[0,1,2].map(function(i){
       return i<stars ? "\u2605" : '<span class="off">\u2605</span>';
     }).join("");
@@ -617,8 +675,8 @@
   el("allDone").onclick=function(){ signOut(); };
   el("signOut").onclick=function(){ signOut(); };
   function signOut(){
-    store.clear("tt_name"); S.name="";
-    el("name").value=""; show("welcome"); el("name").focus();
+    store.clear("mm_name"); S.name="";
+    el("name").value=""; show("welcome");
   }
   document.addEventListener("click", function(e){
     var b=e.target.closest("[data-go]"); if(!b) return;
@@ -626,7 +684,7 @@
   });
 
   /* ---------- boot ---------- */
-  var saved=store.get("tt_name");
+  var saved=store.get("mm_name");
   if (saved){ S.name=saved; el("name").value=saved; openMenu(); }
   else show("welcome");
   theme(2);
