@@ -3,146 +3,143 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Times Table Practice</title>
+<title>Third Grade Multiplication</title>
 <style>
   :root{
-    --theme:#3A86FF;
-    --theme-soft:#E3EDFF;
-    --on-theme:#FFFFFF;
-    --paper:#FFFDF7;
-    --ink:#22243B;
-    --ink-soft:#6A6E90;
-    --line:#DCDCEC;
-    --right:#12A150;
-    --right-bg:#E3F8EC;
-    --wrong:#E5484D;
-    --wrong-bg:#FDEAEA;
+    --theme:#0EA5A5; --theme-soft:#E6F7F7; --on-theme:#fff;
+    --paper:#FFFDF8; --ink:#22243B; --ink-soft:#6A6E90; --line:#DFE0EE;
+    --right:#12A150; --right-bg:#E6F8EE; --wrong:#E5484D; --wrong-bg:#FDEBEB;
     --display:"Trebuchet MS","Segoe UI",Verdana,sans-serif;
     --ui:Verdana,Geneva,"DejaVu Sans",sans-serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{
-    background:var(--paper);
-    background-image:
-      radial-gradient(circle at 12% 8%, #FFE8A3 0 12px, transparent 13px),
-      radial-gradient(circle at 88% 14%, #B9E8FF 0 14px, transparent 15px),
-      radial-gradient(circle at 8% 82%, #D8F5C6 0 16px, transparent 17px),
-      radial-gradient(circle at 92% 76%, #FFD1E3 0 12px, transparent 13px);
-    background-repeat:no-repeat;
-    color:var(--ink);
-    font-family:var(--ui);
-    min-height:100vh;
-    display:flex;justify-content:center;
-    padding:18px 14px 36px;
-  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--ui);
+    min-height:100vh;display:flex;justify-content:center;padding:16px 12px 34px}
   .shell{width:100%;max-width:640px}
-  .card{
-    background:#fff;
-    border:3px solid var(--ink);
-    border-radius:22px;
-    box-shadow:0 8px 0 rgba(34,36,59,.16);
-    padding:20px 20px 24px;
-    overflow:hidden;
-  }
-  .banner{
-    background:var(--theme);color:var(--on-theme);
-    margin:-20px -20px 18px;padding:18px 20px;
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
-  }
-  .banner h1,.banner h2{font-family:var(--display);margin:0;font-size:27px;letter-spacing:.01em}
-  .banner .badge{
-    background:rgba(255,255,255,.25);border-radius:999px;
-    padding:6px 14px;font-size:14px;font-weight:bold;white-space:nowrap;
-  }
-  h1,h2{font-family:var(--display)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:22px;
+    box-shadow:0 8px 0 rgba(34,36,59,.15);padding:20px;overflow:hidden}
+  .banner{background:var(--theme);color:var(--on-theme);margin:-20px -20px 18px;
+    padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .banner h1,.banner h2{font-family:var(--display);margin:0;font-size:25px}
+  .badge{background:rgba(255,255,255,.24);border-radius:999px;padding:6px 13px;
+    font-size:13px;font-weight:bold;white-space:nowrap}
+  h1,h2,h3{font-family:var(--display)}
   p{line-height:1.55;margin:0 0 12px}
   .sub{color:var(--ink-soft);font-size:14px}
+  .center{text-align:center}
+  .step{font-size:12px;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:10px}
   label{display:block;font-size:12px;font-weight:bold;letter-spacing:.08em;
-        text-transform:uppercase;color:var(--ink-soft);margin:18px 0 9px}
-  input[type=text]{
-    width:100%;font-family:var(--ui);font-size:17px;padding:12px;
-    border:3px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);
-  }
+    text-transform:uppercase;color:var(--ink-soft);margin:18px 0 9px}
+  input[type=text]{width:100%;font-family:var(--display);font-size:22px;padding:14px;
+    border:3px solid var(--line);border-radius:14px;background:#fff;color:var(--ink)}
   input[type=text]:focus{outline:none;border-color:var(--theme)}
-  .choices{display:flex;flex-wrap:wrap;gap:9px}
-  .chip{
-    font-family:var(--display);font-size:19px;font-weight:bold;
-    min-width:56px;padding:12px 10px;cursor:pointer;color:#fff;
-    border:3px solid var(--ink);border-radius:16px;
-    box-shadow:0 4px 0 rgba(34,36,59,.25);
-    transition:transform .08s ease;
-  }
-  .chip.wide{min-width:auto;padding:12px 16px;font-size:16px}
-  .chip[aria-pressed=false]{opacity:.55}
-  .chip[aria-pressed=true]{transform:translateY(-2px)}
-  .chip:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(34,36,59,.25)}
-  .chip:focus-visible,button:focus-visible,input:focus-visible{outline:4px solid #22243B;outline-offset:3px}
-  .btn{
-    font-family:var(--display);font-size:19px;font-weight:bold;cursor:pointer;
-    padding:14px 22px;border-radius:16px;border:3px solid var(--ink);
-    background:var(--theme);color:var(--on-theme);
-    box-shadow:0 5px 0 rgba(34,36,59,.3);
-  }
-  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(34,36,59,.3)}
-  .btn.quiet{background:#fff;color:var(--ink);box-shadow:0 5px 0 rgba(34,36,59,.15)}
-  .btn.block{width:100%;margin-top:24px}
-  .row{display:flex;gap:10px;flex-wrap:wrap}
-  .bar{display:flex;justify-content:space-between;align-items:center;
-       font-size:14px;font-weight:bold;color:var(--ink-soft);margin-bottom:10px;gap:10px}
-  .track{height:14px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:20px}
+  .btn{font-family:var(--display);font-size:19px;font-weight:bold;cursor:pointer;
+    padding:15px 20px;border-radius:16px;border:3px solid var(--ink);
+    background:var(--theme);color:var(--on-theme);box-shadow:0 5px 0 rgba(34,36,59,.28)}
+  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(34,36,59,.28)}
+  .btn.quiet{background:#fff;color:var(--ink);box-shadow:0 5px 0 rgba(34,36,59,.14)}
+  .btn.block{width:100%;margin-top:12px}
+  .btn:focus-visible,.tile:focus-visible,input:focus-visible,.key:focus-visible{
+    outline:4px solid var(--ink);outline-offset:3px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+  .tile{font-family:var(--display);font-size:32px;font-weight:bold;color:#fff;cursor:pointer;
+    padding:22px 6px;border:3px solid var(--ink);border-radius:18px;
+    box-shadow:0 5px 0 rgba(34,36,59,.26)}
+  .tile:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(34,36,59,.26)}
+  .tile.wide{grid-column:span 2;font-size:21px}
+  .hint{background:var(--theme-soft);border:3px dashed var(--theme);
+    border-radius:18px;padding:16px 18px}
+  .hint b{display:block;font-family:var(--display);font-size:20px;margin-bottom:6px}
+  .bar{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    font-size:13px;font-weight:bold;color:var(--ink-soft);margin-bottom:10px}
+  .link{cursor:pointer;text-decoration:underline;color:var(--ink-soft);
+    background:none;border:none;font-family:var(--ui);font-size:13px;font-weight:bold}
+  .track{height:14px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:18px}
   .fill{height:100%;width:0;background:var(--theme);border-radius:999px;transition:width .3s ease}
-  .problem{display:flex;justify-content:center;position:relative}
+  .problem{display:flex;justify-content:center}
   .stack{min-width:200px;text-align:right;font-family:var(--display);font-weight:bold;
-         font-size:60px;line-height:1.16;font-variant-numeric:tabular-nums;padding-right:10px}
+    font-size:58px;line-height:1.16;font-variant-numeric:tabular-nums;padding-right:10px}
   .stack .sign{float:left;padding-left:16px;color:var(--theme)}
   .ruleline{border-bottom:6px solid var(--ink);padding-bottom:2px}
-  .answer{
-    margin-top:12px;width:100%;text-align:right;font-family:var(--display);
-    font-size:56px;font-weight:bold;padding:2px 10px 8px 0;
-    border:none;border-bottom:6px dashed var(--line);background:transparent;color:var(--theme);
-  }
+  .answer{margin-top:12px;width:100%;text-align:right;font-family:var(--display);
+    font-size:54px;font-weight:bold;padding:2px 10px 8px 0;border:none;
+    border-bottom:6px dashed var(--line);background:transparent;color:var(--theme)}
   .answer:focus{outline:none;border-bottom-color:var(--theme)}
   .answer.ok{color:var(--right);border-bottom-color:var(--right)}
   .answer.no{color:var(--wrong);border-bottom-color:var(--wrong)}
   .pop{animation:pop .35s ease}
-  @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.14)}100%{transform:scale(1)}}
+  @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.13)}100%{transform:scale(1)}}
   .shake{animation:shake .3s ease}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-  .verdict{min-height:36px;text-align:center;font-family:var(--display);
-           font-weight:bold;font-size:20px;margin:14px 0 2px}
-  .verdict.ok{color:var(--right)}
-  .verdict.no{color:var(--wrong)}
+  .verdict{min-height:34px;text-align:center;font-family:var(--display);
+    font-weight:bold;font-size:19px;margin:12px 0 2px}
+  .verdict.ok{color:var(--right)} .verdict.no{color:var(--wrong)}
   .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
   .key{font-family:var(--display);font-size:24px;font-weight:bold;padding:15px 0;cursor:pointer;
-       background:#fff;border:3px solid var(--ink);border-radius:16px;color:var(--ink);
-       box-shadow:0 4px 0 rgba(34,36,59,.18)}
-  .key:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(34,36,59,.18)}
-  .key.go{background:var(--theme);color:var(--on-theme);font-size:19px}
-  .hint{background:var(--theme-soft);border:3px dashed var(--theme);border-radius:18px;padding:16px 18px}
-  .hint b{display:block;font-family:var(--display);font-size:21px;margin-bottom:6px}
-  .stars{font-size:46px;letter-spacing:6px;color:#FFC300;text-align:center;margin:4px 0 6px}
+    background:#fff;border:3px solid var(--ink);border-radius:16px;color:var(--ink);
+    box-shadow:0 4px 0 rgba(34,36,59,.16)}
+  .key:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(34,36,59,.16)}
+  .key.go{background:var(--theme);color:var(--on-theme);font-size:18px}
+  /* teaching panel */
+  .teach{border:3px solid var(--wrong);border-radius:20px;padding:18px;background:var(--wrong-bg)}
+  .teach h3{margin:0 0 4px;font-size:22px;color:var(--wrong)}
+  .teach .said{font-family:var(--display);font-size:19px;margin-bottom:14px}
+  .groups{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:6px 0 14px}
+  .group{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:9px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(16px,16px));gap:5px;
+    justify-content:center;min-width:44px;min-height:44px;align-content:center}
+  .group.empty{border-style:dashed;color:var(--ink-soft);display:flex;
+    align-items:center;justify-content:center;font-size:22px;font-family:var(--display)}
+  .dot{width:16px;height:16px;border-radius:50%;background:var(--theme)}
+  .mathline{font-family:var(--display);font-size:22px;font-weight:bold;text-align:center;
+    background:#fff;border-radius:12px;padding:12px 10px;margin-bottom:6px;
+    word-break:break-word;line-height:1.5}
+  .stars{font-size:44px;letter-spacing:6px;color:#FFC300;text-align:center;margin:6px 0}
   .stars .off{color:var(--line)}
   .score{font-family:var(--display);font-size:52px;font-weight:bold;text-align:center;margin:0 0 4px}
-  .center{text-align:center}
   .misslist{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:9px}
   .misslist li{background:var(--wrong-bg);border:3px solid var(--wrong);color:var(--wrong);
-               border-radius:14px;padding:8px 12px;font-family:var(--display);font-weight:bold;font-size:18px}
-  .foot{margin-top:16px;font-size:12px;color:var(--ink-soft);text-align:center;line-height:1.6}
-  .toggle{background:none;border:none;cursor:pointer;font-size:13px;font-weight:bold;
-          color:var(--on-theme);font-family:var(--ui)}
-  .confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:9}
+    border-radius:14px;padding:8px 12px;font-family:var(--display);font-weight:bold;font-size:17px}
+  .foot{margin-top:14px;font-size:12px;color:var(--ink-soft);text-align:center;line-height:1.6}
+  .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9}
   .bit{position:absolute;width:11px;height:16px;border-radius:3px;animation:fall 1s ease-out forwards}
   @keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1}
-                  100%{transform:translateY(150px) rotate(320deg);opacity:0}}
+    100%{transform:translateY(150px) rotate(320deg);opacity:0}}
+  /* ===== entry page ===== */
+  .rainbow{background:linear-gradient(90deg,#0EA5A5,#3A86FF)}
+  .hero{text-align:center;padding:4px 0 2px}
+  .hero .kicker{font-family:var(--display);font-size:15px;font-weight:bold;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+  .hero .big{font-family:var(--display);font-size:46px;font-weight:bold;line-height:1.02;margin:0}
+  .hero .big span:nth-child(1){color:#0EA5A5}
+  .hero .big span:nth-child(2){color:#12A150}
+  .hero .big span:nth-child(3){color:#3A86FF}
+  .hero .big span:nth-child(4){color:#0EA5A5}
+  .hero .big span:nth-child(5){color:#5E60CE}
+  .bubbles{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:18px 0 14px}
+  .bubble{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);
+    color:#fff;font-family:var(--display);font-size:21px;font-weight:bold;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 0 rgba(34,36,59,.25);animation:bob 2.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .tagline{font-family:var(--display);font-size:20px;line-height:1.45;margin:6px 0 2px}
+  .signs{font-family:var(--display);font-size:26px;letter-spacing:14px;
+    color:var(--ink-soft);margin:10px 0 0;opacity:.6}
   .hidden{display:none}
-  @media (prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}
-  }
   @media (max-width:420px){
-    .stack{font-size:50px;min-width:160px}
-    .answer{font-size:46px}
-    .banner h1,.banner h2{font-size:22px}
+    .hero .big{font-size:36px}
+    .bubble{width:40px;height:40px;font-size:18px}
+    .tagline{font-size:18px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media (max-width:420px){
+    .stack{font-size:48px;min-width:158px}
+    .answer{font-size:44px}
+    .banner h1,.banner h2{font-size:21px}
+    .tile{font-size:27px;padding:18px 4px}
+    .mathline{font-size:19px}
   }
 </style>
 </head>
@@ -150,411 +147,463 @@
 <div class="confetti" id="confetti"></div>
 <div class="shell">
 
-  <!-- START -->
-  <section id="start" class="card">
-    <div class="banner">
-      <h1>Times Table Practice</h1>
-      <span class="badge">Grade 3</span>
+  <!-- WELCOME -->
+  <section id="welcome" class="card">
+    <div class="banner rainbow" style="justify-content:center">
+      <h1 style="font-size:19px;letter-spacing:.06em">&times; TIMES TABLE HQ &times;</h1>
     </div>
-    <p class="sub">Pick a number. Learn the rule. Practice until it's easy.</p>
-
-    <label for="name">Your name (optional)</label>
-    <input type="text" id="name" placeholder="First name" autocomplete="off">
-
-    <label>Practice the</label>
-    <div class="choices" id="tables"></div>
-
-    <label>How many problems?</label>
-    <div class="choices" id="lengths"></div>
-
-    <button class="btn block" id="go">Start practice</button>
-    <p class="foot">Nothing is saved or sent anywhere. Close the tab and it's gone.</p>
+    <div class="hero">
+      <p class="kicker">Welcome to</p>
+      <h2 class="big"><span>Third</span> <span>Grade</span><br><span>Multi</span><span>plica</span><span>tion</span></h2>
+      <div class="bubbles" id="bubbles"></div>
+      <p class="tagline">Pick a number.<br>Practice it. Then beat your score.</p>
+      <p class="signs">&times; &times; &times;</p>
+    </div>
+    <label for="name">What's your name?</label>
+    <input type="text" id="name" placeholder="Type your first name" autocomplete="off" maxlength="18">
+    <button class="btn block" id="enter">Let's go</button>
+    <p class="foot">Your name stays on this device only. Tap "I'm all done" when you finish to clear it.</p>
   </section>
 
-  <!-- RULE -->
-  <section id="ruleScreen" class="card hidden">
+  <!-- MENU -->
+  <section id="menu" class="card hidden">
     <div class="banner">
-      <h2 id="ruleTitle">The rule</h2>
-      <button class="toggle" id="soundBtn" aria-pressed="false">Sound: off</button>
+      <h2 id="hello">Pick a number</h2>
+      <button class="badge link" id="signOut" style="color:#fff">I'm all done</button>
     </div>
-    <div class="hint"><b id="ruleHead"></b><span id="ruleBody"></span></div>
-    <p class="sub" id="ruleExample" style="margin-top:16px"></p>
-    <button class="btn block" id="ruleGo">Got it &mdash; start</button>
+    <p class="step">Step 1 of 2 &middot; Choose a number</p>
+    <div class="grid" id="tiles"></div>
+  </section>
+
+  <!-- MODE -->
+  <section id="hub" class="card hidden">
+    <div class="banner">
+      <h2 id="hubTitle">The 2s</h2>
+      <button class="badge link" data-go="menu" style="color:#fff">&larr; Menu</button>
+    </div>
+    <p class="step">Step 2 of 2 &middot; Practice or test</p>
+    <div class="hint"><b id="hubRuleHead"></b><span id="hubRuleBody"></span></div>
+    <button class="btn block" id="toPractice">Practice</button>
+    <button class="btn block quiet" id="toTest">Test me</button>
+    <p class="foot">Practice shows you how to work a problem when you miss it. The test waits until the end.</p>
   </section>
 
   <!-- QUIZ -->
   <section id="quiz" class="card hidden">
     <div class="banner">
-      <h2 id="quizTitle">The 1s</h2>
-      <span class="badge" id="streak">Streak: 0</span>
+      <h2 id="quizTitle">The 2s</h2>
+      <span class="badge" id="modeBadge">Practice</span>
     </div>
     <div class="bar">
-      <span id="counter">Problem 1 of 10</span>
-      <span id="hintPeek" style="cursor:pointer;text-decoration:underline">Show the rule</span>
+      <span id="counter">Problem 1 of 12</span>
+      <button class="link" id="peekBtn">Show the rule</button>
     </div>
     <div class="track"><div class="fill" id="fill"></div></div>
-    <div id="peek" class="hint hidden" style="margin-bottom:18px"><b id="peekHead"></b><span id="peekBody"></span></div>
+    <div id="peek" class="hint hidden" style="margin-bottom:16px"><b id="peekHead"></b><span id="peekBody"></span></div>
 
-    <div class="problem">
-      <div class="stack" id="stack">
-        <div id="top">7</div>
-        <div class="ruleline"><span class="sign">&times;</span><span id="bottom">1</span></div>
-        <input class="answer" id="answer" inputmode="numeric" autocomplete="off"
-               aria-label="Your answer" placeholder="?">
+    <div id="askWrap">
+      <div class="problem">
+        <div class="stack">
+          <div id="top">2</div>
+          <div class="ruleline"><span class="sign">&times;</span><span id="bottom">7</span></div>
+          <input class="answer" id="answer" inputmode="numeric" autocomplete="off" aria-label="Your answer" placeholder="?">
+        </div>
+      </div>
+      <div class="verdict" id="verdict"></div>
+      <div class="pad" id="pad">
+        <button class="key">1</button><button class="key">2</button><button class="key">3</button>
+        <button class="key">4</button><button class="key">5</button><button class="key">6</button>
+        <button class="key">7</button><button class="key">8</button><button class="key">9</button>
+        <button class="key" data-act="del">&larr;</button>
+        <button class="key">0</button>
+        <button class="key go" data-act="enter" id="enterKey">Check</button>
       </div>
     </div>
 
-    <div class="verdict" id="verdict"></div>
-
-    <div class="pad" id="pad">
-      <button class="key">1</button><button class="key">2</button><button class="key">3</button>
-      <button class="key">4</button><button class="key">5</button><button class="key">6</button>
-      <button class="key">7</button><button class="key">8</button><button class="key">9</button>
-      <button class="key" data-act="del">&larr;</button>
-      <button class="key">0</button>
-      <button class="key go" data-act="enter" id="enterKey">Check</button>
+    <!-- teaching panel -->
+    <div id="teach" class="teach hidden">
+      <h3 id="teachTitle">Not quite</h3>
+      <div class="said" id="teachSaid"></div>
+      <div class="mathline" id="teachGroups"></div>
+      <div class="groups" id="groupBox"></div>
+      <div class="mathline" id="teachAdd"></div>
+      <div class="mathline" id="teachAnswer"></div>
+      <button class="btn block" id="tryAgain">Try it again</button>
     </div>
+
+    <button class="btn block quiet" data-go="menu" style="margin-top:16px">Quit to menu</button>
   </section>
 
-  <!-- RESULTS -->
+  <!-- DONE -->
   <section id="done" class="card hidden">
-    <div class="banner"><h2 id="doneTitle">Nice work!</h2></div>
-    <div class="stars" id="stars">&#9733;&#9733;&#9733;</div>
-    <div class="score" id="finalScore">10 / 10</div>
+    <div class="banner"><h2 id="doneTitle">All finished!</h2></div>
+    <div class="stars" id="stars"></div>
+    <div class="score" id="finalScore"></div>
     <p class="sub center" id="doneDetail"></p>
     <div id="missWrap" class="hidden">
-      <label>Facts to practice again</label>
+      <label>Practice these again</label>
       <ul class="misslist" id="missList"></ul>
     </div>
-    <div class="row" style="margin-top:24px">
-      <button class="btn" id="againMissed">Practice the misses</button>
-      <button class="btn quiet" id="againSame">Same set again</button>
-      <button class="btn quiet" id="restart">Pick a new number</button>
-    </div>
+    <button class="btn block" id="repeat">Do it again</button>
+    <button class="btn block quiet" id="backHub">Back to this number</button>
+    <button class="btn block quiet" data-go="menu">Pick a different number</button>
+    <button class="btn block quiet" id="allDone">I'm all done</button>
   </section>
 
-  <p class="foot">Works offline &middot; no accounts &middot; no data collected</p>
+  <p class="foot">Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
+  <span style="display:inline-block;margin-top:6px;font-family:var(--display);font-size:13px;color:var(--ink)">
+  Inspired by Christopher Bazemore II</span></p>
 </div>
 
 <script>
 (function(){
   "use strict";
 
-  var COLORS = {
-    0:"#EF476F", 1:"#F77F00", 2:"#FFC300", 3:"#8AC926", 4:"#12A150",
-    5:"#06AED5", 6:"#3A86FF", 7:"#7B4BFF", 8:"#B5179E", 9:"#E0479E",
-    10:"#00A6A6", 11:"#E4572E", 12:"#5E60CE",
-    mix01:"#FF6B35", mixall:"#6247AA"
-  };
-  var DARK_TEXT = {2:true, 3:true};
+  var COLORS = {0:"#EF476F",1:"#F77F00",2:"#0EA5A5",3:"#8AC926",4:"#12A150",
+    5:"#06AED5",6:"#3A86FF",7:"#7B4BFF",8:"#B5179E",9:"#E0479E",
+    10:"#00A6A6",11:"#E4572E",12:"#5E60CE",mixall:"#6247AA"};
 
   var RULES = {
-    0:{head:"Any number \u00D7 0 = 0",
-       body:"Multiplying by 0 means there is nothing to count. It does not matter how big the other number is \u2014 the answer is always 0.",
-       ex:"Example: 6 \u00D7 0 = 0, and 0 \u00D7 45 = 0."},
-    1:{head:"Any number \u00D7 1 = that same number",
-       body:"One group of a number is just that number. Whatever goes in comes right back out \u2014 copy it down.",
-       ex:"Example: 8 \u00D7 1 = 8, and 1 \u00D7 52 = 52."},
-    2:{head:"Multiplying by 2 means doubling",
-       body:"Add the number to itself. If you can add it twice, you already know the answer.",
-       ex:"Example: 7 \u00D7 2 is 7 + 7 = 14."},
-    3:{head:"Double it, then add one more group",
-       body:"Three groups is two groups plus one. Double the number, then add the number again.",
-       ex:"Example: 6 \u00D7 3 is 12 + 6 = 18."},
-    4:{head:"Double it, then double it again",
-       body:"Four is two twos. Double the number once, then double your answer.",
-       ex:"Example: 7 \u00D7 4 is 14, doubled = 28."},
-    5:{head:"Count by fives \u2014 answers end in 5 or 0",
-       body:"Every answer in the fives ends in 5 or 0. Or take ten groups and cut it in half.",
-       ex:"Example: 8 \u00D7 5 is half of 80 = 40."},
-    6:{head:"Five groups, plus one more group",
-       body:"Take the fives answer you already know and add the number one more time.",
-       ex:"Example: 7 \u00D7 6 is 35 + 7 = 42."},
-    7:{head:"Five groups, plus two more groups",
-       body:"Take the fives answer and add double the number. The sevens are the hardest set \u2014 go slow.",
-       ex:"Example: 6 \u00D7 7 is 30 + 12 = 42."},
-    8:{head:"Double, double, double",
-       body:"Eight is two, doubled, doubled. Another way: ten groups minus two groups.",
-       ex:"Example: 7 \u00D7 8 is 14, then 28, then 56."},
-    9:{head:"Ten groups, minus one group",
-       body:"Multiply by 10 first, then subtract the number once. The two digits of every answer add up to 9.",
-       ex:"Example: 7 \u00D7 9 is 70 \u2212 7 = 63, and 6 + 3 = 9."},
-    10:{head:"Multiplying by 10 puts a 0 on the end",
-       body:"Every digit moves up one place, so the answer is the number with a zero after it.",
-       ex:"Example: 7 \u00D7 10 = 70."},
-    11:{head:"Small numbers repeat the digit",
-       body:"For 1 through 9, the answer is that digit written twice.",
-       ex:"Example: 7 \u00D7 11 = 77."},
-    12:{head:"Ten groups, plus two more groups",
-       body:"Multiply by 10, then add double the number.",
-       ex:"Example: 7 \u00D7 12 is 70 + 14 = 84."},
-    mix01:{head:"Two rules at once",
-       body:"Any number \u00D7 0 is 0. Any number \u00D7 1 stays the same. Look carefully \u2014 they are mixed together.",
-       ex:"Watch out for 0 \u00D7 0 and 1 \u00D7 1."},
-    mixall:{head:"Everything mixed together",
-       body:"Problems come from all the tables, 0 through 12, in random order.",
-       ex:"Take your time on the sevens and eights."}
+    0:{h:"Any number \u00D7 0 = 0",b:"Multiplying by 0 means there is nothing to count. The answer is always 0, no matter how big the other number is."},
+    1:{h:"Any number \u00D7 1 = that same number",b:"One group of a number is just that number. Whatever goes in comes right back out."},
+    2:{h:"Multiplying by 2 means doubling",b:"Add the number to itself. If you can add it twice, you already know the answer."},
+    3:{h:"Double it, then add one more group",b:"Three groups is two groups plus one. Double the number, then add the number again."},
+    4:{h:"Double it, then double it again",b:"Four is two twos. Double the number once, then double your answer."},
+    5:{h:"Count by fives \u2014 answers end in 5 or 0",b:"Every answer in the fives ends in 5 or 0. Or take ten groups and cut it in half."},
+    6:{h:"Five groups, plus one more group",b:"Take the fives answer you already know and add the number one more time."},
+    7:{h:"Five groups, plus two more groups",b:"Take the fives answer and add double the number. The sevens are the hardest set \u2014 go slow."},
+    8:{h:"Double, double, double",b:"Eight is two, doubled, doubled. Another way: ten groups minus two groups."},
+    9:{h:"Ten groups, minus one group",b:"Multiply by 10, then subtract the number once. The two digits of every answer add up to 9."},
+    10:{h:"Multiplying by 10 puts a 0 on the end",b:"Every digit moves up one place, so the answer is the number with a zero after it."},
+    11:{h:"Small numbers repeat the digit",b:"For 1 through 9, the answer is that digit written twice."},
+    12:{h:"Ten groups, plus two more groups",b:"Multiply by 10, then add double the number."},
+    mixall:{h:"Everything mixed together",b:"Problems come from all the tables, 0 through 12, in random order."}
   };
 
-  var el = function(id){ return document.getElementById(id); };
+  var PRACTICE_LEN = 12, TEST_LEN = 20;
+
+  var mem = {};
+  var store = {
+    get:function(k){ try{ return localStorage.getItem(k); }catch(e){ return mem[k] || null; } },
+    set:function(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k]=v; } },
+    clear:function(k){ try{ localStorage.removeItem(k); }catch(e){ delete mem[k]; } }
+  };
+
+  var el=function(id){return document.getElementById(id);};
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var state = {name:"", table:1, length:10, problems:[], idx:0, correct:0,
-               streak:0, best:0, misses:[], answered:false, start:0, sound:false};
+  var S = {name:"", table:2, mode:"practice", problems:[], idx:0, correct:0, streak:0,
+           best:0, misses:[], answered:false, start:0, retry:false};
 
-  function label(t){
-    return t === "mix01" ? "0s & 1s" : t === "mixall" ? "All mixed" : "The " + t + "s";
-  }
+  function label(t){ return t==="mixall" ? "All mixed" : "The " + t + "s"; }
   function theme(t){
-    var c = COLORS[t];
-    document.documentElement.style.setProperty("--theme", c);
-    document.documentElement.style.setProperty("--theme-soft", c + "22");
-    document.documentElement.style.setProperty("--on-theme", DARK_TEXT[t] ? "#22243B" : "#FFFFFF");
+    var c = COLORS[t] || "#0EA5A5", r = document.documentElement.style;
+    r.setProperty("--theme", c);
+    r.setProperty("--theme-soft", c + "1A");
   }
-
-  /* ---- start screen ---- */
-  var tablesBox = el("tables"), opts = [];
-  for (var n = 0; n <= 12; n++) opts.push({v:n, label:n + "s"});
-  opts.push({v:"mix01", label:"0s & 1s", wide:true});
-  opts.push({v:"mixall", label:"All mixed", wide:true});
-  opts.forEach(function(o){
-    var b = document.createElement("button");
-    b.className = "chip" + (o.wide ? " wide" : "");
-    b.textContent = o.label;
-    b.style.background = COLORS[o.v];
-    if (DARK_TEXT[o.v]) b.style.color = "#22243B";
-    b.setAttribute("aria-pressed", o.v === 1 ? "true" : "false");
-    b.onclick = function(){
-      state.table = o.v;
-      theme(o.v);
-      Array.prototype.forEach.call(tablesBox.children, function(c){ c.setAttribute("aria-pressed","false"); });
-      b.setAttribute("aria-pressed","true");
-    };
-    tablesBox.appendChild(b);
-  });
-
-  var lengthsBox = el("lengths");
-  [10,20,30,50].forEach(function(v,i){
-    var b = document.createElement("button");
-    b.className = "chip wide";
-    b.textContent = v;
-    b.style.background = "#22243B";
-    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
-    b.onclick = function(){
-      state.length = v;
-      Array.prototype.forEach.call(lengthsBox.children, function(c){ c.setAttribute("aria-pressed","false"); });
-      b.setAttribute("aria-pressed","true");
-    };
-    lengthsBox.appendChild(b);
-  });
-
-  /* ---- sound ---- */
-  var ac = null;
-  function beep(freq, dur){
-    if (!state.sound) return;
-    try{
-      if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
-      var o = ac.createOscillator(), g = ac.createGain();
-      o.type = "sine"; o.frequency.value = freq;
-      g.gain.setValueAtTime(.09, ac.currentTime);
-      g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + dur);
-      o.connect(g); g.connect(ac.destination);
-      o.start(); o.stop(ac.currentTime + dur);
-    }catch(e){}
-  }
-  el("soundBtn").onclick = function(){
-    state.sound = !state.sound;
-    this.textContent = "Sound: " + (state.sound ? "on" : "off");
-    this.setAttribute("aria-pressed", state.sound ? "true" : "false");
-    if (state.sound) beep(880,.12);
-  };
-
-  /* ---- confetti ---- */
-  function burst(){
-    if (reduced) return;
-    var box = el("confetti"), pal = ["#EF476F","#FFC300","#8AC926","#06AED5","#7B4BFF","#F77F00"];
-    for (var i = 0; i < 16; i++){
-      var b = document.createElement("div");
-      b.className = "bit";
-      b.style.background = pal[i % pal.length];
-      b.style.left = (18 + Math.random() * 64) + "%";
-      b.style.top = (26 + Math.random() * 22) + "%";
-      b.style.animationDelay = (Math.random() * .12) + "s";
-      box.appendChild(b);
-      (function(node){ setTimeout(function(){ node.remove(); }, 1200); })(b);
-    }
-  }
-
-  /* ---- problems ---- */
-  function shuffle(a){
-    for (var i = a.length - 1; i > 0; i--){
-      var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
-  function build(){
-    var list = [], i, n;
-    if (state.table === "mix01"){
-      for (i = 0; i <= 12; i++){ list.push([i,0],[0,i],[i,1],[1,i]); }
-    } else if (state.table === "mixall"){
-      for (n = 0; n <= 12; n++) for (i = 0; i <= 12; i++) list.push([n,i]);
-    } else {
-      n = state.table;
-      for (i = 0; i <= 12; i++){ list.push([n,i],[i,n]); }
-    }
-    shuffle(list);
-    var out = [];
-    while (out.length < state.length) out = out.concat(list);
-    state.problems = out.slice(0, state.length);
-  }
-
   function show(id){
-    ["start","ruleScreen","quiz","done"].forEach(function(s){
+    ["welcome","menu","hub","quiz","done"].forEach(function(s){
       el(s).classList.toggle("hidden", s !== id);
     });
+    window.scrollTo(0,0);
+  }
+  function shuffle(a){
+    for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t; }
+    return a;
+  }
+  function burst(){
+    if (reduced) return;
+    var box=el("confetti"), pal=["#EF476F","#FFC300","#8AC926","#06AED5","#7B4BFF","#F77F00"];
+    for (var i=0;i<16;i++){
+      var b=document.createElement("div");
+      b.className="bit"; b.style.background=pal[i%pal.length];
+      b.style.left=(18+Math.random()*64)+"%"; b.style.top=(24+Math.random()*24)+"%";
+      b.style.animationDelay=(Math.random()*.12)+"s";
+      box.appendChild(b);
+      (function(n){ setTimeout(function(){ n.remove(); },1200); })(b);
+    }
   }
 
-  el("go").onclick = function(){
-    state.name = el("name").value.trim();
-    theme(state.table);
-    build();
-    var r = RULES[state.table];
-    el("ruleTitle").textContent = state.name ? ("Ready, " + state.name + "?") : label(state.table);
-    el("ruleHead").textContent = r.head;
-    el("ruleBody").textContent = r.body;
-    el("ruleExample").textContent = r.ex;
-    el("peekHead").textContent = r.head;
-    el("peekBody").textContent = r.body;
-    show("ruleScreen");
-  };
-  el("ruleGo").onclick = function(){ beginRun(); };
-  el("hintPeek").onclick = function(){
-    var p = el("peek"), hidden = p.classList.toggle("hidden");
-    this.textContent = hidden ? "Show the rule" : "Hide the rule";
-  };
+  /* ---------- welcome ---------- */
+  (function(){
+    var box=el("bubbles");
+    for (var i=0;i<=9;i++){
+      var b=document.createElement("div");
+      b.className="bubble"; b.textContent=i;
+      b.style.background=COLORS[i];
+      b.style.animationDelay=(i*0.13)+"s";
+      b.setAttribute("aria-hidden","true");
+      box.appendChild(b);
+    }
+  })();
 
-  function beginRun(){
-    state.idx = 0; state.correct = 0; state.streak = 0; state.best = 0;
-    state.misses = []; state.start = Date.now();
-    el("quizTitle").textContent = label(state.table);
-    show("quiz");
-    render();
+  function enterApp(){
+    var v = el("name").value.trim();
+    if (!v){ el("name").focus(); return; }
+    S.name = v.charAt(0).toUpperCase() + v.slice(1);
+    store.set("tt_name", S.name);
+    openMenu();
+  }
+  el("enter").onclick = enterApp;
+  el("name").addEventListener("keydown", function(e){ if (e.key==="Enter") enterApp(); });
+
+  /* ---------- menu ---------- */
+  var tiles = el("tiles");
+  for (var n=0;n<=12;n++){
+    (function(num){
+      var b=document.createElement("button");
+      b.className="tile"; b.style.background=COLORS[num]; b.textContent=num;
+      b.setAttribute("aria-label","Practice the "+num+"s");
+      b.onclick=function(){ openHub(num); };
+      tiles.appendChild(b);
+    })(n);
+  }
+  var mix=document.createElement("button");
+  mix.className="tile wide"; mix.style.background=COLORS.mixall; mix.textContent="All mixed";
+  mix.onclick=function(){ openHub("mixall"); };
+  tiles.appendChild(mix);
+
+  function openMenu(){
+    el("hello").textContent = S.name ? ("Hi, " + S.name + "!") : "Pick a number";
+    theme(2); show("menu");
   }
 
+  /* ---------- mode ---------- */
+  function openHub(t){
+    S.table=t; theme(t);
+    el("hubTitle").textContent=label(t);
+    el("hubRuleHead").textContent=RULES[t].h;
+    el("hubRuleBody").textContent=RULES[t].b;
+    show("hub");
+  }
+  el("toPractice").onclick=function(){ start("practice"); };
+  el("toTest").onclick=function(){ start("test"); };
+
+  /* ---------- problems ---------- */
+  function build(len){
+    var list=[], i, n;
+    if (S.table==="mixall"){
+      for (n=0;n<=12;n++) for (i=0;i<=12;i++) list.push([n,i]);
+    } else {
+      n=S.table;
+      for (i=0;i<=12;i++){ list.push([n,i]); list.push([i,n]); }
+    }
+    shuffle(list);
+    var out=[];
+    while (out.length<len) out=out.concat(list);
+    S.problems=out.slice(0,len);
+  }
+  function start(mode){
+    S.mode=mode;
+    build(mode==="test" ? TEST_LEN : PRACTICE_LEN);
+    run();
+  }
+  function run(){
+    S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.retry=false;
+    el("quizTitle").textContent=label(S.table);
+    el("modeBadge").textContent = S.mode==="test" ? "Test" : "Practice";
+    el("peekBtn").classList.toggle("hidden", S.mode==="test");
+    el("peek").classList.add("hidden");
+    el("peekBtn").textContent="Show the rule";
+    el("peekHead").textContent=RULES[S.table].h;
+    el("peekBody").textContent=RULES[S.table].b;
+    show("quiz"); render();
+  }
   function render(){
-    var p = state.problems[state.idx];
-    state.answered = false;
-    el("top").textContent = p[0];
-    el("bottom").textContent = p[1];
-    el("counter").textContent = "Problem " + (state.idx + 1) + " of " + state.problems.length;
-    el("streak").textContent = "Streak: " + state.streak;
-    el("fill").style.width = (state.idx / state.problems.length * 100) + "%";
-    el("verdict").textContent = ""; el("verdict").className = "verdict";
-    el("enterKey").textContent = "Check";
-    var a = el("answer");
-    a.value = ""; a.className = "answer"; a.readOnly = false; a.focus();
+    var p=S.problems[S.idx];
+    S.answered=false;
+    el("teach").classList.add("hidden");
+    el("askWrap").classList.remove("hidden");
+    el("top").textContent=p[0];
+    el("bottom").textContent=p[1];
+    el("counter").textContent="Problem "+(S.idx+1)+" of "+S.problems.length;
+    el("fill").style.width=(S.idx/S.problems.length*100)+"%";
+    el("verdict").textContent=""; el("verdict").className="verdict";
+    el("enterKey").textContent="Check";
+    var a=el("answer"); a.value=""; a.className="answer"; a.readOnly=false; a.focus();
   }
 
+  /* ---------- the teaching panel ---------- */
+  function teach(groups, size, wrongAnswer){
+    var product = groups * size, i, j;
+    el("teachTitle").textContent = "Let's work it out";
+    el("teachSaid").textContent = wrongAnswer !== "" ?
+      ("You wrote " + wrongAnswer + ". Here is how this one works.") :
+      "Here is how this one works.";
+
+    el("teachGroups").textContent =
+      groups + " \u00D7 " + size + " means " + groups + " group" + (groups===1?"":"s") +
+      " of " + size + ".";
+
+    var box = el("groupBox");
+    box.innerHTML = "";
+    var drawable = groups >= 1 && groups <= 8 && size <= 12 && product <= 72;
+
+    if (groups === 0){
+      box.innerHTML = '<div class="group empty" style="min-width:200px">no groups at all</div>';
+    } else if (drawable){
+      for (i=0;i<groups;i++){
+        var g=document.createElement("div");
+        if (size === 0){
+          g.className="group empty"; g.textContent="0";
+        } else {
+          g.className="group";
+          g.style.gridTemplateColumns="repeat("+Math.min(size,4)+",16px)";
+          for (j=0;j<size;j++){
+            var d=document.createElement("div"); d.className="dot"; g.appendChild(d);
+          }
+        }
+        box.appendChild(g);
+      }
+    }
+
+    /* the addition or skip-count line */
+    var addLine;
+    if (groups === 0 || size === 0){
+      addLine = "Nothing to add. The answer is 0.";
+    } else if (groups <= 6){
+      var parts=[];
+      for (i=0;i<groups;i++) parts.push(size);
+      addLine = parts.join(" + ") + " = " + product;
+    } else {
+      var chain=[];
+      for (i=1;i<=groups;i++) chain.push(size*i);
+      addLine = "Count by " + size + "s: " + chain.join(", ");
+    }
+    el("teachAdd").textContent = addLine;
+    el("teachAnswer").innerHTML = "<span style='color:var(--right)'>" +
+      groups + " \u00D7 " + size + " = " + product + "</span>";
+
+    el("askWrap").classList.add("hidden");
+    el("teach").classList.remove("hidden");
+    el("tryAgain").focus();
+  }
+
+  el("tryAgain").onclick=function(){
+    S.retry = true;
+    el("teach").classList.add("hidden");
+    el("askWrap").classList.remove("hidden");
+    S.answered=false;
+    var a=el("answer"); a.value=""; a.className="answer"; a.readOnly=false;
+    el("verdict").textContent="Now you try it."; el("verdict").className="verdict";
+    el("enterKey").textContent="Check";
+    a.focus();
+  };
+
+  /* ---------- checking ---------- */
   function check(){
-    var a = el("answer"), raw = a.value.trim();
-    if (raw === ""){ a.focus(); return; }
-    var p = state.problems[state.idx], right = p[0] * p[1];
-    var ok = Number(raw) === right;
-    state.answered = true; a.readOnly = true;
+    var a=el("answer"), raw=a.value.trim();
+    if (raw===""){ a.focus(); return; }
+    var p=S.problems[S.idx], right=p[0]*p[1], ok=Number(raw)===right;
+
+    if (S.mode==="test"){
+      S.answered=true; a.readOnly=true;
+      if (ok){ S.correct++; S.streak++; if (S.streak>S.best) S.best=S.streak; }
+      else { S.streak=0; S.misses.push(p[0]+"\u00D7"+p[1]); }
+      setTimeout(next,120);
+      return;
+    }
 
     if (ok){
-      state.correct++; state.streak++;
-      if (state.streak > state.best) state.best = state.streak;
-      a.className = "answer ok pop";
-      el("verdict").textContent = state.streak >= 5 ? (state.streak + " in a row!") : "Correct";
-      el("verdict").className = "verdict ok";
-      beep(880,.14);
-      if (state.streak > 0 && state.streak % 5 === 0) burst();
-      setTimeout(next, 600);
+      S.answered=true; a.readOnly=true;
+      if (!S.retry){
+        S.correct++; S.streak++;
+        if (S.streak>S.best) S.best=S.streak;
+      }
+      a.className="answer ok pop";
+      el("verdict").textContent = S.retry ? "That's it! Now you've got it."
+        : (S.streak>=5 ? (S.streak+" in a row!") : "Correct");
+      el("verdict").className="verdict ok";
+      if (!S.retry && S.streak % 5 === 0) burst();
+      setTimeout(next,700);
     } else {
-      state.streak = 0;
-      state.misses.push(p[0] + "\u00D7" + p[1]);
-      a.className = "answer no shake";
-      el("verdict").textContent = p[0] + " \u00D7 " + p[1] + " = " + right;
-      el("verdict").className = "verdict no";
-      el("enterKey").textContent = "Next";
-      beep(220,.2);
+      if (!S.retry){
+        S.streak=0;
+        S.misses.push(p[0]+"\u00D7"+p[1]);
+        if (S.problems.length - S.idx < 3) S.problems.push([p[0],p[1]]);
+      }
+      a.className="answer no shake";
+      var wrong = raw;
+      setTimeout(function(){ teach(p[0], p[1], wrong); }, 450);
     }
-    el("streak").textContent = "Streak: " + state.streak;
   }
-
   function next(){
-    state.idx++;
-    if (state.idx >= state.problems.length) finish();
-    else render();
+    S.retry=false; S.idx++;
+    if (S.idx>=S.problems.length) finish(); else render();
   }
 
+  /* ---------- results ---------- */
   function finish(){
-    var total = state.problems.length;
-    var secs = Math.round((Date.now() - state.start) / 1000);
-    var mins = Math.floor(secs / 60), rem = secs % 60;
-    var timeStr = mins ? (mins + " min " + rem + " sec") : (secs + " sec");
-    var pct = Math.round(state.correct / total * 100);
-    var stars = pct >= 90 ? 3 : pct >= 70 ? 2 : 1;
+    var total=S.problems.length;
+    var secs=Math.round((Date.now()-S.start)/1000);
+    var mins=Math.floor(secs/60), rem=secs%60;
+    var timeStr = mins ? (mins+" min "+rem+" sec") : (secs+" sec");
+    var pct=Math.round(S.correct/total*100);
+    var stars = pct>=90?3:pct>=70?2:1;
 
-    el("doneTitle").textContent = pct === 100 ? "Perfect score!"
-      : pct >= 80 ? (state.name ? ("Nice work, " + state.name + "!") : "Nice work!")
-      : "Good effort \u2014 keep going";
-    el("stars").innerHTML = [0,1,2].map(function(i){
-      return i < stars ? "\u2605" : '<span class="off">\u2605</span>';
+    el("doneTitle").textContent = S.name
+      ? (pct===100 ? ("Perfect, "+S.name+"!") : ("You're finished, "+S.name+"!"))
+      : "You're finished!";
+    el("stars").innerHTML=[0,1,2].map(function(i){
+      return i<stars ? "\u2605" : '<span class="off">\u2605</span>';
     }).join("");
-    el("finalScore").textContent = state.correct + " / " + total;
-    el("doneDetail").textContent = pct + "% correct \u00B7 " + timeStr + " \u00B7 longest streak " + state.best;
+    el("finalScore").textContent=S.correct+" / "+total;
+    el("doneDetail").textContent=(S.mode==="test"?"Test":"Practice")+" \u00B7 "+
+      pct+"% correct \u00B7 "+timeStr+" \u00B7 longest streak "+S.best;
 
-    var seen = {}, uniq = [];
-    state.misses.forEach(function(m){ if (!seen[m]){ seen[m] = 1; uniq.push(m); } });
-    var list = el("missList"); list.innerHTML = "";
+    var seen={}, uniq=[];
+    S.misses.forEach(function(m){ if(!seen[m]){seen[m]=1;uniq.push(m);} });
+    var list=el("missList"); list.innerHTML="";
     if (uniq.length){
       uniq.forEach(function(m){
-        var parts = m.split("\u00D7");
-        var li = document.createElement("li");
-        li.textContent = parts[0] + " \u00D7 " + parts[1] + " = " + (Number(parts[0]) * Number(parts[1]));
+        var q=m.split("\u00D7"), li=document.createElement("li");
+        li.textContent=q[0]+" \u00D7 "+q[1]+" = "+(Number(q[0])*Number(q[1]));
         list.appendChild(li);
       });
       el("missWrap").classList.remove("hidden");
-      el("againMissed").classList.remove("hidden");
     } else {
       el("missWrap").classList.add("hidden");
-      el("againMissed").classList.add("hidden");
-      if (pct === 100) burst();
+      burst();
     }
     show("done");
   }
 
+  /* ---------- input ---------- */
   el("answer").addEventListener("keydown", function(e){
-    if (e.key === "Enter"){ e.preventDefault(); state.answered ? next() : check(); }
+    if (e.key==="Enter"){ e.preventDefault(); if (S.answered) next(); else check(); }
   });
   el("pad").addEventListener("click", function(e){
-    var b = e.target.closest("button"); if (!b) return;
-    var a = el("answer"), act = b.getAttribute("data-act");
-    if (act === "enter"){ state.answered ? next() : check(); return; }
-    if (state.answered) return;
-    if (act === "del") a.value = a.value.slice(0, -1);
-    else if (a.value.length < 4) a.value += b.textContent;
+    var b=e.target.closest("button"); if(!b) return;
+    var a=el("answer"), act=b.getAttribute("data-act");
+    if (act==="enter"){ if (S.answered) next(); else check(); return; }
+    if (S.answered) return;
+    if (act==="del") a.value=a.value.slice(0,-1);
+    else if (a.value.length<4) a.value+=b.textContent;
     a.focus();
   });
-
-  el("againSame").onclick = function(){ shuffle(state.problems); beginRun(); };
-  el("restart").onclick = function(){ show("start"); };
-  el("againMissed").onclick = function(){
-    var seen = {}, redo = [];
-    state.misses.forEach(function(m){
-      if (seen[m]) return; seen[m] = 1;
-      var p = m.split("\u00D7");
-      redo.push([Number(p[0]), Number(p[1])]);
-    });
-    if (!redo.length) return;
-    var target = Math.max(10, redo.length * 2), set = [];
-    while (set.length < target) set = set.concat(redo);
-    state.problems = shuffle(set.slice(0, target));
-    beginRun();
+  el("peekBtn").onclick=function(){
+    var hidden=el("peek").classList.toggle("hidden");
+    this.textContent = hidden ? "Show the rule" : "Hide the rule";
   };
 
-  theme(1);
+  /* ---------- navigation ---------- */
+  el("repeat").onclick=function(){ start(S.mode); };
+  el("backHub").onclick=function(){ openHub(S.table); };
+  el("allDone").onclick=function(){ signOut(); };
+  el("signOut").onclick=function(){ signOut(); };
+  function signOut(){
+    store.clear("tt_name"); S.name="";
+    el("name").value=""; show("welcome"); el("name").focus();
+  }
+  document.addEventListener("click", function(e){
+    var b=e.target.closest("[data-go]"); if(!b) return;
+    if (b.getAttribute("data-go")==="menu") openMenu();
+  });
+
+  /* ---------- boot ---------- */
+  var saved=store.get("tt_name");
+  if (saved){ S.name=saved; el("name").value=saved; openMenu(); }
+  else show("welcome");
+  theme(2);
 })();
 </script>
 </body>
