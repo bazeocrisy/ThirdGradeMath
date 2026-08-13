@@ -70,6 +70,18 @@
   .btn:hover{filter:brightness(1.06)}
   .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--navy)}
   .btn.quiet{background:#fff;color:var(--navy)}
+  .btn.fix{background:var(--teal);color:var(--navy);box-shadow:0 5px 0 #0E9B98}
+  .btn.fix:hover{background:var(--cyan)}
+  .btn.fix:active{box-shadow:0 1px 0 #0E9B98}
+  .btn.ghost{background:transparent;color:var(--ink-soft);border-color:var(--line);
+    box-shadow:none;font-size:17px;padding:12px 18px}
+  .btn.ghost:hover{background:var(--sky);color:var(--navy)}
+  .btn.ghost:active{transform:translateY(2px)}
+  .perfect{text-align:center;font-family:var(--display);font-size:19px;font-weight:bold;
+    color:var(--right);background:var(--right-bg);border:3px dashed var(--right);
+    border-radius:16px;padding:12px 14px;margin:14px 0 4px}
+  .orig{text-align:center;font-size:13px;font-weight:bold;color:var(--ink-soft);
+    background:var(--sky);border-radius:12px;padding:9px 12px;margin:12px 0 2px}
   .btn.go{background:var(--orange);color:var(--navy)}
   .btn.block{width:100%;margin-top:12px}
   .btn:focus-visible,.tile:focus-visible,input:focus-visible,.key:focus-visible,
@@ -164,8 +176,9 @@
     background:#fff;border-radius:12px;padding:12px 10px;margin-bottom:6px;
     word-break:break-word;line-height:1.5}
   /* ---------- results ---------- */
-  .stars{font-size:44px;letter-spacing:6px;color:var(--yellow);text-align:center;margin:6px 0}
-  .stars .off{color:var(--line)}
+  .stars{font-size:44px;letter-spacing:6px;color:var(--yellow);text-align:center;margin:6px 0;
+    filter:drop-shadow(0 2px 0 rgba(11,31,91,.18))}
+  .stars .off{color:#C9D9EC;filter:none}
   .score{font-family:var(--display);font-size:52px;font-weight:bold;text-align:center;margin:0 0 4px}
   .misslist{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:9px}
   .misslist li{background:var(--wrong-bg);border:3px solid var(--wrong);color:var(--wrong);
@@ -177,8 +190,8 @@
   .foot .brandline b{color:var(--yellow)}
   .foot .credit{display:inline-block;margin-top:4px;font-family:var(--display);
     font-size:13px;color:var(--cyan)}
-  .foot .build{display:inline-block;margin-top:5px;font-family:var(--ui);
-    font-size:11px;letter-spacing:.06em;color:#8FB2DA}
+  .foot .build{display:inline-block;margin-top:6px;font-family:var(--ui);
+    font-size:9px;letter-spacing:.08em;color:#4E6E9E}
   .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9}
   .bit{position:absolute;width:11px;height:16px;border-radius:3px;animation:fall 1s ease-out forwards}
   @keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1}
@@ -257,6 +270,11 @@
     .key{padding:12px 0;font-size:21px}
     .key.word,.key.go{font-size:15px}
     .track{height:13px;margin-bottom:11px}
+    /* results screen: trim chrome, keep the score dominant */
+    .stars{font-size:36px;margin:2px 0}
+    .score{font-size:46px}
+    #done .btn.block{margin-top:9px}
+    .perfect{font-size:17px;padding:10px 12px;margin:11px 0 2px}
     #quiz .btn.block[data-go]{margin-top:10px;padding:11px 16px;font-size:15px;
       background:transparent;box-shadow:none;border-width:2px}
   }
@@ -362,21 +380,24 @@
     <div class="stars" id="stars"></div>
     <div class="score" id="finalScore"></div>
     <p class="sub center" id="doneDetail"></p>
+    <p class="perfect hidden" id="perfectNote">Perfect mission &mdash; no facts to fix! &#128640;</p>
+    <p class="orig hidden" id="origNote"></p>
     <div id="missWrap" class="hidden">
       <label>Practice these again</label>
       <ul class="misslist" id="missList"></ul>
+      <button class="btn block fix" id="fixBtn">Practice My Misses</button>
     </div>
-    <button class="btn block" id="repeat">Do it again</button>
-    <button class="btn block quiet" id="backHub">Back to this number</button>
-    <button class="btn block quiet" data-go="menu">Pick a different number</button>
-    <button class="btn block quiet" id="allDone">I'm all done</button>
+    <button class="btn block" id="repeat">&#128640; Try This Mission Again</button>
+    <button class="btn block quiet" id="practiceNum">Practice the 1s</button>
+    <button class="btn block quiet" data-go="menu">Pick a Different Number</button>
+    <button class="btn block ghost" id="allDone">I'm All Done</button>
   </section>
 
   <p class="foot">
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build">Build 6 &middot; 2026-08-13</span>
+    <span class="build" title="build version">b7 &middot; 2026-08-13</span>
   </p>
 </div>
 
@@ -436,7 +457,8 @@
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var TOUCH = window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
   var S = {name:"", table:2, mode:"practice", problems:[], idx:0, correct:0, streak:0,
-           best:0, misses:[], answered:false, start:0, retry:false};
+           best:0, misses:[], answered:false, start:0, retry:false, fix:false, fixPool:[]};
+  var LAST = null;   /* snapshot of the last full mission — fix-it rounds never overwrite it */
 
   /* if the logo file is missing, fall back to a text wordmark */
   el("logo").onerror = function(){
@@ -551,14 +573,14 @@
     S.problems=out.slice(0,len);
   }
   function start(mode){
-    S.mode=mode;
+    S.mode=mode; S.fix=false;
     build(mode==="test" ? TEST_LEN : PRACTICE_LEN);
     run();
   }
   function run(){
     S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.retry=false;
     el("quizTitle").textContent=label(S.table);
-    el("modeBadge").textContent = S.mode==="test" ? "Test" : "Practice";
+    el("modeBadge").textContent = S.fix ? "Fix-it round" : (S.mode==="test" ? "Test" : "Practice");
     el("peekBtn").classList.toggle("hidden", S.mode==="test");
     el("peek").classList.add("hidden");
     el("peekBtn").textContent="Need a hint?";
@@ -687,26 +709,55 @@
   }
 
   /* ---------- results ---------- */
+  function starCount(pct){ return pct>=90 ? 3 : pct>=75 ? 2 : 1; }
+
   function finish(){
     var total=S.problems.length;
     var secs=Math.round((Date.now()-S.start)/1000);
     var mins=Math.floor(secs/60), rem=secs%60;
     var timeStr = mins ? (mins+" min "+rem+" sec") : (secs+" sec");
     var pct=Math.round(S.correct/total*100);
-    var stars = pct>=90?3:pct>=70?2:1;
+    var stars=starCount(pct);
+    var isFix = S.fix;
 
-    el("doneTitle").textContent = S.name
-      ? (pct===100 ? ("Perfect, "+S.name+"!") : ("Mission complete, "+S.name+"!"))
-      : "Mission complete!";
+    /* headline — always uses the name the student typed in, never a fixed name */
+    if (isFix){
+      el("doneTitle").textContent = S.name ? ("Fix-it round done, "+S.name+"!") : "Fix-it round done!";
+    } else {
+      el("doneTitle").textContent = S.name
+        ? (pct===100 ? ("Perfect, "+S.name+"!") : ("Mission complete, "+S.name+"!"))
+        : (pct===100 ? "Perfect mission!" : "Mission complete!");
+    }
+
     el("stars").innerHTML=[0,1,2].map(function(i){
-      return i<stars ? "\u2605" : '<span class="off">\u2605</span>';
+      return i<stars ? "\u2605" : '<span class="off">\u2606</span>';
     }).join("");
     el("finalScore").textContent=S.correct+" / "+total;
-    el("doneDetail").textContent=(S.mode==="test"?"Test":"Practice")+" \u00B7 "+
-      pct+"% correct \u00B7 "+timeStr+" \u00B7 longest streak "+S.best;
 
+    var modeName = isFix ? "Fix-it round" : (S.mode==="test" ? "Test" : "Practice");
+    el("doneDetail").textContent = modeName+" \u00B7 "+pct+"% correct \u00B7 "+timeStr+
+      " \u00B7 Longest streak: "+S.best+(S.best>=3 ? " \uD83D\uDD25" : "");
+
+    /* unique missed facts from this round */
     var seen={}, uniq=[];
     S.misses.forEach(function(m){ if(!seen[m]){seen[m]=1;uniq.push(m);} });
+
+    /* the original mission result is captured once and never overwritten by a fix-it round */
+    if (!isFix){
+      LAST = {mode:S.mode, table:S.table, correct:S.correct, total:total,
+              pct:pct, timeStr:timeStr, best:S.best};
+      el("origNote").classList.add("hidden");
+    } else if (LAST){
+      el("origNote").textContent = "Your mission score is still "+LAST.correct+" / "+LAST.total+
+        " ("+LAST.pct+"%) on the "+(LAST.table==="mixall" ? "mixed facts" : LAST.table+"s")+".";
+      el("origNote").classList.remove("hidden");
+    }
+
+    /* facts to fix next */
+    S.fixPool = uniq.map(function(m){
+      var q=m.split("\u00D7"); return [Number(q[0]), Number(q[1])];
+    });
+
     var list=el("missList"); list.innerHTML="";
     if (uniq.length){
       uniq.forEach(function(m){
@@ -715,11 +766,28 @@
         list.appendChild(li);
       });
       el("missWrap").classList.remove("hidden");
+      el("perfectNote").classList.add("hidden");
     } else {
       el("missWrap").classList.add("hidden");
+      el("perfectNote").classList.remove("hidden");
       burst();
     }
+
+    el("practiceNum").textContent = "Practice the " +
+      (S.table==="mixall" ? "mixed facts" : S.table+"s");
     show("done");
+  }
+
+  /* short remediation round built only from the facts just missed */
+  function startMisses(){
+    var pool = S.fixPool || [];
+    if (!pool.length) return;                 /* never launch an empty round */
+    var target = Math.min(20, Math.max(4, pool.length*2));
+    var set=[];
+    while (set.length < target) set = set.concat(pool);
+    S.problems = shuffle(set.slice(0,target).map(function(p){ return [p[0],p[1]]; }));
+    S.mode="practice"; S.fix=true;
+    run();
   }
 
   /* ---------- input ---------- */
@@ -741,8 +809,9 @@
   };
 
   /* ---------- navigation ---------- */
-  el("repeat").onclick=function(){ start(S.mode); };
-  el("backHub").onclick=function(){ openHub(S.table); };
+  el("repeat").onclick=function(){ start(LAST ? LAST.mode : S.mode); };
+  el("practiceNum").onclick=function(){ start("practice"); };
+  el("fixBtn").onclick=function(){ startMisses(); };
   el("allDone").onclick=function(){ signOut(); };
   el("signOut").onclick=function(){ signOut(); };
   function signOut(){
