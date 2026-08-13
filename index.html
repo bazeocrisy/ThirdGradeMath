@@ -7,17 +7,21 @@
 <style>
   :root{
     --theme:#0EA5A5; --theme-soft:#E6F7F7; --on-theme:#fff;
-    --paper:#FFFDF8; --ink:#22243B; --ink-soft:#6A6E90; --line:#DFE0EE;
+    --paper:#E8F3F7; --card:#FFFCF3; --ink:#22243B; --ink-soft:#6A6E90; --line:#DFE0EE;
     --right:#12A150; --right-bg:#E6F8EE; --wrong:#E5484D; --wrong-bg:#FDEBEB;
     --display:"Trebuchet MS","Segoe UI",Verdana,sans-serif;
     --ui:Verdana,Geneva,"DejaVu Sans",sans-serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{background:var(--paper);color:var(--ink);font-family:var(--ui);
+  body{background:var(--paper);
+    background-image:radial-gradient(#FFFFFF66 2.5px, transparent 3px),
+                     linear-gradient(170deg,#E8F3F7 0%,#EDEBFA 55%,#FDF1E7 100%);
+    background-size:26px 26px, 100% 100%;
+    color:var(--ink);font-family:var(--ui);
     min-height:100vh;display:flex;justify-content:center;padding:16px 12px 34px}
   .shell{width:100%;max-width:640px}
-  .card{background:#fff;border:3px solid var(--ink);border-radius:22px;
+  .card{background:var(--card);border:3px solid var(--ink);border-radius:22px;
     box-shadow:0 8px 0 rgba(34,36,59,.15);padding:20px;overflow:hidden}
   .banner{background:var(--theme);color:var(--on-theme);margin:-20px -20px 18px;
     padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -52,6 +56,8 @@
   .hint{background:var(--theme-soft);border:3px dashed var(--theme);
     border-radius:18px;padding:16px 18px}
   .hint b{display:block;font-family:var(--display);font-size:20px;margin-bottom:6px}
+  .example{margin-top:12px;background:#fff;border-radius:12px;padding:11px 13px;
+    font-family:var(--display);font-size:18px;font-weight:bold;line-height:1.5}
   .bar{display:flex;justify-content:space-between;align-items:center;gap:10px;
     font-size:13px;font-weight:bold;color:var(--ink-soft);margin-bottom:10px}
   .link{cursor:pointer;text-decoration:underline;color:var(--ink-soft);
@@ -160,7 +166,7 @@
       <p class="signs">&times; &times; &times;</p>
     </div>
     <label for="name">What's your name?</label>
-    <input type="text" id="name" placeholder="Type your first name" autocomplete="off" maxlength="18">
+    <input type="text" id="name" placeholder="Type your name" autocomplete="off" maxlength="40">
     <button class="btn block" id="enter">Let's go</button>
     <p class="foot">Your name stays on this device only. Tap "I'm all done" when you finish to clear it.</p>
   </section>
@@ -182,7 +188,8 @@
       <button class="badge link" data-go="menu" style="color:#fff">&larr; Menu</button>
     </div>
     <p class="step">Step 2 of 2 &middot; Practice or test</p>
-    <div class="hint"><b id="hubRuleHead"></b><span id="hubRuleBody"></span></div>
+    <div class="hint"><b id="hubRuleHead"></b><span id="hubRuleBody"></span>
+      <div class="example" id="hubExample"></div></div>
     <button class="btn block" id="toPractice">Practice</button>
     <button class="btn block quiet" id="toTest">Test me</button>
     <p class="foot">Practice shows you how to work a problem when you miss it. The test waits until the end.</p>
@@ -199,7 +206,8 @@
       <button class="link" id="peekBtn">Show the rule</button>
     </div>
     <div class="track"><div class="fill" id="fill"></div></div>
-    <div id="peek" class="hint hidden" style="margin-bottom:16px"><b id="peekHead"></b><span id="peekBody"></span></div>
+    <div id="peek" class="hint hidden" style="margin-bottom:16px"><b id="peekHead"></b><span id="peekBody"></span>
+      <div class="example" id="peekExample"></div></div>
 
     <div id="askWrap">
       <div class="problem">
@@ -264,20 +272,34 @@
     10:"#00A6A6",11:"#E4572E",12:"#5E60CE",mixall:"#6247AA"};
 
   var RULES = {
-    0:{h:"Any number \u00D7 0 = 0",b:"Multiplying by 0 means there is nothing to count. The answer is always 0, no matter how big the other number is."},
-    1:{h:"Any number \u00D7 1 = that same number",b:"One group of a number is just that number. Whatever goes in comes right back out."},
-    2:{h:"Multiplying by 2 means doubling",b:"Add the number to itself. If you can add it twice, you already know the answer."},
-    3:{h:"Double it, then add one more group",b:"Three groups is two groups plus one. Double the number, then add the number again."},
-    4:{h:"Double it, then double it again",b:"Four is two twos. Double the number once, then double your answer."},
-    5:{h:"Count by fives \u2014 answers end in 5 or 0",b:"Every answer in the fives ends in 5 or 0. Or take ten groups and cut it in half."},
-    6:{h:"Five groups, plus one more group",b:"Take the fives answer you already know and add the number one more time."},
-    7:{h:"Five groups, plus two more groups",b:"Take the fives answer and add double the number. The sevens are the hardest set \u2014 go slow."},
-    8:{h:"Double, double, double",b:"Eight is two, doubled, doubled. Another way: ten groups minus two groups."},
-    9:{h:"Ten groups, minus one group",b:"Multiply by 10, then subtract the number once. The two digits of every answer add up to 9."},
-    10:{h:"Multiplying by 10 puts a 0 on the end",b:"Every digit moves up one place, so the answer is the number with a zero after it."},
-    11:{h:"Small numbers repeat the digit",b:"For 1 through 9, the answer is that digit written twice."},
-    12:{h:"Ten groups, plus two more groups",b:"Multiply by 10, then add double the number."},
-    mixall:{h:"Everything mixed together",b:"Problems come from all the tables, 0 through 12, in random order."}
+    0:{h:"Any number \u00D7 0 = 0",b:"Zero means none. If every group is empty, there is nothing to count \u2014 no matter how many groups you have.",
+       e:"6 \u00D7 0 means 6 groups of 0. Every group is empty, so 6 \u00D7 0 = 0."},
+    1:{h:"Any number \u00D7 1 = that same number",b:"One group of a number is just that number. It comes out the same as it went in.",
+       e:"8 \u00D7 1 means 8 groups of 1. Count them: 1, 2, 3, 4, 5, 6, 7, 8. So 8 \u00D7 1 = 8."},
+    2:{h:"The 2s are doubles",b:"Two groups means you add the number to itself. You already know your doubles from adding.",
+       e:"2 \u00D7 7 means 2 groups of 7. Put them together: 7 + 7 = 14."},
+    3:{h:"Count by 3s",b:"Three groups. Skip count by 3, or add the number three times.",
+       e:"3 \u00D7 6 means 3 groups of 6. Count by 6s: 6, 12, 18. So 3 \u00D7 6 = 18."},
+    4:{h:"Count by 4s",b:"Four groups. Skip count by 4, or double the number and then double your answer.",
+       e:"4 \u00D7 6 means 4 groups of 6. Count by 6s: 6, 12, 18, 24. So 4 \u00D7 6 = 24."},
+    5:{h:"Count by 5s \u2014 answers end in 5 or 0",b:"Skip counting by 5 is quick, and every answer ends in 5 or 0. Order does not change the answer, so count whichever way is easier.",
+       e:"5 \u00D7 4 means 5 groups of 4: 4, 8, 12, 16, 20. Counting by 5s four times gets there too: 5, 10, 15, 20."},
+    6:{h:"Count by 6s",b:"Six groups. Skip count by 6, or take five groups and add one more group.",
+       e:"6 \u00D7 3 means 6 groups of 3. Count by 3s: 3, 6, 9, 12, 15, 18. So 6 \u00D7 3 = 18."},
+    7:{h:"Count by 7s \u2014 go slow",b:"Seven groups. The 7s are the hardest set, so skip count carefully and keep track of where you are.",
+       e:"7 \u00D7 2 means 7 groups of 2. Count by 2s: 2, 4, 6, 8, 10, 12, 14. So 7 \u00D7 2 = 14."},
+    8:{h:"Count by 8s",b:"Eight groups. Skip count by 8, or double the number three times.",
+       e:"8 \u00D7 2 means 8 groups of 2. Count by 2s: 2, 4, 6, 8, 10, 12, 14, 16. So 8 \u00D7 2 = 16."},
+    9:{h:"Count by 9s \u2014 the digits add up to 9",b:"Nine groups. Every answer has two digits that add up to 9, so you can check your own work.",
+       e:"9 \u00D7 3 means 9 groups of 3: 3, 6, 9, 12, 15, 18, 21, 24, 27. Check it: 2 + 7 = 9."},
+    10:{h:"The 10s put a 0 on the end",b:"Ten groups. Write the number, then put a zero after it.",
+       e:"10 \u00D7 4 means 10 groups of 4. Write the 4, then add a 0: 40."},
+    11:{h:"The 11s repeat the digit",b:"For 1 through 9, write the digit two times.",
+       e:"11 \u00D7 3 means 11 groups of 3. Write the 3 twice: 33."},
+    12:{h:"Count by 12s, or use 10 and 2",b:"Twelve groups. Take ten groups, then add two more groups.",
+       e:"12 \u00D7 2 means 12 groups of 2: 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24."},
+    mixall:{h:"Everything mixed together",b:"Problems come from all the tables, 0 through 12, in random order.",
+       e:"The first number is how many groups. The second is what is in each group."}
   };
 
   var PRACTICE_LEN = 12, TEST_LEN = 20;
@@ -291,6 +313,7 @@
 
   var el=function(id){return document.getElementById(id);};
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var TOUCH = window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
   var S = {name:"", table:2, mode:"practice", problems:[], idx:0, correct:0, streak:0,
            best:0, misses:[], answered:false, start:0, retry:false};
 
@@ -373,6 +396,7 @@
     el("hubTitle").textContent=label(t);
     el("hubRuleHead").textContent=RULES[t].h;
     el("hubRuleBody").textContent=RULES[t].b;
+    el("hubExample").textContent="Example: "+RULES[t].e;
     show("hub");
   }
   el("toPractice").onclick=function(){ start("practice"); };
@@ -406,6 +430,7 @@
     el("peekBtn").textContent="Show the rule";
     el("peekHead").textContent=RULES[S.table].h;
     el("peekBody").textContent=RULES[S.table].b;
+    el("peekExample").textContent="Example: "+RULES[S.table].e;
     show("quiz"); render();
   }
   function render(){
@@ -419,7 +444,8 @@
     el("fill").style.width=(S.idx/S.problems.length*100)+"%";
     el("verdict").textContent=""; el("verdict").className="verdict";
     el("enterKey").textContent="Check";
-    var a=el("answer"); a.value=""; a.className="answer"; a.readOnly=false; a.focus();
+    var a=el("answer"); a.value=""; a.className="answer";
+    a.readOnly=TOUCH; if(!TOUCH) a.focus();
   }
 
   /* ---------- the teaching panel ---------- */
@@ -483,16 +509,16 @@
     el("teach").classList.add("hidden");
     el("askWrap").classList.remove("hidden");
     S.answered=false;
-    var a=el("answer"); a.value=""; a.className="answer"; a.readOnly=false;
+    var a=el("answer"); a.value=""; a.className="answer"; a.readOnly=TOUCH;
     el("verdict").textContent="Now you try it."; el("verdict").className="verdict";
     el("enterKey").textContent="Check";
-    a.focus();
+    if(!TOUCH) a.focus();
   };
 
   /* ---------- checking ---------- */
   function check(){
     var a=el("answer"), raw=a.value.trim();
-    if (raw===""){ a.focus(); return; }
+    if (raw===""){ if(!TOUCH) a.focus(); return; }
     var p=S.problems[S.idx], right=p[0]*p[1], ok=Number(raw)===right;
 
     if (S.mode==="test"){
@@ -578,7 +604,7 @@
     if (S.answered) return;
     if (act==="del") a.value=a.value.slice(0,-1);
     else if (a.value.length<4) a.value+=b.textContent;
-    a.focus();
+    if(!TOUCH) a.focus();
   });
   el("peekBtn").onclick=function(){
     var hidden=el("peek").classList.toggle("hidden");
