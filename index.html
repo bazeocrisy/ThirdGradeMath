@@ -36,7 +36,8 @@
     background-position:0 0, 40px 30px, 0 0;
     background-attachment:fixed;
     color:var(--ink);font-family:var(--ui);
-    min-height:100vh;display:flex;justify-content:center;padding:16px 12px 34px;
+    min-height:100vh;display:flex;justify-content:center;
+    padding:16px 12px calc(34px + env(safe-area-inset-bottom, 0px));
   }
   .shell{width:100%;max-width:640px}
   .card{background:var(--card);border:3px solid var(--navy);border-radius:24px;
@@ -45,6 +46,8 @@
     padding:15px 20px;display:flex;align-items:center;justify-content:space-between;
     gap:10px;border-bottom:3px solid var(--navy)}
   .banner h1,.banner h2{font-family:var(--display);margin:0;font-size:24px}
+  .rocket{display:inline-block;margin-right:8px;font-size:20px;
+    filter:drop-shadow(0 1px 0 rgba(11,31,91,.25))}
   .badge{background:rgba(11,31,91,.14);border-radius:999px;padding:6px 13px;
     font-size:13px;font-weight:bold;white-space:nowrap}
   .banner .badge.link{background:rgba(11,31,91,.14);color:inherit;text-decoration:none}
@@ -101,21 +104,24 @@
   .example{margin-top:12px;background:#fff;border-radius:12px;padding:11px 13px;
     font-family:var(--display);font-size:18px;font-weight:bold;line-height:1.5}
   .bar{display:flex;justify-content:space-between;align-items:center;gap:10px;
-    font-size:13px;font-weight:bold;color:var(--ink-soft);margin-bottom:10px}
-  .link{cursor:pointer;text-decoration:underline;color:var(--ink-soft);
+    font-size:13px;font-weight:bold;color:var(--ink-soft);margin-bottom:7px}
+  .bar .mission{color:var(--navy);letter-spacing:.02em}
+  .link{cursor:pointer;text-decoration:underline;color:var(--navy2);
     background:none;border:none;font-family:var(--ui);font-size:13px;font-weight:bold}
-  .track{height:16px;background:var(--line);border-radius:999px;overflow:hidden;
-    margin-bottom:18px;border:2px solid var(--navy)}
-  .fill{height:100%;width:0;background:var(--theme);transition:width .3s ease}
+  .track{height:16px;background:var(--sky);border-radius:999px;overflow:hidden;
+    margin-bottom:14px;border:2px solid var(--navy);position:relative}
+  .fill{height:100%;width:0;border-radius:999px;
+    background:linear-gradient(90deg,var(--teal),var(--theme));
+    transition:width .3s ease}
   /* ---------- the problem ---------- */
   .problem{display:flex;justify-content:center;background:var(--sky);
-    border:3px solid var(--line);border-radius:20px;padding:14px 10px 8px}
+    border:3px solid var(--line);border-radius:20px;padding:10px 10px 4px}
   .stack{min-width:190px;text-align:right;font-family:var(--display);font-weight:bold;
-    font-size:58px;line-height:1.16;font-variant-numeric:tabular-nums;padding-right:10px}
+    font-size:58px;line-height:1.1;font-variant-numeric:tabular-nums;padding-right:10px}
   .stack .sign{float:left;padding-left:14px;color:var(--orange)}
   .ruleline{border-bottom:6px solid var(--navy);padding-bottom:2px}
-  .answer{margin-top:12px;width:100%;text-align:right;font-family:var(--display);
-    font-size:54px;font-weight:bold;padding:2px 10px 8px 0;border:none;
+  .answer{margin-top:8px;width:100%;text-align:right;font-family:var(--display);
+    font-size:54px;font-weight:bold;padding:0 10px 6px 0;border:none;
     border-bottom:6px dashed #B9CEE8;background:transparent;color:var(--navy2)}
   .answer:focus{outline:none;border-bottom-color:var(--teal)}
   .answer.ok{color:var(--right);border-bottom-color:var(--right)}
@@ -124,18 +130,26 @@
   @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.13)}100%{transform:scale(1)}}
   .shake{animation:shake .3s ease}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-  .verdict{min-height:34px;text-align:center;font-family:var(--display);
-    font-weight:bold;font-size:19px;margin:12px 0 2px}
+  .verdict{min-height:30px;text-align:center;font-family:var(--display);
+    font-weight:bold;font-size:19px;margin:9px 0 0}
   .verdict.ok{color:var(--right)} .verdict.no{color:var(--wrong)}
   /* ---------- keypad ---------- */
-  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
   .key{font-family:var(--display);font-size:24px;font-weight:bold;padding:15px 0;cursor:pointer;
     background:#fff;border:3px solid var(--navy);border-radius:16px;color:var(--navy);
-    box-shadow:0 4px 0 rgba(11,31,91,.28);transition:transform .06s ease}
+    box-shadow:0 4px 0 rgba(11,31,91,.28);transition:transform .06s ease, background .12s ease}
   .key:hover{background:var(--sky)}
   .key:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(11,31,91,.28)}
-  .key.word{font-size:18px}
-  .key.go{background:var(--orange);color:var(--navy);font-size:18px}
+  /* Erase = secondary action, teal */
+  .key.word{font-size:17px;letter-spacing:.02em;background:var(--teal);color:var(--navy);
+    box-shadow:0 4px 0 #0E9B98}
+  .key.word:hover{background:var(--cyan)}
+  .key.word:active{box-shadow:0 1px 0 #0E9B98}
+  /* Check = primary action, orange */
+  .key.go{font-size:18px;letter-spacing:.02em;background:var(--orange);color:var(--navy);
+    box-shadow:0 4px 0 #C96412}
+  .key.go:hover{background:#FFA260}
+  .key.go:active{box-shadow:0 1px 0 #C96412}
   /* ---------- teaching panel ---------- */
   .teach{border:3px solid var(--coral);border-radius:20px;padding:18px;background:var(--wrong-bg)}
   .teach h3{margin:0 0 4px;font-size:22px;color:var(--wrong)}
@@ -169,10 +183,32 @@
     100%{transform:translateY(150px) rotate(320deg);opacity:0}}
   .hidden{display:none}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  /* ---- tablet: roomier targets, no stretched keypad ---- */
+  @media (min-width:600px) and (max-width:1024px){
+    .shell{max-width:560px}
+    .key{padding:18px 0;font-size:26px}
+    .key.word,.key.go{font-size:19px}
+    .btn{padding:16px 22px}
+    .tile{padding:22px 6px}
+  }
+  /* ---- landscape tablet / short laptop: keep the whole quiz on one screen ---- */
+  @media (min-width:700px) and (max-height:820px){
+    .problem{padding:8px 10px 3px}
+    .stack{font-size:44px;min-width:150px;line-height:1.08}
+    .answer{font-size:42px;margin-top:6px;padding-bottom:5px}
+    .verdict{min-height:26px;font-size:18px;margin:7px 0 0}
+    .pad{gap:8px;margin-top:10px}
+    .key{padding:12px 0;font-size:22px}
+    .key.word,.key.go{font-size:17px}
+    .track{height:14px;margin-bottom:11px}
+    #quiz .btn.block[data-go]{margin-top:10px;padding:11px 18px;font-size:16px}
+  }
+  /* ---- phones ---- */
   @media (max-width:430px){
     .card{padding:16px;border-radius:20px}
     .banner{margin:-16px -16px 16px;padding:13px 16px}
-    .banner h1,.banner h2{font-size:20px}
+    .banner h1,.banner h2{font-size:19px}
+    .rocket{font-size:17px;margin-right:6px}
     .logowrap{margin:-16px -16px 0;padding:14px 12px 12px}
     .logo{max-width:300px}
     .hero{padding:12px 0 0}
@@ -183,12 +219,43 @@
     .answer{font-size:42px}
     .tile{font-size:27px;padding:17px 4px}
     .mathline{font-size:18px}
+    .bar{font-size:12px}
+    .pad{gap:8px}
+    .key{padding:14px 0;font-size:22px}
+    .key.word,.key.go{font-size:16px}
+  }
+  /* ---- narrow phones (320–360) ---- */
+  @media (max-width:365px){
+    body{padding:12px 8px 30px}
+    .card{padding:13px}
+    .banner{margin:-13px -13px 14px;padding:12px 13px}
+    .banner h1,.banner h2{font-size:17px}
+    .badge{padding:5px 10px;font-size:12px}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
+    .tile{font-size:24px;padding:15px 3px}
+    .stack{font-size:40px;min-width:132px}
+    .answer{font-size:38px}
+    .key{padding:13px 0;font-size:21px}
+    .key.word,.key.go{font-size:15px}
+    .logo{max-width:245px}
   }
   @media (max-height:700px){
     .logo{max-width:250px}
     .bubbles{margin:8px 0 0}
     .bubble{width:30px;height:30px;font-size:15px}
     .tagline{font-size:16px}
+    /* keep the quiz workflow inside one screen */
+    .problem{padding:6px 8px 2px}
+    .stack{font-size:38px;min-width:126px;line-height:1.08}
+    .answer{font-size:36px;margin-top:5px;padding-bottom:4px;border-bottom-width:5px}
+    .ruleline{border-bottom-width:5px}
+    .verdict{min-height:24px;font-size:17px;margin:6px 0 0}
+    .pad{gap:7px;margin-top:9px}
+    .key{padding:11px 0;font-size:20px}
+    .key.word,.key.go{font-size:15px}
+    .track{height:13px;margin-bottom:10px}
+    #quiz .btn.block[data-go]{margin-top:9px;padding:10px 16px;font-size:15px;
+      background:transparent;box-shadow:none;border-width:2px}
   }
 </style>
 </head>
@@ -242,12 +309,12 @@
   <!-- ===== QUIZ ===== -->
   <section id="quiz" class="card hidden">
     <div class="banner">
-      <h2 id="quizTitle">The 2s</h2>
+      <h2><span class="rocket" aria-hidden="true">&#128640;</span><span id="quizTitle">The 2s</span></h2>
       <span class="badge" id="modeBadge">Practice</span>
     </div>
     <div class="bar">
-      <span id="counter">Problem 1 of 12</span>
-      <button class="link" id="peekBtn">Show the rule</button>
+      <span class="mission" id="counter">Mission progress: 1 of 12</span>
+      <button class="link" id="peekBtn">Need a hint?</button>
     </div>
     <div class="track"><div class="fill" id="fill"></div></div>
     <div id="peek" class="hint hidden" style="margin-bottom:16px"><b id="peekHead"></b><span id="peekBody"></span>
@@ -490,7 +557,7 @@
     el("modeBadge").textContent = S.mode==="test" ? "Test" : "Practice";
     el("peekBtn").classList.toggle("hidden", S.mode==="test");
     el("peek").classList.add("hidden");
-    el("peekBtn").textContent="Show the rule";
+    el("peekBtn").textContent="Need a hint?";
     el("peekHead").textContent=RULES[S.table].h;
     el("peekBody").textContent=RULES[S.table].b;
     el("peekExample").textContent="Example: "+RULES[S.table].e;
@@ -503,7 +570,7 @@
     el("askWrap").classList.remove("hidden");
     el("top").textContent=p[0];
     el("bottom").textContent=p[1];
-    el("counter").textContent="Problem "+(S.idx+1)+" of "+S.problems.length;
+    el("counter").textContent="Mission progress: "+(S.idx+1)+" of "+S.problems.length;
     el("fill").style.width=(S.idx/S.problems.length*100)+"%";
     el("verdict").textContent=""; el("verdict").className="verdict";
     el("enterKey").textContent="Check";
@@ -666,7 +733,7 @@
   });
   el("peekBtn").onclick=function(){
     var hidden=el("peek").classList.toggle("hidden");
-    this.textContent = hidden ? "Show the rule" : "Hide the rule";
+    this.textContent = hidden ? "Need a hint?" : "Hide the hint";
   };
 
   /* ---------- navigation ---------- */
