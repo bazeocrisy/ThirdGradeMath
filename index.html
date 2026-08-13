@@ -42,15 +42,17 @@
   .shell{width:100%;max-width:640px}
   .card{background:var(--card);border:3px solid var(--navy);border-radius:24px;
     box-shadow:0 10px 0 rgba(11,31,91,.45);padding:20px;overflow:hidden}
-  .banner{background:var(--theme);color:var(--on-theme);margin:-20px -20px 18px;
+  /* Every screen header is brand teal — the table accent never reaches the banner,
+     so no table can tint the header. Results is the one exception (coral-orange). */
+  .banner{background:var(--teal);color:var(--navy);margin:-20px -20px 18px;
     padding:15px 20px;display:flex;align-items:center;justify-content:space-between;
     gap:10px;border-bottom:3px solid var(--navy)}
   .banner h1,.banner h2{font-family:var(--display);margin:0;font-size:24px}
   .rocket{display:inline-block;margin-right:8px;font-size:20px;
     filter:drop-shadow(0 1px 0 rgba(11,31,91,.25))}
-  .badge{background:rgba(11,31,91,.14);border-radius:999px;padding:6px 13px;
-    font-size:13px;font-weight:bold;white-space:nowrap}
-  .banner .badge.link{background:rgba(11,31,91,.14);color:inherit;text-decoration:none}
+  .badge{background:rgba(11,31,91,.16);border-radius:999px;padding:6px 13px;
+    font-size:13px;font-weight:bold;white-space:nowrap;color:var(--navy)}
+  .banner .badge.link{background:rgba(11,31,91,.16);color:var(--navy);text-decoration:none}
   /* results header stays brand coral-orange — it marks the end of a mission,
      it does not encode the score (the stars do that) */
   #done .banner{background:var(--orange);color:var(--navy)}
@@ -400,7 +402,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b8 &middot; 2026-08-13</span>
+    <span class="build" title="build version">b9 &middot; 2026-08-13</span>
   </p>
 </div>
 
@@ -409,12 +411,13 @@
   "use strict";
 
   /* number colors, drawn from the logo family */
-  var COLORS = {0:"#FF6B57",1:"#FF8A3D",2:"#FFC928",3:"#2FBF7B",4:"#20D6D2",
-    5:"#7EEBFF",6:"#2A6BE0",7:"#6C5CE7",8:"#C44BE0",9:"#FF4F81",
-    10:"#12B3A8",11:"#F49E1B",12:"#123A8C",mixall:"#7A3DFF"};
-  /* colors light enough to need navy text on top */
-  /* swatches bright enough that navy text reads better than white */
-  var LIGHT = {0:1, 1:1, 2:1, 3:1, 4:1, 5:1, 8:1, 9:1, 10:1, 11:1};
+  /* Table accents. Every value sits inside the approved brand palette:
+     coral, orange, amber, gold, teal, cyan, blue, navy. No pink/magenta/purple. */
+  var COLORS = {0:"#FF6B57",1:"#FF8A3D",2:"#FFC928",3:"#E9A317",4:"#20D6D2",
+    5:"#7EEBFF",6:"#0E9B98",7:"#35C1DE",8:"#4FB8F5",9:"#2A6BE0",
+    10:"#123A8C",11:"#E3762A",12:"#0B1F5B",mixall:"#145DA0"};
+  /* accents light enough that navy text reads better than white */
+  var LIGHT = {0:1, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1, 11:1};
 
   var RULES = {
     0:{h:"Any number \u00D7 0 = 0",b:"Zero means none. If every group is empty, there is nothing to count \u2014 no matter how many groups you have.",
@@ -488,7 +491,7 @@
   }
   function burst(){
     if (reduced) return;
-    var box=el("confetti"), pal=["#FFC928","#20D6D2","#FF8A3D","#7EEBFF","#FF6B57","#2FBF7B"];
+    var box=el("confetti"), pal=["#FFC928","#20D6D2","#FF8A3D","#7EEBFF","#FF6B57","#4FB8F5"];
     for (var i=0;i<16;i++){
       var b=document.createElement("div");
       b.className="bit"; b.style.background=pal[i%pal.length];
