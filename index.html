@@ -51,6 +51,9 @@
   .badge{background:rgba(11,31,91,.14);border-radius:999px;padding:6px 13px;
     font-size:13px;font-weight:bold;white-space:nowrap}
   .banner .badge.link{background:rgba(11,31,91,.14);color:inherit;text-decoration:none}
+  /* results header stays brand coral-orange — it marks the end of a mission,
+     it does not encode the score (the stars do that) */
+  #done .banner{background:var(--orange);color:var(--navy)}
   h1,h2,h3{font-family:var(--display)}
   p{line-height:1.55;margin:0 0 12px}
   .sub{color:var(--ink-soft);font-size:14px}
@@ -73,12 +76,12 @@
   .btn.fix{background:var(--teal);color:var(--navy);box-shadow:0 5px 0 #0E9B98}
   .btn.fix:hover{background:var(--cyan)}
   .btn.fix:active{box-shadow:0 1px 0 #0E9B98}
-  .btn.ghost{background:transparent;color:var(--ink-soft);border-color:var(--line);
-    box-shadow:none;font-size:17px;padding:12px 18px}
-  .btn.ghost:hover{background:var(--sky);color:var(--navy)}
-  .btn.ghost:active{transform:translateY(2px)}
+  .btn.ghost{background:#fff;color:var(--navy);border-color:#7E9AC4;
+    box-shadow:0 4px 0 rgba(11,31,91,.18);font-size:17px;padding:13px 18px}
+  .btn.ghost:hover{background:var(--sky)}
+  .btn.ghost:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(11,31,91,.18)}
   .perfect{text-align:center;font-family:var(--display);font-size:19px;font-weight:bold;
-    color:var(--right);background:var(--right-bg);border:3px dashed var(--right);
+    color:var(--navy);background:#E6FBFB;border:3px dashed var(--teal);
     border-radius:16px;padding:12px 14px;margin:14px 0 4px}
   .orig{text-align:center;font-size:13px;font-weight:bold;color:var(--ink-soft);
     background:var(--sky);border-radius:12px;padding:9px 12px;margin:12px 0 2px}
@@ -181,7 +184,7 @@
   .stars .off{color:#C9D9EC;filter:none}
   .score{font-family:var(--display);font-size:52px;font-weight:bold;text-align:center;margin:0 0 4px}
   .misslist{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:9px}
-  .misslist li{background:var(--wrong-bg);border:3px solid var(--wrong);color:var(--wrong);
+  .misslist li{background:#FFF1ED;border:3px solid var(--coral);color:#A83A2A;
     border-radius:14px;padding:8px 12px;font-family:var(--display);font-weight:bold;font-size:17px}
   /* ---------- footer ---------- */
   .foot{margin-top:16px;font-size:12px;color:#BBD5F2;text-align:center;line-height:1.7}
@@ -397,7 +400,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b7 &middot; 2026-08-13</span>
+    <span class="build" title="build version">b8 &middot; 2026-08-13</span>
   </p>
 </div>
 
