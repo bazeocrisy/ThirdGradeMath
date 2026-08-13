@@ -90,7 +90,7 @@
   .btn.go{background:var(--orange);color:var(--navy)}
   .btn.block{width:100%;margin-top:12px}
   .btn:focus-visible,.tile:focus-visible,input:focus-visible,.key:focus-visible,
-  .link:focus-visible{outline:4px solid var(--teal);outline-offset:3px}
+  .link:focus-visible,.choice:focus-visible{outline:4px solid var(--teal);outline-offset:3px}
   /* ---------- entry screen ---------- */
   .logowrap{background:linear-gradient(180deg,#0B1F5B,#123A8C);
     margin:-20px -20px 0;padding:18px 16px 16px;border-bottom:3px solid var(--navy);
@@ -201,6 +201,68 @@
   .bit{position:absolute;width:11px;height:16px;border-radius:3px;animation:fall 1s ease-out forwards}
   @keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1}
     100%{transform:translateY(150px) rotate(320deg);opacity:0}}
+  /* ===== mode buttons on the table screen ===== */
+  .btn.mode{text-align:left;padding:13px 16px;line-height:1.2}
+  .btn.mode .lbl{display:block;font-size:19px}
+  .btn.mode .tip{display:block;font-family:var(--ui);font-size:11.5px;font-weight:bold;
+    margin-top:4px;opacity:.82;letter-spacing:.01em}
+  .btn.learn{background:var(--teal);color:var(--navy);box-shadow:0 5px 0 #0E9B98}
+  .btn.learn:hover{background:var(--cyan)}
+  .btn.learn:active{box-shadow:0 1px 0 #0E9B98}
+  .btn.choice-mode{background:var(--cyan);color:var(--navy);box-shadow:0 5px 0 #4FB8D6}
+  .btn.choice-mode:hover{background:#A6F2FF}
+  .btn.choice-mode:active{box-shadow:0 1px 0 #4FB8D6}
+  /* ===== memorize ===== */
+  .phase{text-align:center;font-family:var(--display);font-size:13px;font-weight:bold;
+    letter-spacing:.22em;color:var(--navy);background:var(--cyan);border:3px solid var(--navy);
+    border-radius:999px;padding:6px 0;margin:0 auto 14px;max-width:210px}
+  .phase.recall{background:var(--yellow)}
+  .factbox{background:var(--sky);border:3px solid var(--line);border-radius:20px;
+    padding:16px 12px;text-align:center}
+  .fact{font-family:var(--display);font-size:44px;font-weight:bold;color:var(--navy);
+    line-height:1.15;word-break:break-word}
+  .fact .eq{color:var(--orange)}
+  .mastery{margin-top:8px;font-size:20px;letter-spacing:4px;color:var(--yellow)}
+  .mastery .off{color:#C9D9EC}
+  .mastery .txt{display:block;font-family:var(--ui);font-size:11px;font-weight:bold;
+    letter-spacing:.06em;color:var(--ink-soft);margin-top:3px}
+  .sayit{background:#FFF9E6;border:3px dashed var(--yellow);border-radius:16px;
+    padding:14px 16px;font-family:var(--display);font-size:17px;font-weight:bold;
+    color:var(--navy);text-align:center;margin:14px 0 0}
+  .memoinput{width:100%;max-width:260px;margin:14px auto 0;display:block;text-align:center;
+    font-family:var(--display);font-size:46px;font-weight:bold;color:var(--navy2);
+    border:none;border-bottom:6px dashed #B9CEE8;background:transparent;padding:0 0 6px}
+  .memoinput:focus{outline:none;border-bottom-color:var(--teal)}
+  .memoinput.ok{color:var(--right);border-bottom-color:var(--right)}
+  .memoinput.no{color:var(--wrong);border-bottom-color:var(--wrong)}
+  /* ===== quick choice ===== */
+  .choices2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
+  .choice{font-family:var(--display);font-size:30px;font-weight:bold;cursor:pointer;
+    padding:20px 6px;background:#fff;border:3px solid var(--navy);border-radius:18px;
+    color:var(--navy);box-shadow:0 5px 0 rgba(11,31,91,.26);
+    transition:transform .06s ease, background .12s ease}
+  .choice:hover{background:var(--sky)}
+  .choice:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(11,31,91,.26)}
+  .choice.right{background:var(--right-bg);border-color:var(--right);color:var(--right)}
+  .choice.wrong{background:#FFF1ED;border-color:var(--coral);color:#A83A2A}
+  .choice .mark{display:block;font-size:15px;letter-spacing:.06em;margin-top:2px}
+  .choice[disabled]{cursor:default}
+  @media (max-width:365px){
+    .fact{font-size:36px}
+    .choice{font-size:26px;padding:16px 4px}
+    .memoinput{font-size:40px}
+    .btn.mode .lbl{font-size:17px}
+    .btn.mode .tip{font-size:11px}
+  }
+  @media (max-height:700px){
+    .fact{font-size:36px}
+    .factbox{padding:12px 10px}
+    .sayit{font-size:15px;padding:11px 13px;margin-top:11px}
+    .memoinput{font-size:38px;margin-top:10px}
+    .choice{font-size:26px;padding:15px 4px}
+    .choices2{gap:8px;margin-top:12px}
+    .phase{margin-bottom:10px}
+  }
   .hidden{display:none}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   /* ---- tablet: roomier targets, no stretched keypad ---- */
@@ -213,6 +275,12 @@
   }
   /* ---- landscape tablet / short laptop: keep the whole quiz on one screen ---- */
   @media (min-width:700px) and (max-height:820px){
+    .fact{font-size:38px}
+    .factbox{padding:11px 10px}
+    .memoinput{font-size:40px;margin-top:9px}
+    .sayit{font-size:16px;padding:12px 14px;margin-top:11px}
+    .phase{margin-bottom:10px}
+    .choice{font-size:27px;padding:16px 4px}
     .problem{padding:8px 10px 3px}
     .stack{font-size:44px;min-width:150px;line-height:1.08}
     .answer{font-size:42px;margin-top:6px;padding-bottom:5px}
@@ -326,10 +394,18 @@
     <p class="step">Step 2 of 2 &middot; Practice or test</p>
     <div class="hint"><b id="hubRuleHead"></b><span id="hubRuleBody"></span>
       <div class="example" id="hubExample"></div></div>
-    <button class="btn block" id="toPractice">Practice</button>
-    <button class="btn block quiet" id="toTest">Test me</button>
-    <p class="sub center" style="margin-top:14px;font-size:12px">
-      Practice shows you how to work a problem when you miss it. The test waits until the end.</p>
+    <button class="btn block mode learn" id="toMemorize">
+      <span class="lbl">Memorize</span>
+      <span class="tip">See it. Say it. Hide it. Remember it.</span></button>
+    <button class="btn block mode choice-mode" id="toQuick">
+      <span class="lbl">Quick Choice</span>
+      <span class="tip">Choose the correct answer.</span></button>
+    <button class="btn block mode" id="toPractice">
+      <span class="lbl">Practice</span>
+      <span class="tip">Type the answer. Get help when you need it.</span></button>
+    <button class="btn block mode quiet" id="toTest">
+      <span class="lbl">Test Me</span>
+      <span class="tip">No hints. See your results at the end.</span></button>
   </section>
 
   <!-- ===== QUIZ ===== -->
@@ -356,14 +432,7 @@
         </div>
       </div>
       <div class="verdict" id="verdict"></div>
-      <div class="pad" id="pad">
-        <button class="key">1</button><button class="key">2</button><button class="key">3</button>
-        <button class="key">4</button><button class="key">5</button><button class="key">6</button>
-        <button class="key">7</button><button class="key">8</button><button class="key">9</button>
-        <button class="key word" data-act="del">Erase</button>
-        <button class="key">0</button>
-        <button class="key go" data-act="enter" id="enterKey">Check</button>
-      </div>
+      <div id="padSlotQuiz"></div>
     </div>
 
     <div id="teach" class="teach hidden">
@@ -377,6 +446,68 @@
     </div>
 
     <button class="btn block quiet" data-go="menu" style="margin-top:16px">Quit to menu</button>
+  </section>
+
+
+  <!-- ===== MEMORIZE ===== -->
+  <section id="memo" class="card hidden">
+    <div class="banner">
+      <h2><span class="rocket" aria-hidden="true">&#128640;</span><span id="memoTitle">Memorize the 2s</span></h2>
+      <span class="badge" id="memoBadge">0 of 6 mastered</span>
+    </div>
+    <div class="track"><div class="fill" id="memoFill"></div></div>
+    <p class="phase" id="memoPhase">LOOK</p>
+
+    <div class="factbox">
+      <div class="fact" id="memoFact">2 <span class="eq">&times;</span> 7 = 14</div>
+      <div class="mastery" id="memoStars"></div>
+      <input class="memoinput hidden" id="memoAnswer" inputmode="numeric" autocomplete="off"
+             aria-label="Type the answer from memory" placeholder="?">
+    </div>
+
+    <div id="memoLook">
+      <p class="sayit" id="memoSay"></p>
+      <button class="btn block learn" id="memoReady">I'm Ready &mdash; Hide the Answer</button>
+    </div>
+
+    <div id="memoRecall" class="hidden">
+      <div class="verdict" id="memoVerdict"></div>
+      <div id="padSlotMemo"></div>
+    </div>
+
+    <div id="memoAgain" class="hidden">
+      <p class="sayit" id="memoAgainText"></p>
+      <button class="btn block learn" id="memoAgainBtn">Say it, then keep going</button>
+    </div>
+
+    <button class="btn block ghost" data-go="menu" style="margin-top:16px">Quit to menu</button>
+  </section>
+
+  <!-- ===== MEMORIZE COMPLETE ===== -->
+  <section id="memoDone" class="card hidden">
+    <div class="banner"><h2 id="memoDoneTitle">Memory Mission Complete! &#128640;</h2></div>
+    <div class="stars">&#9733;&#9733;</div>
+    <p class="sub center" id="memoDoneDetail"></p>
+    <button class="btn block choice-mode" id="memoToQuick">Quick Choice</button>
+    <button class="btn block" id="memoToPractice">Practice</button>
+    <button class="btn block quiet" id="memoBack">Back to the 2s</button>
+    <button class="btn block ghost" data-go="menu">Pick a Different Number</button>
+  </section>
+
+  <!-- ===== QUICK CHOICE ===== -->
+  <section id="qc" class="card hidden">
+    <div class="banner">
+      <h2><span class="rocket" aria-hidden="true">&#128640;</span><span id="qcTitle">Quick Choice</span></h2>
+      <span class="badge" id="qcBadge">1 of 12</span>
+    </div>
+    <div class="track"><div class="fill" id="qcFill"></div></div>
+    <div class="factbox">
+      <div class="fact" id="qcFact">2 <span class="eq">&times;</span> 7 = ?</div>
+    </div>
+    <div class="choices2" id="qcChoices"></div>
+    <div class="verdict" id="qcVerdict"></div>
+    <button class="btn block hidden" id="qcNext">Next</button>
+    <button class="btn block ghost" data-go="menu" style="margin-top:12px">Quit to menu</button>
   </section>
 
   <!-- ===== RESULTS ===== -->
@@ -398,11 +529,23 @@
     <button class="btn block ghost" id="allDone">I'm All Done</button>
   </section>
 
+  <!-- one keypad, shared by Practice/Test and Memorize -->
+  <div id="padHolder" class="hidden">
+    <div class="pad" id="pad">
+      <button class="key">1</button><button class="key">2</button><button class="key">3</button>
+      <button class="key">4</button><button class="key">5</button><button class="key">6</button>
+      <button class="key">7</button><button class="key">8</button><button class="key">9</button>
+      <button class="key word" data-act="del">Erase</button>
+      <button class="key">0</button>
+      <button class="key go" data-act="enter" id="enterKey">Check</button>
+    </div>
+  </div>
+
   <p class="foot">
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b9 &middot; 2026-08-13</span>
+    <span class="build" title="build version">b10 &middot; 2026-08-13</span>
   </p>
 </div>
 
@@ -480,7 +623,7 @@
     r.setProperty("--on-theme", LIGHT[t] ? "#0B1F5B" : "#FFFFFF");
   }
   function show(id){
-    ["welcome","menu","hub","quiz","done"].forEach(function(s){
+    ["welcome","menu","hub","quiz","memo","memoDone","qc","done"].forEach(function(s){
       el(s).classList.toggle("hidden", s !== id);
     });
     window.scrollTo(0,0);
@@ -561,6 +704,8 @@
     el("hubExample").textContent="Example: "+RULES[t].e;
     show("hub");
   }
+  el("toMemorize").onclick=function(){ startMemorize(); };
+  el("toQuick").onclick=function(){ start("qc"); };
   el("toPractice").onclick=function(){ start("practice"); };
   el("toTest").onclick=function(){ start("test"); };
 
@@ -580,8 +725,8 @@
   }
   function start(mode){
     S.mode=mode; S.fix=false;
-    build(mode==="test" ? TEST_LEN : PRACTICE_LEN);
-    run();
+    build(mode==="test" ? TEST_LEN : (mode==="qc" ? QC_LEN : PRACTICE_LEN));
+    if (mode==="qc") runQC(); else run();
   }
   function run(){
     S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.retry=false;
@@ -606,6 +751,9 @@
     el("fill").style.width=(S.idx/S.problems.length*100)+"%";
     el("verdict").textContent=""; el("verdict").className="verdict";
     el("enterKey").textContent="Check";
+    mountPad("padSlotQuiz","answer",
+      function(){ if (S.answered) next(); else check(); },
+      function(){ return S.answered; }, "Check");
     var a=el("answer"); a.value=""; a.className="answer";
     a.readOnly=TOUCH; if(!TOUCH) a.focus();
   }
@@ -714,6 +862,269 @@
     if (S.idx>=S.problems.length) finish(); else render();
   }
 
+
+  /* ================= MEMORIZE =================
+     LOOK -> see the whole fact and say it out loud
+     REMEMBER -> answer hidden, recall it on the keypad
+     REINFORCE -> the full fact again, right or wrong
+     Mastered = two successful recalls that are SPACED:
+     other facts must appear in between. ================= */
+  var MEMO_LEN = 6, MEMO_GAP = 2;
+  var M = {facts:[], cur:null, turn:0, phase:"look", answered:false, done:0, lastKey:null};
+
+  var ONES=["zero","one","two","three","four","five","six","seven","eight","nine","ten",
+            "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen",
+            "eighteen","nineteen"];
+  var TENS=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+  function words(n){
+    if (n<20) return ONES[n];
+    if (n<100){ var t=Math.floor(n/10), r=n%10; return TENS[t]+(r? "-"+ONES[r] : ""); }
+    var h=Math.floor(n/100), rest=n%100;
+    return ONES[h]+" hundred"+(rest? " "+words(rest) : "");
+  }
+  function cap(t){ return t.charAt(0).toUpperCase()+t.slice(1); }
+  function sayLine(a,b){
+    return cap(words(a))+" times "+words(b)+" equals "+words(a*b)+".";
+  }
+
+  function startMemorize(){
+    var all=[], i;
+    if (S.table==="mixall"){
+      for (var x=0;x<=12;x++) for (i=0;i<=12;i++) all.push([x,i]);
+    } else {
+      for (i=0;i<=12;i++) all.push([S.table,i]);
+    }
+    shuffle(all);
+    M.facts = all.slice(0, Math.min(MEMO_LEN, all.length)).map(function(f){
+      return {a:f[0], b:f[1], stars:0, lastTurn:-99, lastWinTurn:-99,
+              introduced:false, sawOther:false};
+    });
+    M.turn=0; M.done=0; M.answered=false; M.cur=null; M.lastKey=null;
+    el("memoTitle").textContent = "Memorize " +
+      (S.table==="mixall" ? "mixed facts" : "the "+S.table+"s");
+    show("memo");
+    nextMemoFact();
+  }
+
+  function factKey(f){ return f.a+"x"+f.b; }
+
+  /* Next fact: unmastered, not seen within MEMO_GAP turns, fewest stars first.
+     If the pick would repeat the fact just shown, slip a different fact in
+     between instead — that is what makes the second star genuinely spaced,
+     and it guarantees the session can always finish. */
+  function pickFact(){
+    var pool = M.facts.filter(function(f){ return f.stars<2; });
+    if (!pool.length) return null;
+    var spaced = pool.filter(function(f){ return M.turn - f.lastTurn >= MEMO_GAP; });
+    var use = spaced.length ? spaced : pool;
+    use.sort(function(x,y){ return (x.stars-y.stars) || (x.lastTurn-y.lastTurn); });
+    var top = use.filter(function(f){ return f.stars===use[0].stars; });
+    var choice = top[Math.floor(Math.random()*Math.min(top.length,3))];
+
+    if (M.lastKey && factKey(choice)===M.lastKey && M.facts.length>1){
+      var others = M.facts.filter(function(f){ return factKey(f)!==M.lastKey; });
+      var open = others.filter(function(f){ return f.stars<2; });
+      var from = open.length ? open : others;      /* a mastered fact makes a fine review */
+      choice = from[Math.floor(Math.random()*from.length)];
+    }
+    return choice;
+  }
+
+  function memoStarMarkup(f){
+    var out="";
+    for (var i=0;i<2;i++) out += i<f.stars ? "\u2605" : '<span class="off">\u2606</span>';
+    var txt = f.stars===0 ? "New fact" : f.stars===1 ? "Star 1 earned" : "Mastered";
+    return out + '<span class="txt">'+txt+'</span>';
+  }
+  function memoProgress(){
+    M.done = M.facts.filter(function(f){ return f.stars===2; }).length;
+    el("memoBadge").textContent = M.done+" of "+M.facts.length+" mastered";
+    el("memoFill").style.width = (M.done/M.facts.length*100)+"%";
+  }
+
+  function nextMemoFact(){
+    var f = pickFact();
+    if (!f){ finishMemorize(); return; }
+    M.cur=f; M.answered=false;
+    M.facts.forEach(function(g){ if (g!==f) g.sawOther = true; });
+    M.lastKey = factKey(f);
+    memoProgress();
+    el("memoStars").innerHTML = memoStarMarkup(f);
+    el("memoVerdict").textContent=""; el("memoVerdict").className="verdict";
+    el("memoAgain").classList.add("hidden");
+    if (!f.introduced) memoLook(); else memoRecall();
+  }
+
+  function memoLook(){
+    var f=M.cur;
+    M.phase="look";
+    el("memoPhase").textContent="LOOK"; el("memoPhase").className="phase";
+    el("memoFact").innerHTML = f.a+' <span class="eq">\u00D7</span> '+f.b+" = "+(f.a*f.b);
+    el("memoSay").textContent = 'Say it out loud: "'+sayLine(f.a,f.b)+'"';
+    el("memoAnswer").classList.add("hidden");
+    el("memoLook").classList.remove("hidden");
+    el("memoRecall").classList.add("hidden");
+  }
+
+  function memoRecall(){
+    var f=M.cur;
+    M.phase="recall"; M.answered=false;
+    el("memoPhase").textContent="REMEMBER"; el("memoPhase").className="phase recall";
+    el("memoFact").innerHTML = f.a+' <span class="eq">\u00D7</span> '+f.b+" = ?";
+    el("memoLook").classList.add("hidden");
+    el("memoRecall").classList.remove("hidden");
+    var a=el("memoAnswer");
+    a.classList.remove("hidden"); a.value=""; a.className="memoinput"; a.readOnly=TOUCH;
+    mountPad("padSlotMemo","memoAnswer", memoSubmit,
+             function(){ return M.answered; }, "Check");
+    if(!TOUCH) a.focus();
+  }
+
+  function memoSubmit(){ if (M.answered) nextMemoFact(); else memoCheck(); }
+
+  function memoCheck(){
+    var a=el("memoAnswer"), raw=a.value.trim();
+    if (raw===""){ if(!TOUCH) a.focus(); return; }
+    var f=M.cur, right=f.a*f.b, ok=Number(raw)===right;
+    /* the second star needs a DIFFERENT fact to have appeared since the first */
+    var spaced = f.sawOther === true;
+    M.answered=true; a.readOnly=true; f.introduced=true;
+
+    if (ok){
+      a.className="memoinput ok";
+      if (f.stars===0){ f.stars=1; f.lastWinTurn=M.turn; f.sawOther=false; }
+      else if (f.stars===1 && spaced){ f.stars=2; f.lastWinTurn=M.turn; }
+      el("memoFact").innerHTML = '\u2713 '+f.a+' <span class="eq">\u00D7</span> '+f.b+" = "+right;
+      el("memoVerdict").textContent = f.stars===2 ? "Mastered! Straight from memory."
+                                                  : "Correct \u2014 you remembered it!";
+      el("memoVerdict").className="verdict ok";
+    } else {
+      a.className="memoinput no";
+      el("memoFact").innerHTML = f.a+' <span class="eq">\u00D7</span> '+f.b+" = "+right;
+      el("memoVerdict").textContent = "Not yet \u2014 here it is again.";
+      el("memoVerdict").className="verdict no";
+      el("memoAgainText").textContent = 'Look at it again and say it out loud: "'+
+        sayLine(f.a,f.b)+'"';
+      el("memoAgain").classList.remove("hidden");
+    }
+    el("memoStars").innerHTML = memoStarMarkup(f);
+    f.lastTurn = M.turn;
+    M.turn++;
+    memoProgress();
+    if (ok) setTimeout(function(){ if (M.answered) nextMemoFact(); }, 1100);
+  }
+
+  function finishMemorize(){
+    el("memoDoneTitle").textContent = S.name
+      ? ("Memory Mission Complete, "+S.name+"! \uD83D\uDE80")
+      : "Memory Mission Complete! \uD83D\uDE80";
+    el("memoDoneDetail").textContent = "You mastered "+M.facts.length+" facts in "+
+      (S.table==="mixall" ? "mixed practice" : "the "+S.table+"s")+
+      " \u2014 each one recalled twice.";
+    el("memoBack").textContent = "Back to " +
+      (S.table==="mixall" ? "mixed facts" : "the "+S.table+"s");
+    show("memoDone");
+  }
+
+  el("memoReady").onclick    = function(){ memoRecall(); };
+  el("memoAgainBtn").onclick = function(){ nextMemoFact(); };
+  el("memoToQuick").onclick  = function(){ start("qc"); };
+  el("memoToPractice").onclick = function(){ start("practice"); };
+  el("memoBack").onclick     = function(){ openHub(S.table); };
+
+
+  /* ================= QUICK CHOICE =================
+     Multiple-choice recognition warm-up. Reuses the shared fact list,
+     the progress system, the results screen and missed-fact tracking. */
+  var QC_LEN = 12;
+
+  /* Believable wrong answers, in priority tiers so a big fact never gets
+     a giveaway choice like 5 next to 144. Tier 1 = neighbouring facts and
+     off-by-a-group slips; tier 2 = near misses; tier 3 only rescues the
+     0s and 1s, where tiers 1-2 collapse to almost nothing. */
+  function distractors(a, b){
+    var right=a*b, out=[], seen={};
+    seen[right]=1;
+    function take(list, need){
+      shuffle(list);
+      for (var i=0;i<list.length && out.length<need;i++){
+        var v=Math.round(list[i]);
+        if (v<0 || v>200 || seen[v]) continue;     /* no negatives, nothing absurd */
+        seen[v]=1; out.push(v);
+      }
+    }
+    take([a*(b+1), a*(b-1), (a+1)*b, (a-1)*b,
+          right+a, right-a, right+b, right-b,
+          a*(b+2), a*(b-2)], 3);
+    if (out.length<3) take([right+1, right-1, right+2, right-2,
+                            right+10, right-10, a+b, a+b+1], 3);
+    if (out.length<3) take([a, b, a*2, b*2, b+1, a+1,
+                            right+3, right+4, right+5, right+6], 3);
+    return out.slice(0,3);
+  }
+  function buildChoices(a, b){
+    var right=a*b, list=distractors(a,b).concat([right]);
+    return shuffle(list);
+  }
+
+  function runQC(){
+    S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.fix=false;
+    el("qcTitle").textContent = "Quick Choice \u2014 " +
+      (S.table==="mixall" ? "mixed facts" : "the "+S.table+"s");
+    show("qc");
+    renderQC();
+  }
+  function renderQC(){
+    var p=S.problems[S.idx];
+    S.answered=false;
+    el("qcBadge").textContent = (S.idx+1)+" of "+S.problems.length;
+    el("qcFill").style.width = (S.idx/S.problems.length*100)+"%";
+    el("qcFact").innerHTML = p[0]+' <span class="eq">\u00D7</span> '+p[1]+" = ?";
+    el("qcVerdict").textContent=""; el("qcVerdict").className="verdict";
+    el("qcNext").classList.add("hidden");
+    var box=el("qcChoices"); box.innerHTML="";
+    buildChoices(p[0],p[1]).forEach(function(v){
+      var b=document.createElement("button");
+      b.className="choice"; b.type="button"; b.textContent=v;
+      b.setAttribute("aria-label","Answer "+v);
+      b.onclick=function(){ answerQC(v, b); };
+      box.appendChild(b);
+    });
+  }
+  function answerQC(picked, node){
+    if (S.answered) return;
+    S.answered=true;
+    var p=S.problems[S.idx], right=p[0]*p[1], ok=picked===right;
+    var kids=el("qcChoices").children, i;
+    for (i=0;i<kids.length;i++){
+      kids[i].disabled=true;
+      if (Number(kids[i].textContent)===right){
+        kids[i].classList.add("right");
+        kids[i].innerHTML = right+'<span class="mark">\u2713 correct</span>';
+      }
+    }
+    if (ok){
+      S.correct++; S.streak++; if (S.streak>S.best) S.best=S.streak;
+      el("qcVerdict").textContent = "Correct! "+p[0]+" \u00D7 "+p[1]+" = "+right;
+      el("qcVerdict").className="verdict ok";
+      if (S.streak % 5 === 0) burst();
+      setTimeout(nextQC, 850);
+    } else {
+      S.streak=0;
+      S.misses.push(p[0]+"\u00D7"+p[1]);
+      node.classList.add("wrong");
+      node.innerHTML = picked+'<span class="mark">\u2717 not this one</span>';
+      el("qcVerdict").textContent = p[0]+" \u00D7 "+p[1]+" = "+right;
+      el("qcVerdict").className="verdict no";
+      el("qcNext").classList.remove("hidden");
+    }
+  }
+  function nextQC(){
+    S.idx++;
+    if (S.idx>=S.problems.length) finish(); else renderQC();
+  }
+  el("qcNext").onclick=function(){ nextQC(); };
+
   /* ---------- results ---------- */
   function starCount(pct){ return pct>=90 ? 3 : pct>=75 ? 2 : 1; }
 
@@ -730,9 +1141,10 @@
     if (isFix){
       el("doneTitle").textContent = S.name ? ("Fix-it round done, "+S.name+"!") : "Fix-it round done!";
     } else {
+      var base = S.mode==="qc" ? "Quick Choice Complete" : "Mission complete";
       el("doneTitle").textContent = S.name
-        ? (pct===100 ? ("Perfect, "+S.name+"!") : ("Mission complete, "+S.name+"!"))
-        : (pct===100 ? "Perfect mission!" : "Mission complete!");
+        ? (pct===100 ? ("Perfect, "+S.name+"!") : (base+", "+S.name+"!"))
+        : (pct===100 ? (S.mode==="qc" ? "Quick Choice Complete!" : "Perfect mission!") : base+"!");
     }
 
     el("stars").innerHTML=[0,1,2].map(function(i){
@@ -740,7 +1152,8 @@
     }).join("");
     el("finalScore").textContent=S.correct+" / "+total;
 
-    var modeName = isFix ? "Fix-it round" : (S.mode==="test" ? "Test" : "Practice");
+    var modeName = isFix ? "Fix-it round"
+      : (S.mode==="test" ? "Test" : S.mode==="qc" ? "Quick Choice" : "Practice");
     el("doneDetail").textContent = modeName+" \u00B7 "+pct+"% correct \u00B7 "+timeStr+
       " \u00B7 Longest streak: "+S.best+(S.best>=3 ? " \uD83D\uDD25" : "");
 
@@ -800,11 +1213,26 @@
   el("answer").addEventListener("keydown", function(e){
     if (e.key==="Enter"){ e.preventDefault(); if (S.answered) next(); else check(); }
   });
+  el("memoAnswer").addEventListener("keydown", function(e){
+    if (e.key==="Enter"){ e.preventDefault(); memoSubmit(); }
+  });
+  /* The keypad is a single element moved between Practice/Test and Memorize.
+     padCtx says which input it types into and what Check should do. */
+  var padCtx = {
+    input:"answer",
+    submit:function(){ if (S.answered) next(); else check(); },
+    locked:function(){ return S.answered; }
+  };
+  function mountPad(slotId, inputId, submitFn, lockedFn, checkLabel){
+    el(slotId).appendChild(el("pad"));
+    padCtx = {input:inputId, submit:submitFn, locked:lockedFn};
+    el("enterKey").textContent = checkLabel || "Check";
+  }
   el("pad").addEventListener("click", function(e){
     var b=e.target.closest("button"); if(!b) return;
-    var a=el("answer"), act=b.getAttribute("data-act");
-    if (act==="enter"){ if (S.answered) next(); else check(); return; }
-    if (S.answered) return;
+    var a=el(padCtx.input), act=b.getAttribute("data-act");
+    if (act==="enter"){ padCtx.submit(); return; }
+    if (padCtx.locked()) return;
     if (act==="del") a.value=a.value.slice(0,-1);
     else if (a.value.length<4) a.value+=b.textContent;
     if(!TOUCH) a.focus();
