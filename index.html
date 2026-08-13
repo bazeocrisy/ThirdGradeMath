@@ -177,6 +177,8 @@
   .foot .brandline b{color:var(--yellow)}
   .foot .credit{display:inline-block;margin-top:4px;font-family:var(--display);
     font-size:13px;color:var(--cyan)}
+  .foot .build{display:inline-block;margin-top:5px;font-family:var(--ui);
+    font-size:11px;letter-spacing:.06em;color:#8FB2DA}
   .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9}
   .bit{position:absolute;width:11px;height:16px;border-radius:3px;animation:fall 1s ease-out forwards}
   @keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1}
@@ -244,17 +246,18 @@
     .bubbles{margin:8px 0 0}
     .bubble{width:30px;height:30px;font-size:15px}
     .tagline{font-size:16px}
-    /* keep the quiz workflow inside one screen */
-    .problem{padding:6px 8px 2px}
-    .stack{font-size:38px;min-width:126px;line-height:1.08}
-    .answer{font-size:36px;margin-top:5px;padding-bottom:4px;border-bottom-width:5px}
+    /* short phones: trim spacing, but keep the numerals and keys comfortable.
+       A little vertical scrolling here is preferable to shrinking the math. */
+    .problem{padding:8px 8px 3px}
+    .stack{font-size:42px;min-width:138px;line-height:1.08}
+    .answer{font-size:40px;margin-top:6px;padding-bottom:5px;border-bottom-width:5px}
     .ruleline{border-bottom-width:5px}
-    .verdict{min-height:24px;font-size:17px;margin:6px 0 0}
-    .pad{gap:7px;margin-top:9px}
-    .key{padding:11px 0;font-size:20px}
+    .verdict{min-height:26px;font-size:17px;margin:7px 0 0}
+    .pad{gap:7px;margin-top:10px}
+    .key{padding:12px 0;font-size:21px}
     .key.word,.key.go{font-size:15px}
-    .track{height:13px;margin-bottom:10px}
-    #quiz .btn.block[data-go]{margin-top:9px;padding:10px 16px;font-size:15px;
+    .track{height:13px;margin-bottom:11px}
+    #quiz .btn.block[data-go]{margin-top:10px;padding:11px 16px;font-size:15px;
       background:transparent;box-shadow:none;border-width:2px}
   }
 </style>
@@ -372,7 +375,8 @@
   <p class="foot">
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
-    <span class="credit">Inspired by Christopher Bazemore II</span>
+    <span class="credit">Inspired by Christopher Bazemore II</span><br>
+    <span class="build">Build 6 &middot; 2026-08-13</span>
   </p>
 </div>
 
