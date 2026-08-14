@@ -213,28 +213,11 @@
   .btn.choice-mode:hover{background:#A6F2FF}
   .btn.choice-mode:active{box-shadow:0 1px 0 #4FB8D6}
   /* ===== memorize ===== */
-  .phase{text-align:center;font-family:var(--display);font-size:13px;font-weight:bold;
-    letter-spacing:.22em;color:var(--navy);background:var(--cyan);border:3px solid var(--navy);
-    border-radius:999px;padding:6px 0;margin:0 auto 14px;max-width:210px}
-  .phase.recall{background:var(--yellow)}
   .factbox{background:var(--sky);border:3px solid var(--line);border-radius:20px;
     padding:16px 12px;text-align:center}
   .fact{font-family:var(--display);font-size:44px;font-weight:bold;color:var(--navy);
     line-height:1.15;word-break:break-word}
   .fact .eq{color:var(--orange)}
-  .mastery{margin-top:8px;font-size:20px;letter-spacing:4px;color:var(--yellow)}
-  .mastery .off{color:#C9D9EC}
-  .mastery .txt{display:block;font-family:var(--ui);font-size:11px;font-weight:bold;
-    letter-spacing:.06em;color:var(--ink-soft);margin-top:3px}
-  .sayit{background:#FFF9E6;border:3px dashed var(--yellow);border-radius:16px;
-    padding:14px 16px;font-family:var(--display);font-size:17px;font-weight:bold;
-    color:var(--navy);text-align:center;margin:14px 0 0}
-  .memoinput{width:100%;max-width:260px;margin:14px auto 0;display:block;text-align:center;
-    font-family:var(--display);font-size:46px;font-weight:bold;color:var(--navy2);
-    border:none;border-bottom:6px dashed #B9CEE8;background:transparent;padding:0 0 6px}
-  .memoinput:focus{outline:none;border-bottom-color:var(--teal)}
-  .memoinput.ok{color:var(--right);border-bottom-color:var(--right)}
-  .memoinput.no{color:var(--wrong);border-bottom-color:var(--wrong)}
   /* ===== quick choice ===== */
   .choices2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
   .choice{font-family:var(--display);font-size:30px;font-weight:bold;cursor:pointer;
@@ -250,19 +233,15 @@
   @media (max-width:365px){
     .fact{font-size:36px}
     .choice{font-size:26px;padding:16px 4px}
-    .memoinput{font-size:40px}
-    .btn.mode .lbl{font-size:17px}
+      .btn.mode .lbl{font-size:17px}
     .btn.mode .tip{font-size:11px}
   }
   @media (max-height:700px){
     .fact{font-size:36px}
     .factbox{padding:12px 10px}
-    .sayit{font-size:15px;padding:11px 13px;margin-top:11px}
-    .memoinput{font-size:38px;margin-top:10px}
-    .choice{font-size:26px;padding:15px 4px}
+        .choice{font-size:26px;padding:15px 4px}
     .choices2{gap:8px;margin-top:12px}
-    .phase{margin-bottom:10px}
-  }
+    }
   /* ===== multi-select ===== */
   .tile .tick{display:block;font-family:var(--ui);font-size:11px;font-weight:bold;
     letter-spacing:.06em;margin-top:3px}
@@ -285,6 +264,46 @@
   .rchip:hover{background:var(--sky)}
   .rchip[aria-pressed=true]{background:var(--teal);color:var(--navy)}
   .rchip:focus-visible{outline:4px solid var(--teal);outline-offset:3px}
+  /* ===== flashcard ===== */
+  .flashcard .fact{font-size:40px}
+  .flashcard{display:block;width:100%;cursor:pointer;text-align:center;
+    background:var(--sky);border:4px solid var(--navy);border-radius:24px;
+    padding:26px 16px;min-height:210px;box-shadow:0 6px 0 rgba(11,31,91,.3);
+    font-family:var(--ui);color:var(--navy)}
+  .flashcard:hover{background:#DDF1FF}
+  .flashcard:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(11,31,91,.3)}
+  .flashcard:focus-visible{outline:4px solid var(--teal);outline-offset:4px}
+  .flashcard.back{background:#FFFDF3;border-color:var(--orange)}
+  .cardface{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+  .cardface.flip{animation:flipin .3s ease}
+  @keyframes flipin{0%{transform:scaleX(.25);opacity:.3}100%{transform:scaleX(1);opacity:1}}
+  .cardlabel{font-family:var(--ui);font-size:11px;font-weight:bold;letter-spacing:.18em;
+    color:var(--navy);background:var(--yellow);border:2px solid var(--navy);
+    border-radius:999px;padding:3px 12px}
+  .cardsub{font-family:var(--display);font-size:17px;font-weight:bold;color:var(--navy)}
+  .cardtap{font-family:var(--ui);font-size:12px;font-weight:bold;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--navy2);border-top:2px dashed #A9C4E4;
+    padding-top:9px;margin-top:2px;width:100%}
+  .cardwords{font-family:var(--display);font-size:17px;font-weight:bold;color:var(--navy2)}
+  .cardcount{text-align:center;font-family:var(--display);font-size:22px;
+    font-weight:bold;margin:6px 0 2px}
+  /* ===== contextual hint ===== */
+  .hintline{background:#fff;border-radius:12px;padding:8px 12px;margin-top:7px;
+    font-family:var(--display);font-size:16px;font-weight:bold;line-height:1.4;
+    word-break:break-word;color:var(--navy)}
+  .hintline.answer{background:#E9FBF4;color:var(--right)}
+  @media (max-width:365px){
+    .flashcard{padding:20px 10px;min-height:180px}
+    .flashcard .fact{font-size:30px}
+    .cardsub,.cardwords{font-size:15px}
+    .hintline{font-size:15px}
+  }
+  @media (max-height:700px){
+    .flashcard{padding:18px 12px;min-height:0}
+    .flashcard .fact{font-size:32px}
+    .cardsub,.cardwords{font-size:15px}
+    .hintline{font-size:15px;padding:7px 10px;margin-top:6px}
+  }
   .hidden{display:none}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   /* ---- tablet: roomier targets, no stretched keypad ---- */
@@ -299,10 +318,7 @@
   @media (min-width:700px) and (max-height:820px){
     .fact{font-size:38px}
     .factbox{padding:11px 10px}
-    .memoinput{font-size:40px;margin-top:9px}
-    .sayit{font-size:16px;padding:12px 14px;margin-top:11px}
-    .phase{margin-bottom:10px}
-    .choice{font-size:27px;padding:16px 4px}
+          .choice{font-size:27px;padding:16px 4px}
     .problem{padding:8px 10px 3px}
     .stack{font-size:44px;min-width:150px;line-height:1.08}
     .answer{font-size:42px;margin-top:6px;padding-bottom:5px}
@@ -327,6 +343,7 @@
     .bubbles{gap:6px;margin:10px 0 2px}
     .stack{font-size:46px;min-width:150px}
     .answer{font-size:42px}
+    .flashcard .fact{font-size:34px}
     .tile{font-size:24px;padding:12px 3px}
     .grid{grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:8px}
     .tile .tick{font-size:10px;margin-top:2px}
@@ -434,13 +451,13 @@
       <div class="example" id="hubExample"></div></div>
     <button class="btn block mode learn" id="toMemorize">
       <span class="lbl">Memorize</span>
-      <span class="tip">See it. Say it. Hide it. Remember it.</span></button>
+      <span class="tip">Flip flashcards until you know them.</span></button>
     <button class="btn block mode choice-mode" id="toQuick">
       <span class="lbl">Quick Choice</span>
       <span class="tip">Choose the correct answer.</span></button>
     <button class="btn block mode" id="toPractice">
       <span class="lbl">Practice</span>
-      <span class="tip">Type the answer. Get help when you need it.</span></button>
+      <span class="tip">Type the answer. Get a hint if you need one.</span></button>
     <button class="btn block mode quiet" id="toTest">
       <span class="lbl">Test Me</span>
       <span class="tip">No hints. See your results at the end.</span></button>
@@ -457,8 +474,10 @@
       <button class="link" id="peekBtn">Need a hint?</button>
     </div>
     <div class="track"><div class="fill" id="fill"></div></div>
-    <div id="peek" class="hint hidden" style="margin-bottom:16px"><b id="peekHead"></b><span id="peekBody"></span>
-      <div class="example" id="peekExample"></div></div>
+    <div id="peek" class="hint hidden" style="margin-bottom:16px" role="region" aria-label="Hint">
+      <b id="hintHead"></b>
+      <div id="hintLines"></div>
+    </div>
 
     <div id="askWrap">
       <div class="problem">
@@ -487,35 +506,31 @@
   </section>
 
 
-  <!-- ===== MEMORIZE ===== -->
+  <!-- ===== MEMORIZE (flashcards) ===== -->
   <section id="memo" class="card hidden">
     <div class="banner">
-      <h2><span class="rocket" aria-hidden="true">&#128640;</span><span id="memoTitle">Memorize the 2s</span></h2>
-      <span class="badge" id="memoBadge">0 of 6 mastered</span>
+      <h2><span class="rocket" aria-hidden="true">&#128640;</span><span id="memoTitle">Memorize</span></h2>
+      <span class="badge" id="memoBadge">0 learned &middot; 8 to go</span>
     </div>
     <div class="track"><div class="fill" id="memoFill"></div></div>
-    <p class="phase" id="memoPhase">LOOK</p>
+    <p class="step" id="memoLine">0 of 8 learned</p>
 
-    <div class="factbox">
-      <div class="fact" id="memoFact">2 <span class="eq">&times;</span> 7 = 14</div>
-      <div class="mastery" id="memoStars"></div>
-      <input class="memoinput hidden" id="memoAnswer" inputmode="numeric" autocomplete="off"
-             aria-label="Type the answer from memory" placeholder="?">
-    </div>
+    <button type="button" class="flashcard" id="card" aria-describedby="cardTap">
+      <span class="cardface" id="cardFront">
+        <span class="fact" id="cardFact">2 <span class="eq">&times;</span> 7 = ?</span>
+        <span class="cardsub">Think of the answer. Say it out loud.</span>
+        <span class="cardtap" id="cardTap">Tap the card to flip</span>
+      </span>
+      <span class="cardface hidden" id="cardBack">
+        <span class="cardlabel">Answer</span>
+        <span class="fact" id="cardAnswer">2 <span class="eq">&times;</span> 7 = 14</span>
+        <span class="cardwords" id="cardWords">Two times seven equals fourteen.</span>
+      </span>
+    </button>
 
-    <div id="memoLook">
-      <p class="sayit" id="memoSay"></p>
-      <button class="btn block learn" id="memoReady">I'm Ready &mdash; Hide the Answer</button>
-    </div>
-
-    <div id="memoRecall" class="hidden">
-      <div class="verdict" id="memoVerdict"></div>
-      <div id="padSlotMemo"></div>
-    </div>
-
-    <div id="memoAgain" class="hidden">
-      <p class="sayit" id="memoAgainText"></p>
-      <button class="btn block learn" id="memoAgainBtn">Say it, then keep going</button>
+    <div id="cardActions" class="hidden">
+      <button class="btn block learn" id="knewIt">&#10003; I knew it</button>
+      <button class="btn block quiet" id="againIt">&#8635; Practice again</button>
     </div>
 
     <button class="btn block ghost" data-go="menu" style="margin-top:16px">Quit to menu</button>
@@ -524,11 +539,11 @@
   <!-- ===== MEMORIZE COMPLETE ===== -->
   <section id="memoDone" class="card hidden">
     <div class="banner"><h2 id="memoDoneTitle">Memory Mission Complete! &#128640;</h2></div>
-    <div class="stars">&#9733;&#9733;</div>
+    <p class="cardcount" id="memoDoneCount">8 cards practiced</p>
     <p class="sub center" id="memoDoneDetail"></p>
     <button class="btn block choice-mode" id="memoToQuick">Quick Choice</button>
     <button class="btn block" id="memoToPractice">Practice</button>
-    <button class="btn block quiet" id="memoBack">Back to the 2s</button>
+    <button class="btn block quiet" id="memoBack">Back to Mission Menu</button>
     <button class="btn block ghost" data-go="menu">Pick a Different Number</button>
   </section>
 
@@ -583,7 +598,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b11 &middot; 2026-08-13</span>
+    <span class="build" title="build version">b12 &middot; 2026-08-13</span>
   </p>
 </div>
 
@@ -856,13 +871,9 @@
     S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.retry=false;
     el("quizTitle").textContent=shortTitle();
     el("modeBadge").textContent = S.fix ? "Fix-it round" : (S.mode==="test" ? "Test" : "Practice");
+    /* hints exist in Practice only — never in Test, Quick Choice or Memorize */
     el("peekBtn").classList.toggle("hidden", S.mode==="test");
-    el("peek").classList.add("hidden");
-    el("peekBtn").textContent="Need a hint?";
-    var rt=RULES[S.tables[0]];
-    el("peekHead").textContent=rt.h;
-    el("peekBody").textContent=rt.b;
-    el("peekExample").textContent="Example: "+rt.e;
+    closeHint();
     show("quiz"); render();
   }
   function render(){
@@ -876,6 +887,7 @@
     el("fill").style.width=(S.idx/S.problems.length*100)+"%";
     el("verdict").textContent=""; el("verdict").className="verdict";
     el("enterKey").textContent="Check";
+    closeHint();
     mountPad("padSlotQuiz","answer",
       function(){ if (S.answered) next(); else check(); },
       function(){ return S.answered; }, "Check");
@@ -988,14 +1000,12 @@
   }
 
 
-  /* ================= MEMORIZE =================
-     LOOK -> see the whole fact and say it out loud
-     REMEMBER -> answer hidden, recall it on the keypad
-     REINFORCE -> the full fact again, right or wrong
-     Mastered = two successful recalls that are SPACED:
-     other facts must appear in between. ================= */
-  var MEMO_LEN = 6, MEMO_GAP = 2;
-  var M = {facts:[], cur:null, turn:0, phase:"look", answered:false, done:0, lastKey:null};
+  /* ================= MEMORIZE — flashcards =================
+     See the problem -> think -> flip -> "I knew it" or "Practice again".
+     No keypad, no score, no stars. A card that needs another look is MOVED
+     back down the queue (never duplicated), so the queue can shrink but
+     never grow, and the session always ends. ========================= */
+  var M = {queue:[], cur:null, flipped:false, learned:0, total:0, repeats:0, busy:false};
 
   var ONES=["zero","one","two","three","four","five","six","seven","eight","nine","ten",
             "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen",
@@ -1008,155 +1018,184 @@
     return ONES[h]+" hundred"+(rest? " "+words(rest) : "");
   }
   function cap(t){ return t.charAt(0).toUpperCase()+t.slice(1); }
-  function sayLine(a,b){
-    return cap(words(a))+" times "+words(b)+" equals "+words(a*b)+".";
-  }
+  function sayLine(a,b){ return cap(words(a))+" times "+words(b)+" equals "+words(a*b)+"."; }
+  function factHTML(a,b,tail){ return a+' <span class="eq">\u00D7</span> '+b+" = "+tail; }
+
+  /* Session size: every selected table is represented, and the deck stays sane.
+     1 table -> 8 cards, 2-3 -> 3 each, 4-6 -> 2 each, 7+ -> 1 each. */
+  function deckSize(n){ return n<=1 ? 8 : n<=3 ? 3 : n<=6 ? 2 : 1; }
 
   function startMemorize(){
-    /* balanced across the selected tables, then de-duplicated */
-    var candidates = buildFrom(S.tables, Math.max(MEMO_LEN*4, 24));
-    var seen={}, picked=[];
-    candidates.forEach(function(f){
-      var k=f[0]+"x"+f[1];
-      if (!seen[k] && picked.length<MEMO_LEN){ seen[k]=1; picked.push(f); }
+    var per = deckSize(S.tables.length), seen = {}, deck = [];
+    S.tables.forEach(function(t){
+      var pool = shuffle(factsFor(t)), added = 0;
+      for (var i=0;i<pool.length && added<per;i++){
+        var a=pool[i][0], b=pool[i][1];
+        /* 2x7 and 7x2 count as the same card inside one deck */
+        var k = Math.min(a,b)+"x"+Math.max(a,b);
+        if (seen[k]) continue;
+        seen[k]=1; deck.push([a,b]); added++;
+      }
     });
-    M.facts = picked.map(function(f){
-      return {a:f[0], b:f[1], stars:0, lastTurn:-99, lastWinTurn:-99,
-              introduced:false, sawOther:false};
-    });
-    M.turn=0; M.done=0; M.answered=false; M.cur=null; M.lastKey=null;
+    M.queue = shuffle(deck);
+    M.total = deck.length; M.learned = 0; M.repeats = 0; M.cur = null; M.busy = false;
     el("memoTitle").textContent = "Memorize " +
       (S.tables.length===1 ? "the "+S.tables[0]+"s" : tablesPhrase(S.tables));
     show("memo");
-    nextMemoFact();
+    nextCard();
   }
 
-  function factKey(f){ return f.a+"x"+f.b; }
-
-  /* Next fact: unmastered, not seen within MEMO_GAP turns, fewest stars first.
-     If the pick would repeat the fact just shown, slip a different fact in
-     between instead — that is what makes the second star genuinely spaced,
-     and it guarantees the session can always finish. */
-  function pickFact(){
-    var pool = M.facts.filter(function(f){ return f.stars<2; });
-    if (!pool.length) return null;
-    var spaced = pool.filter(function(f){ return M.turn - f.lastTurn >= MEMO_GAP; });
-    var use = spaced.length ? spaced : pool;
-    use.sort(function(x,y){ return (x.stars-y.stars) || (x.lastTurn-y.lastTurn); });
-    var top = use.filter(function(f){ return f.stars===use[0].stars; });
-    var choice = top[Math.floor(Math.random()*Math.min(top.length,3))];
-
-    if (M.lastKey && factKey(choice)===M.lastKey && M.facts.length>1){
-      var others = M.facts.filter(function(f){ return factKey(f)!==M.lastKey; });
-      var open = others.filter(function(f){ return f.stars<2; });
-      var from = open.length ? open : others;      /* a mastered fact makes a fine review */
-      choice = from[Math.floor(Math.random()*from.length)];
-    }
-    return choice;
-  }
-
-  function memoStarMarkup(f){
-    var out="";
-    for (var i=0;i<2;i++) out += i<f.stars ? "\u2605" : '<span class="off">\u2606</span>';
-    var txt = f.stars===0 ? "New fact" : f.stars===1 ? "Star 1 earned" : "Mastered";
-    return out + '<span class="txt">'+txt+'</span>';
-  }
   function memoProgress(){
-    M.done = M.facts.filter(function(f){ return f.stars===2; }).length;
-    el("memoBadge").textContent = M.done+" of "+M.facts.length+" mastered";
-    el("memoFill").style.width = (M.done/M.facts.length*100)+"%";
+    el("memoBadge").textContent = M.learned+" learned \u00B7 "+M.queue.length+" to go";
+    el("memoLine").textContent  = M.learned+" of "+M.total+" learned";
+    el("memoFill").style.width  = (M.total ? (M.learned/M.total*100) : 0)+"%";
   }
 
-  function nextMemoFact(){
-    var f = pickFact();
-    if (!f){ finishMemorize(); return; }
-    M.cur=f; M.answered=false;
-    M.facts.forEach(function(g){ if (g!==f) g.sawOther = true; });
-    M.lastKey = factKey(f);
+  function nextCard(){
+    if (!M.queue.length){ finishMemorize(); return; }
+    M.cur = M.queue[0];
+    M.flipped = false; M.busy = false;
+    var a=M.cur[0], b=M.cur[1];
+    el("cardFact").innerHTML = factHTML(a,b,"?");
+    el("cardAnswer").innerHTML = factHTML(a,b,(a*b));
+    el("cardWords").textContent = sayLine(a,b);
+    el("card").classList.remove("back");
+    el("cardFront").classList.remove("hidden");
+    el("cardBack").classList.add("hidden");
+    el("cardActions").classList.add("hidden");
+    el("card").setAttribute("aria-label", a+" times "+b+". Tap to see the answer.");
     memoProgress();
-    el("memoStars").innerHTML = memoStarMarkup(f);
-    el("memoVerdict").textContent=""; el("memoVerdict").className="verdict";
-    el("memoAgain").classList.add("hidden");
-    if (!f.introduced) memoLook(); else memoRecall();
   }
 
-  function memoLook(){
-    var f=M.cur;
-    M.phase="look";
-    el("memoPhase").textContent="LOOK"; el("memoPhase").className="phase";
-    el("memoFact").innerHTML = f.a+' <span class="eq">\u00D7</span> '+f.b+" = "+(f.a*f.b);
-    el("memoSay").textContent = 'Say it out loud: "'+sayLine(f.a,f.b)+'"';
-    el("memoAnswer").classList.add("hidden");
-    el("memoLook").classList.remove("hidden");
-    el("memoRecall").classList.add("hidden");
+  function flipCard(){
+    if (M.flipped || !M.cur) return;          /* rapid taps cannot skip a card */
+    M.flipped = true;
+    el("card").classList.add("back");
+    el("cardFront").classList.add("hidden");
+    el("cardBack").classList.remove("hidden");
+    el("cardBack").classList.add("flip");
+    setTimeout(function(){ el("cardBack").classList.remove("flip"); }, 320);
+    el("cardActions").classList.remove("hidden");
+    el("card").setAttribute("aria-label",
+      M.cur[0]+" times "+M.cur[1]+" equals "+(M.cur[0]*M.cur[1]));
+    el("knewIt").focus();
   }
+  el("card").onclick = function(){ flipCard(); };
 
-  function memoRecall(){
-    var f=M.cur;
-    M.phase="recall"; M.answered=false;
-    el("memoPhase").textContent="REMEMBER"; el("memoPhase").className="phase recall";
-    el("memoFact").innerHTML = f.a+' <span class="eq">\u00D7</span> '+f.b+" = ?";
-    el("memoLook").classList.add("hidden");
-    el("memoRecall").classList.remove("hidden");
-    var a=el("memoAnswer");
-    a.classList.remove("hidden"); a.value=""; a.className="memoinput"; a.readOnly=TOUCH;
-    mountPad("padSlotMemo","memoAnswer", memoSubmit,
-             function(){ return M.answered; }, "Check");
-    if(!TOUCH) a.focus();
+  function knewIt(){
+    if (!M.flipped || M.busy) return;         /* only usable once the card is flipped */
+    M.busy = true;
+    M.queue.shift();                           /* learned: leaves the deck for good */
+    M.learned++;
+    nextCard();
   }
-
-  function memoSubmit(){ if (M.answered) nextMemoFact(); else memoCheck(); }
-
-  function memoCheck(){
-    var a=el("memoAnswer"), raw=a.value.trim();
-    if (raw===""){ if(!TOUCH) a.focus(); return; }
-    var f=M.cur, right=f.a*f.b, ok=Number(raw)===right;
-    /* the second star needs a DIFFERENT fact to have appeared since the first */
-    var spaced = f.sawOther === true;
-    M.answered=true; a.readOnly=true; f.introduced=true;
-
-    if (ok){
-      a.className="memoinput ok";
-      if (f.stars===0){ f.stars=1; f.lastWinTurn=M.turn; f.sawOther=false; }
-      else if (f.stars===1 && spaced){ f.stars=2; f.lastWinTurn=M.turn; }
-      el("memoFact").innerHTML = '\u2713 '+f.a+' <span class="eq">\u00D7</span> '+f.b+" = "+right;
-      el("memoVerdict").textContent = f.stars===2 ? "Mastered! Straight from memory."
-                                                  : "Correct \u2014 you remembered it!";
-      el("memoVerdict").className="verdict ok";
-    } else {
-      a.className="memoinput no";
-      el("memoFact").innerHTML = f.a+' <span class="eq">\u00D7</span> '+f.b+" = "+right;
-      el("memoVerdict").textContent = "Not yet \u2014 here it is again.";
-      el("memoVerdict").className="verdict no";
-      el("memoAgainText").textContent = 'Look at it again and say it out loud: "'+
-        sayLine(f.a,f.b)+'"';
-      el("memoAgain").classList.remove("hidden");
-    }
-    el("memoStars").innerHTML = memoStarMarkup(f);
-    f.lastTurn = M.turn;
-    M.turn++;
-    memoProgress();
-    if (ok) setTimeout(function(){ if (M.answered) nextMemoFact(); }, 1100);
+  function practiceAgain(){
+    if (!M.flipped || M.busy) return;
+    M.busy = true;
+    var card = M.queue.shift();
+    M.repeats++;
+    /* move it down the deck so other cards come first; never duplicated */
+    var at = Math.min(3, M.queue.length);
+    M.queue.splice(at, 0, card);
+    nextCard();
   }
+  el("knewIt").onclick  = function(){ knewIt(); };
+  el("againIt").onclick = function(){ practiceAgain(); };
 
   function finishMemorize(){
     el("memoDoneTitle").textContent = S.name
       ? ("Memory Mission Complete, "+S.name+"! \uD83D\uDE80")
       : "Memory Mission Complete! \uD83D\uDE80";
-    el("memoDoneDetail").textContent = "You mastered "+M.facts.length+" facts in "+
-      (S.tables.length===1 ? "the "+S.tables[0]+"s" : tablesPhrase(S.tables))+
-      " \u2014 each one recalled twice.";
-    el("memoBack").textContent = S.tables.length===1
-      ? ("Back to the "+S.tables[0]+"s") : "Back to your mission";
+    el("memoDoneCount").textContent = M.total+" card"+(M.total===1?"":"s")+" practiced";
+    el("memoDoneDetail").textContent = M.repeats
+      ? (M.repeats+" card"+(M.repeats===1?"":"s")+" needed another look. That is how it sticks.")
+      : "You knew every card on the first flip.";
     show("memoDone");
   }
 
-  el("memoReady").onclick    = function(){ memoRecall(); };
-  el("memoAgainBtn").onclick = function(){ nextMemoFact(); };
-  el("memoToQuick").onclick  = function(){ start("qc"); };
+  el("memoToQuick").onclick    = function(){ start("qc"); };
   el("memoToPractice").onclick = function(){ start("practice"); };
-  el("memoBack").onclick     = function(){ openHub(); };
+  el("memoBack").onclick       = function(){ openHub(); };
 
+  /* ================= CONTEXTUAL HINTS (Practice only) =================
+     Picks the most useful rule for the problem on screen, preferring a
+     factor the child actually selected, and shows the worked steps.
+     All rule headings come from the shared RULES object. */
+  var RULE_RANK = {2:1, 5:2, 10:3, 11:4, 9:5, 3:6, 4:7, 6:8, 8:9, 12:10, 7:11};
+
+  function helperFactor(a, b){
+    var cands=[a,b].filter(function(n){ return RULE_RANK[n]!==undefined; });
+    if (!cands.length) return null;
+    var picked = cands.filter(function(n){ return S.tables.indexOf(n)>=0; });
+    if (!picked.length) picked = cands;
+    picked.sort(function(x,y){ return RULE_RANK[x]-RULE_RANK[y]; });
+    return picked[0];
+  }
+  function skipChain(step, times){
+    var out=[];
+    for (var i=1;i<=times;i++) out.push(step*i);
+    return out.join(", ");
+  }
+  function hintFor(a, b){
+    var prod=a*b, lines=[], head;
+
+    if (a===0 || b===0){
+      head = RULES[0].h;
+      lines.push(a===0 ? ("0 \u00D7 "+b+" means zero groups of "+b+" \u2014 you never took any.")
+                       : (a+" \u00D7 0 means "+a+" group"+(a===1?"":"s")+" of 0 \u2014 every group is empty."));
+      lines.push("Either way there is nothing to count.");
+      lines.push({answer:a+" \u00D7 "+b+" = 0"});
+      return {head:head, lines:lines};
+    }
+    if (a===1 || b===1){
+      var other = (a===1) ? b : a;
+      head = RULES[1].h;
+      lines.push(a===1 ? ("1 \u00D7 "+b+" means one group of "+b+".")
+                       : (a+" \u00D7 1 means "+a+" group"+(a===1?"":"s")+" of 1."));
+      lines.push("Times 1 keeps the number the same, so the answer is "+other+".");
+      lines.push({answer:a+" \u00D7 "+b+" = "+prod});
+      return {head:head, lines:lines};
+    }
+
+    var h = helperFactor(a,b);
+    if (h===null){ return {head:"Work it out in groups",
+      lines:[a+" \u00D7 "+b+" means "+a+" groups of "+b+".",
+             "Count by "+b+"s: "+skipChain(b,a), {answer:a+" \u00D7 "+b+" = "+prod}]}; }
+    var other = (a===h) ? b : a;
+    head = RULES[h].h;
+    if (b===h && a!==b) lines.push("Turn it around: "+a+" \u00D7 "+b+" = "+b+" \u00D7 "+a+".");
+
+    if (h===2)       lines.push(other+" + "+other+" = "+prod+".");
+    else if (h===3)  lines.push(other+" + "+other+" + "+other+" = "+prod+".");
+    else if (h===4)  lines.push("Double "+other+" is "+(other*2)+", double again is "+prod+".");
+    else if (h===5)  lines.push("Count by 5s "+other+" times: "+skipChain(5,other)+".");
+    else if (h===10) lines.push("Write "+other+", then put a 0 after it: "+prod+".");
+    else if (h===11 && other<=9) lines.push("Write the "+other+" twice: "+prod+".");
+    else if (h===11) lines.push("Ten "+other+"s is "+(other*10)+", plus one more "+other+" = "+prod+".");
+    else if (h===9)  lines.push("Ten "+other+"s is "+(other*10)+", take away one "+other+": "+prod+".");
+    else if (h===12) lines.push("Ten "+other+"s is "+(other*10)+", plus two more "+other+"s = "+prod+".");
+    else             lines.push("Count by "+other+"s "+h+" times: "+skipChain(other,h)+".");
+
+    lines.push({answer:a+" \u00D7 "+b+" = "+prod});
+    return {head:head, lines:lines};
+  }
+
+  function renderHint(){
+    var p=S.problems[S.idx];
+    var h=hintFor(p[0], p[1]);
+    el("hintHead").textContent = h.head;
+    var box=el("hintLines"); box.innerHTML="";
+    h.lines.forEach(function(l){
+      var d=document.createElement("div");
+      if (typeof l === "object"){ d.className="hintline answer"; d.textContent=l.answer; }
+      else { d.className="hintline"; d.textContent=l; }
+      box.appendChild(d);
+    });
+  }
+  function closeHint(){
+    el("peek").classList.add("hidden");
+    el("peekBtn").textContent="Need a hint?";
+  }
 
   /* ================= QUICK CHOICE =================
      Multiple-choice recognition warm-up. Reuses the shared fact list,
@@ -1339,9 +1378,6 @@
   el("answer").addEventListener("keydown", function(e){
     if (e.key==="Enter"){ e.preventDefault(); if (S.answered) next(); else check(); }
   });
-  el("memoAnswer").addEventListener("keydown", function(e){
-    if (e.key==="Enter"){ e.preventDefault(); memoSubmit(); }
-  });
   /* The keypad is a single element moved between Practice/Test and Memorize.
      padCtx says which input it types into and what Check should do. */
   var padCtx = {
@@ -1364,7 +1400,15 @@
     if(!TOUCH) a.focus();
   });
   el("peekBtn").onclick=function(){
+    if (S.mode==="test") return;                  /* belt and braces */
     var hidden=el("peek").classList.toggle("hidden");
+    if (!hidden){
+      renderHint();                               /* always the current problem */
+      var pk=el("peek");
+      setTimeout(function(){
+        if (pk.scrollIntoView) pk.scrollIntoView({block:"nearest"});
+      }, 30);
+    }
     this.textContent = hidden ? "Need a hint?" : "Hide the hint";
   };
 
