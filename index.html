@@ -243,9 +243,25 @@
     .choices2{gap:8px;margin-top:12px}
     }
   /* ===== multi-select ===== */
+  .tile{position:relative;transition:opacity .12s ease, transform .08s ease}
   .tile .tick{display:block;font-family:var(--ui);font-size:11px;font-weight:bold;
     letter-spacing:.06em;margin-top:3px}
-  .tile.sel{border-width:4px;box-shadow:0 5px 0 #0E9B98}
+  /* unselected tiles stay clearly available — the picked ones lead on fill,
+     border, badge and shadow rather than on dimming alone */
+  .tile[aria-pressed=false]{opacity:.78}
+  .tile.sel{opacity:1;filter:none;border-width:4px;
+    box-shadow:0 6px 0 #0B7F7C, 0 0 0 3px #7EEBFF inset}
+  .tile.sel .check{position:absolute;top:-9px;right:-7px;width:26px;height:26px;
+    border-radius:50%;background:var(--navy);color:#fff;font-size:15px;font-weight:bold;
+    line-height:24px;text-align:center;border:2px solid #fff}
+  /* selection helpers get their own identities, both quieter than Begin Mission */
+  .btn.pickall{background:var(--cyan);color:var(--navy);box-shadow:0 4px 0 #4FB8D6}
+  .btn.pickall:hover{background:#A6F2FF}
+  .btn.pickall:active{box-shadow:0 1px 0 #4FB8D6}
+  .btn.pickclear{background:#FFDDD1;color:var(--navy);box-shadow:0 4px 0 #E0A48D}
+  .btn.pickclear:hover{background:#FFE9E1}
+  .btn.pickclear:active{box-shadow:0 1px 0 #E0A48D}
+  #beginMission{font-size:21px;padding:17px 20px;margin-top:14px}
   .summary{background:var(--sky);border:3px solid var(--line);border-radius:14px;
     padding:11px 13px;margin:14px 0 0;font-family:var(--display);font-size:16px;
     font-weight:bold;color:var(--navy);text-align:center;word-break:break-word}
@@ -429,8 +445,8 @@
     <p class="step">Step 1 of 2 &middot; Choose your numbers</p>
     <div class="grid" id="tiles"></div>
     <div class="selrow">
-      <button class="btn quiet" id="selectAll">Select All</button>
-      <button class="btn quiet" id="clearSel">Clear Selection</button>
+      <button class="btn pickall" id="selectAll">Select All</button>
+      <button class="btn pickclear" id="clearSel">Clear Selection</button>
     </div>
     <p class="summary none" id="selSummary">Tap the numbers you want to work on.</p>
     <button class="btn block" id="beginMission" disabled>&#128640; Begin Mission</button>
@@ -453,7 +469,7 @@
       <span class="lbl">Memorize</span>
       <span class="tip">Flip flashcards until you know them.</span></button>
     <button class="btn block mode choice-mode" id="toQuick">
-      <span class="lbl">Quick Choice</span>
+      <span class="lbl">Multiple Choice</span>
       <span class="tip">Choose the correct answer.</span></button>
     <button class="btn block mode" id="toPractice">
       <span class="lbl">Practice</span>
@@ -525,6 +541,7 @@
         <span class="cardlabel">Answer</span>
         <span class="fact" id="cardAnswer">2 <span class="eq">&times;</span> 7 = 14</span>
         <span class="cardwords" id="cardWords">Two times seven equals fourteen.</span>
+        <span class="cardtap">Tap again to flip back</span>
       </span>
     </button>
 
@@ -541,16 +558,16 @@
     <div class="banner"><h2 id="memoDoneTitle">Memory Mission Complete! &#128640;</h2></div>
     <p class="cardcount" id="memoDoneCount">8 cards practiced</p>
     <p class="sub center" id="memoDoneDetail"></p>
-    <button class="btn block choice-mode" id="memoToQuick">Quick Choice</button>
+    <button class="btn block choice-mode" id="memoToQuick">Multiple Choice</button>
     <button class="btn block" id="memoToPractice">Practice</button>
     <button class="btn block quiet" id="memoBack">Back to Mission Menu</button>
     <button class="btn block ghost" data-go="menu">Pick a Different Number</button>
   </section>
 
-  <!-- ===== QUICK CHOICE ===== -->
+  <!-- ===== MULTIPLE CHOICE ===== -->
   <section id="qc" class="card hidden">
     <div class="banner">
-      <h2><span class="rocket" aria-hidden="true">&#128640;</span><span id="qcTitle">Quick Choice</span></h2>
+      <h2><span class="rocket" aria-hidden="true">&#128640;</span><span id="qcTitle">Multiple Choice</span></h2>
       <span class="badge" id="qcBadge">1 of 12</span>
     </div>
     <div class="track"><div class="fill" id="qcFill"></div></div>
@@ -598,7 +615,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b12 &middot; 2026-08-13</span>
+    <span class="build" title="build version">b14 &middot; 2026-08-13</span>
   </p>
 </div>
 
@@ -644,7 +661,6 @@
        e:"12 \u00D7 2 means 12 groups of 2: 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24."}
   };
 
-  var PRACTICE_LEN = 12, TEST_LEN = 20;
 
   var mem = {};
   var store = {
@@ -678,24 +694,20 @@
   function shortTitle(){
     return S.tables.length===1 ? "The "+S.tables[0]+"s" : tablesPhrase(S.tables);
   }
-  /* both orientations of every fact in one table */
-  function factsFor(t){
+  /* The 12 facts of one table: t x 1 through t x 12.
+     Each is shown in a random orientation (t x i or i x t) so the child still
+     meets both ways round, while the count stays exactly 12 per table. */
+  function fullFacts(t){
     var out=[];
-    for (var i=0;i<=12;i++){ out.push([t,i]); out.push([i,t]); }
+    for (var i=1;i<=12;i++) out.push(Math.random()<0.5 ? [t,i] : [i,t]);
     return out;
   }
-  /* Even split across the selected tables; leftovers go one each to a random
-     subset, then the whole set is shuffled so tables never arrive in blocks. */
-  function buildFrom(list, len){
-    if (!list.length) return [];
-    var per=Math.floor(len/list.length), extra=len%list.length;
-    var order=shuffle(list.slice()), out=[];
-    order.forEach(function(t, idx){
-      var quota=per+(idx<extra ? 1 : 0);
-      var pool=shuffle(factsFor(t));
-      while (pool.length<quota) pool=pool.concat(shuffle(factsFor(t)));
-      out=out.concat(pool.slice(0,quota));
-    });
+  /* Every selected table contributes its full 12, then the whole mission is
+     shuffled so the tables arrive mixed rather than in blocks.
+     1 table = 12 problems, 2 = 24, 3 = 36, and so on. */
+  function buildFrom(list){
+    var out=[];
+    list.forEach(function(t){ out=out.concat(fullFacts(t)); });
     return shuffle(out);
   }
   var LAST = null;   /* snapshot of the last full mission — fix-it rounds never overwrite it */
@@ -790,7 +802,8 @@
       b.setAttribute("aria-label", (on ? "Selected: the " : "Choose the ")+num+"s");
       b.style.background = on ? "#20D6D2" : COLORS[num];
       b.style.color = (on || LIGHT[num]) ? "#0B1F5B" : "#FFFFFF";
-      b.innerHTML = num + '<span class="tick">' + (on ? "\u2713 PICKED" : "&nbsp;") + '</span>';
+      b.innerHTML = (on ? '<span class="check" aria-hidden="true">\u2713</span>' : "") +
+        num + '<span class="tick">' + (on ? "PICKED" : "&nbsp;") + '</span>';
     });
     var sum=el("selSummary");
     if (!SEL.length){
@@ -861,17 +874,17 @@
   el("toTest").onclick=function(){ start("test"); };
 
   /* ---------- problems ---------- */
-  function build(len){ S.problems = buildFrom(S.tables, len); }
+  function build(){ S.problems = buildFrom(S.tables); }
   function start(mode){
     S.mode=mode; S.fix=false;
-    build(mode==="test" ? TEST_LEN : (mode==="qc" ? QC_LEN : PRACTICE_LEN));
+    build();                       /* 12 facts per selected table, shuffled */
     if (mode==="qc") runQC(); else run();
   }
   function run(){
     S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.retry=false;
     el("quizTitle").textContent=shortTitle();
     el("modeBadge").textContent = S.fix ? "Fix-it round" : (S.mode==="test" ? "Test" : "Practice");
-    /* hints exist in Practice only — never in Test, Quick Choice or Memorize */
+    /* hints exist in Practice only — never in Test, Multiple Choice or Memorize */
     el("peekBtn").classList.toggle("hidden", S.mode==="test");
     closeHint();
     show("quiz"); render();
@@ -1005,7 +1018,8 @@
      No keypad, no score, no stars. A card that needs another look is MOVED
      back down the queue (never duplicated), so the queue can shrink but
      never grow, and the session always ends. ========================= */
-  var M = {queue:[], cur:null, flipped:false, learned:0, total:0, repeats:0, busy:false};
+  var M = {queue:[], cur:null, flipped:false, seen:false, learned:0,
+           total:0, repeats:0, busy:false};
 
   var ONES=["zero","one","two","three","four","five","six","seven","eight","nine","ten",
             "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen",
@@ -1021,24 +1035,15 @@
   function sayLine(a,b){ return cap(words(a))+" times "+words(b)+" equals "+words(a*b)+"."; }
   function factHTML(a,b,tail){ return a+' <span class="eq">\u00D7</span> '+b+" = "+tail; }
 
-  /* Session size: every selected table is represented, and the deck stays sane.
-     1 table -> 8 cards, 2-3 -> 3 each, 4-6 -> 2 each, 7+ -> 1 each. */
-  function deckSize(n){ return n<=1 ? 8 : n<=3 ? 3 : n<=6 ? 2 : 1; }
-
+  /* Memorize uses exactly the same deck as every other mode: each selected
+     table contributes all 12 of its facts, shuffled together. No cap and no
+     de-duplication — a card's identity is the (table, multiplier) slot it came
+     from, not the pair of digits on its face, so the 2s x5 card and the 5s x2
+     card are two different cards even when orientation makes them look alike. */
   function startMemorize(){
-    var per = deckSize(S.tables.length), seen = {}, deck = [];
-    S.tables.forEach(function(t){
-      var pool = shuffle(factsFor(t)), added = 0;
-      for (var i=0;i<pool.length && added<per;i++){
-        var a=pool[i][0], b=pool[i][1];
-        /* 2x7 and 7x2 count as the same card inside one deck */
-        var k = Math.min(a,b)+"x"+Math.max(a,b);
-        if (seen[k]) continue;
-        seen[k]=1; deck.push([a,b]); added++;
-      }
-    });
-    M.queue = shuffle(deck);
-    M.total = deck.length; M.learned = 0; M.repeats = 0; M.cur = null; M.busy = false;
+    M.queue = buildFrom(S.tables);
+    M.total = M.queue.length; M.learned = 0; M.repeats = 0;
+    M.cur = null; M.flipped = false; M.seen = false; M.busy = false;
     el("memoTitle").textContent = "Memorize " +
       (S.tables.length===1 ? "the "+S.tables[0]+"s" : tablesPhrase(S.tables));
     show("memo");
@@ -1054,7 +1059,7 @@
   function nextCard(){
     if (!M.queue.length){ finishMemorize(); return; }
     M.cur = M.queue[0];
-    M.flipped = false; M.busy = false;
+    M.flipped = false; M.seen = false; M.busy = false;
     var a=M.cur[0], b=M.cur[1];
     el("cardFact").innerHTML = factHTML(a,b,"?");
     el("cardAnswer").innerHTML = factHTML(a,b,(a*b));
@@ -1067,30 +1072,36 @@
     memoProgress();
   }
 
+  /* A real flashcard: front <-> back as many times as the child likes.
+     Flipping never advances the deck; only the two buttons do that. */
   function flipCard(){
-    if (M.flipped || !M.cur) return;          /* rapid taps cannot skip a card */
-    M.flipped = true;
-    el("card").classList.add("back");
-    el("cardFront").classList.add("hidden");
-    el("cardBack").classList.remove("hidden");
-    el("cardBack").classList.add("flip");
-    setTimeout(function(){ el("cardBack").classList.remove("flip"); }, 320);
-    el("cardActions").classList.remove("hidden");
-    el("card").setAttribute("aria-label",
-      M.cur[0]+" times "+M.cur[1]+" equals "+(M.cur[0]*M.cur[1]));
-    el("knewIt").focus();
+    if (!M.cur || M.busy) return;
+    M.flipped = !M.flipped;
+    var face = M.flipped ? el("cardBack") : el("cardFront");
+    var hide = M.flipped ? el("cardFront") : el("cardBack");
+    el("card").classList.toggle("back", M.flipped);
+    hide.classList.add("hidden");
+    face.classList.remove("hidden");
+    face.classList.add("flip");
+    setTimeout(function(){ face.classList.remove("flip"); }, 320);
+    /* once the answer has been seen, the two choices stay available */
+    if (M.flipped) M.seen = true;
+    el("cardActions").classList.toggle("hidden", !M.seen);
+    el("card").setAttribute("aria-label", M.flipped
+      ? (M.cur[0]+" times "+M.cur[1]+" equals "+(M.cur[0]*M.cur[1])+". Tap to flip back.")
+      : (M.cur[0]+" times "+M.cur[1]+". Tap to see the answer."));
   }
   el("card").onclick = function(){ flipCard(); };
 
   function knewIt(){
-    if (!M.flipped || M.busy) return;         /* only usable once the card is flipped */
+    if (!M.seen || M.busy) return;            /* only after the answer has been seen */
     M.busy = true;
     M.queue.shift();                           /* learned: leaves the deck for good */
     M.learned++;
     nextCard();
   }
   function practiceAgain(){
-    if (!M.flipped || M.busy) return;
+    if (!M.seen || M.busy) return;
     M.busy = true;
     var card = M.queue.shift();
     M.repeats++;
@@ -1197,10 +1208,9 @@
     el("peekBtn").textContent="Need a hint?";
   }
 
-  /* ================= QUICK CHOICE =================
-     Multiple-choice recognition warm-up. Reuses the shared fact list,
+  /* ================= MULTIPLE CHOICE =================
+     Recognition warm-up. Reuses the shared fact list,
      the progress system, the results screen and missed-fact tracking. */
-  var QC_LEN = 12;
 
   /* Believable wrong answers, in priority tiers so a big fact never gets
      a giveaway choice like 5 next to 144. Tier 1 = neighbouring facts and
@@ -1233,7 +1243,7 @@
 
   function runQC(){
     S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.fix=false;
-    el("qcTitle").textContent = "Quick Choice \u2014 " + shortTitle();
+    el("qcTitle").textContent = "Multiple Choice \u2014 " + shortTitle();
     show("qc");
     renderQC();
   }
@@ -1304,10 +1314,10 @@
     if (isFix){
       el("doneTitle").textContent = S.name ? ("Fix-it round done, "+S.name+"!") : "Fix-it round done!";
     } else {
-      var base = S.mode==="qc" ? "Quick Choice Complete" : "Mission complete";
+      var base = S.mode==="qc" ? "Multiple Choice Complete" : "Mission complete";
       el("doneTitle").textContent = S.name
         ? (pct===100 ? ("Perfect, "+S.name+"!") : (base+", "+S.name+"!"))
-        : (pct===100 ? (S.mode==="qc" ? "Quick Choice Complete!" : "Perfect mission!") : base+"!");
+        : (pct===100 ? (S.mode==="qc" ? "Multiple Choice Complete!" : "Perfect mission!") : base+"!");
     }
 
     el("stars").innerHTML=[0,1,2].map(function(i){
@@ -1316,7 +1326,7 @@
     el("finalScore").textContent=S.correct+" / "+total;
 
     var modeName = isFix ? "Fix-it round"
-      : (S.mode==="test" ? "Test" : S.mode==="qc" ? "Quick Choice" : "Practice");
+      : (S.mode==="test" ? "Test" : S.mode==="qc" ? "Multiple Choice" : "Practice");
     el("doneDetail").textContent = modeName+" \u00B7 "+pct+"% correct \u00B7 "+timeStr+
       " \u00B7 Longest streak: "+S.best+(S.best>=3 ? " \uD83D\uDD25" : "");
 
