@@ -108,13 +108,14 @@
     box-shadow:0 4px 0 rgba(11,31,91,.3);animation:bob 2.6s ease-in-out infinite}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
   /* ---------- menu ---------- */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:9px}
   .tile{font-family:var(--display);font-size:32px;font-weight:bold;color:#fff;cursor:pointer;
     padding:20px 6px;border:3px solid var(--navy);border-radius:18px;
     box-shadow:0 5px 0 rgba(11,31,91,.35);transition:transform .08s ease}
   .tile:hover{transform:translateY(-2px)}
   .tile:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(11,31,91,.35)}
   .tile.wide{grid-column:span 2;font-size:21px}
+  @media (min-width:1025px){ .grid{gap:10px} }
   /* ---------- panels ---------- */
   .hint{background:var(--sky);border:3px solid var(--teal);border-radius:18px;padding:16px 18px}
   .hint b{display:block;font-family:var(--display);font-size:20px;margin-bottom:6px}
@@ -243,30 +244,50 @@
     .choices2{gap:8px;margin-top:12px}
     }
   /* ===== multi-select ===== */
-  .tile{position:relative;transition:opacity .12s ease, transform .08s ease}
-  .tile .tick{display:block;font-family:var(--ui);font-size:11px;font-weight:bold;
-    letter-spacing:.06em;margin-top:3px}
-  /* unselected tiles stay clearly available — the picked ones lead on fill,
-     border, badge and shadow rather than on dimming alone */
-  .tile[aria-pressed=false]{opacity:.78}
-  .tile.sel{opacity:1;filter:none;border-width:4px;
-    box-shadow:0 6px 0 #0B7F7C, 0 0 0 3px #7EEBFF inset}
-  .tile.sel .check{position:absolute;top:-9px;right:-7px;width:26px;height:26px;
+  /* ---- two-step wizard indicator ---- */
+  .stepper{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+    gap:6px;margin:0 0 14px}
+  .stepitem{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);
+    font-size:13px;font-weight:bold;padding:7px 12px;border-radius:999px;
+    border:2px solid var(--navy);white-space:nowrap}
+  .stepitem b{display:inline-flex;align-items:center;justify-content:center;
+    width:19px;height:19px;border-radius:50%;font-size:12px}
+  .stepitem.now{background:var(--navy);color:#fff}
+  .stepitem.now b{background:var(--yellow);color:var(--navy)}
+  .stepitem.next{background:#fff;color:var(--navy);border-style:dashed}
+  .stepitem.next b{background:var(--sky);color:var(--navy)}
+  .stepitem.done{background:var(--teal);color:var(--navy)}
+  .stepitem.done b{background:var(--navy);color:#fff}
+  .steparrow{color:var(--ink-soft);font-weight:bold;font-size:15px}
+  .leadin{text-align:center;font-family:var(--display);font-size:17px;font-weight:bold;
+    color:var(--navy);margin:0 0 12px}
+  /* ---- number tiles: vibrant when free, unmistakable when picked ---- */
+  .tile{position:relative;min-height:58px;transition:transform .08s ease}
+  .tile[aria-pressed=false]{opacity:1}
+  .tile.sel{border-width:4px;
+    box-shadow:0 6px 0 #0B7F7C, 0 0 0 4px rgba(126,235,255,.85);
+    transform:translateY(-2px)}
+  .tile .check{position:absolute;top:-9px;right:-8px;width:26px;height:26px;
     border-radius:50%;background:var(--navy);color:#fff;font-size:15px;font-weight:bold;
-    line-height:24px;text-align:center;border:2px solid #fff}
-  /* selection helpers get their own identities, both quieter than Begin Mission */
-  .btn.pickall{background:var(--cyan);color:var(--navy);box-shadow:0 4px 0 #4FB8D6}
+    line-height:23px;text-align:center;border:2px solid #fff}
+  /* ---- utility controls: useful, deliberately quieter than Continue ---- */
+  .btn.pickall{background:var(--cyan);color:var(--navy);box-shadow:0 3px 0 #4FB8D6}
   .btn.pickall:hover{background:#A6F2FF}
   .btn.pickall:active{box-shadow:0 1px 0 #4FB8D6}
-  .btn.pickclear{background:#FFDDD1;color:var(--navy);box-shadow:0 4px 0 #E0A48D}
+  .btn.pickclear{background:#FFDDD1;color:var(--navy);box-shadow:0 3px 0 #E0A48D}
   .btn.pickclear:hover{background:#FFE9E1}
   .btn.pickclear:active{box-shadow:0 1px 0 #E0A48D}
-  #beginMission{font-size:21px;padding:17px 20px;margin-top:14px}
+  .selrow .btn{font-size:14px;padding:10px 8px;border-width:2px}
+  #beginMission{font-size:22px;padding:18px 20px;margin-top:12px}
+  .nexthint{text-align:center;font-family:var(--ui);font-size:12px;font-weight:bold;
+    color:var(--ink-soft);margin:8px 0 0}
   .summary{background:var(--sky);border:3px solid var(--line);border-radius:14px;
     padding:11px 13px;margin:14px 0 0;font-family:var(--display);font-size:16px;
     font-weight:bold;color:var(--navy);text-align:center;word-break:break-word}
   .summary.none{color:var(--ink-soft);font-weight:normal;font-family:var(--ui);font-size:14px}
-  .btn[disabled]{background:#E4EAF3;color:#7C8CA8;border-color:#AFC0D8;
+  /* disabled: readable enough for a child to understand the label,
+     but flat and grey so it plainly is not the button yet */
+  .btn[disabled]{background:#E4EAF3;color:#5F718F;border-color:#AFC0D8;
     box-shadow:none;cursor:default}
   .btn[disabled]:hover{background:#E4EAF3;filter:none}
   .btn[disabled]:active{transform:none;box-shadow:none}
@@ -361,8 +382,7 @@
     .answer{font-size:42px}
     .flashcard .fact{font-size:34px}
     .tile{font-size:24px;padding:12px 3px}
-    .grid{grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:8px}
-    .tile .tick{font-size:10px;margin-top:2px}
+    .grid{grid-template-columns:repeat(5,1fr);gap:7px}
     .summary{font-size:15px;padding:9px 11px;margin-top:11px}
     .selrow{gap:8px;margin-top:10px}
     .selrow .btn{font-size:14px;padding:11px 8px}
@@ -380,7 +400,7 @@
     .banner{margin:-13px -13px 14px;padding:12px 13px}
     .banner h1,.banner h2{font-size:17px}
     .badge{padding:5px 10px;font-size:12px}
-    .grid{grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:7px}
+    .grid{grid-template-columns:repeat(5,1fr);gap:6px}
     .tile{font-size:22px;padding:11px 2px}
     .stack{font-size:40px;min-width:132px}
     .answer{font-size:38px}
@@ -442,14 +462,20 @@
       <h2 id="hello">Pick a number</h2>
       <button class="badge link" id="signOut">I'm all done</button>
     </div>
-    <p class="step">Step 1 of 2 &middot; Choose your numbers</p>
+    <div class="stepper" aria-label="Step 1 of 2">
+      <span class="stepitem now"><b>1</b> Choose Numbers</span>
+      <span class="steparrow" aria-hidden="true">&rarr;</span>
+      <span class="stepitem next"><b>2</b> Choose How to Learn</span>
+    </div>
+    <p class="leadin">Pick one or more numbers you want to practice.</p>
     <div class="grid" id="tiles"></div>
     <div class="selrow">
       <button class="btn pickall" id="selectAll">Select All</button>
       <button class="btn pickclear" id="clearSel">Clear Selection</button>
     </div>
-    <p class="summary none" id="selSummary">Tap the numbers you want to work on.</p>
-    <button class="btn block" id="beginMission" disabled>&#128640; Begin Mission</button>
+    <p class="summary none" id="selSummary">Pick at least one number to continue.</p>
+    <button class="btn block" id="beginMission" disabled>Continue &#128640;</button>
+    <p class="nexthint">Next: choose how you want to learn</p>
   </section>
 
   <!-- ===== PRACTICE OR TEST ===== -->
@@ -458,7 +484,11 @@
       <h2 id="hubTitle">The 2s</h2>
       <button class="badge link" data-go="menu">&larr; Menu</button>
     </div>
-    <p class="step">Step 2 of 2 &middot; Pick how you want to learn</p>
+    <div class="stepper" aria-label="Step 2 of 2">
+      <span class="stepitem done"><b>&#10003;</b> Choose Numbers</span>
+      <span class="steparrow" aria-hidden="true">&rarr;</span>
+      <span class="stepitem now"><b>2</b> Choose How to Learn</span>
+    </div>
     <div id="ruleReview" class="hidden">
       <label style="margin-top:0">Review your rules</label>
       <div class="chips" id="ruleChips"></div>
@@ -518,7 +548,7 @@
       <button class="btn block go" id="tryAgain">Try it again</button>
     </div>
 
-    <button class="btn block quiet" data-go="menu" style="margin-top:16px">Quit to menu</button>
+    <button class="btn block quiet" data-go="menu" style="margin-top:16px">&#127968; Home</button>
   </section>
 
 
@@ -550,7 +580,7 @@
       <button class="btn block quiet" id="againIt">&#8635; Practice again</button>
     </div>
 
-    <button class="btn block ghost" data-go="menu" style="margin-top:16px">Quit to menu</button>
+    <button class="btn block ghost" data-go="menu" style="margin-top:16px">&#127968; Home</button>
   </section>
 
   <!-- ===== MEMORIZE COMPLETE ===== -->
@@ -577,7 +607,7 @@
     <div class="choices2" id="qcChoices"></div>
     <div class="verdict" id="qcVerdict"></div>
     <button class="btn block hidden" id="qcNext">Next</button>
-    <button class="btn block ghost" data-go="menu" style="margin-top:12px">Quit to menu</button>
+    <button class="btn block ghost" data-go="menu" style="margin-top:12px">&#127968; Home</button>
   </section>
 
   <!-- ===== RESULTS ===== -->
@@ -615,7 +645,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b14 &middot; 2026-08-13</span>
+    <span class="build" title="build version">b15 &middot; 2026-08-13</span>
   </p>
 </div>
 
@@ -673,7 +703,7 @@
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var TOUCH = window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
   /* S.tables is the single source of truth for which tables are in play.
-     It is set once, when Begin Mission is tapped, and only read after that —
+     It is set once, when Continue is tapped, and only read after that —
      no mode writes to it, so a retry or a fix-it round cannot change the set. */
   var S = {name:"", tables:[2], mode:"practice", problems:[], idx:0, correct:0, streak:0,
            best:0, misses:[], answered:false, start:0, retry:false, fix:false, fixPool:[]};
@@ -802,17 +832,19 @@
       b.setAttribute("aria-label", (on ? "Selected: the " : "Choose the ")+num+"s");
       b.style.background = on ? "#20D6D2" : COLORS[num];
       b.style.color = (on || LIGHT[num]) ? "#0B1F5B" : "#FFFFFF";
-      b.innerHTML = (on ? '<span class="check" aria-hidden="true">\u2713</span>' : "") +
-        num + '<span class="tick">' + (on ? "PICKED" : "&nbsp;") + '</span>';
+      b.innerHTML = (on ? '<span class="check" aria-hidden="true">\u2713</span>' : "") + num;
     });
     var sum=el("selSummary");
     if (!SEL.length){
       sum.className="summary none";
-      sum.textContent="Tap the numbers you want to work on.";
+      sum.textContent="Pick at least one number to continue.";
     } else {
+      /* 12 problems for every selected table — the same rule the modes use */
+      var probs = SEL.length*12;
       sum.className="summary";
-      sum.textContent = SEL.length<=4 ? ("Selected: "+tblNames(SEL).join(", "))
-                                      : (SEL.length+" tables selected");
+      sum.textContent = (SEL.length<=4
+        ? ("Selected: "+tablesPhrase(SEL))
+        : (SEL.length+" tables selected")) + " \u00B7 "+probs+" problems";
     }
     el("beginMission").disabled = SEL.length===0;
     el("selectAll").textContent = SEL.length===13 ? "Unselect All" : "Select All";
