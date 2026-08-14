@@ -244,21 +244,6 @@
     .choices2{gap:8px;margin-top:12px}
     }
   /* ===== multi-select ===== */
-  /* ---- two-step wizard indicator ---- */
-  .stepper{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
-    gap:6px;margin:0 0 14px}
-  .stepitem{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);
-    font-size:13px;font-weight:bold;padding:7px 12px;border-radius:999px;
-    border:2px solid var(--navy);white-space:nowrap}
-  .stepitem b{display:inline-flex;align-items:center;justify-content:center;
-    width:19px;height:19px;border-radius:50%;font-size:12px}
-  .stepitem.now{background:var(--navy);color:#fff}
-  .stepitem.now b{background:var(--yellow);color:var(--navy)}
-  .stepitem.next{background:#fff;color:var(--navy);border-style:dashed}
-  .stepitem.next b{background:var(--sky);color:var(--navy)}
-  .stepitem.done{background:var(--teal);color:var(--navy)}
-  .stepitem.done b{background:var(--navy);color:#fff}
-  .steparrow{color:var(--ink-soft);font-weight:bold;font-size:15px}
   .leadin{text-align:center;font-family:var(--display);font-size:17px;font-weight:bold;
     color:var(--navy);margin:0 0 12px}
   /* ---- number tiles: vibrant when free, unmistakable when picked ---- */
@@ -279,8 +264,6 @@
   .btn.pickclear:active{box-shadow:0 1px 0 #E0A48D}
   .selrow .btn{font-size:14px;padding:10px 8px;border-width:2px}
   #beginMission{font-size:22px;padding:18px 20px;margin-top:12px}
-  .nexthint{text-align:center;font-family:var(--ui);font-size:12px;font-weight:bold;
-    color:var(--ink-soft);margin:8px 0 0}
   .summary{background:var(--sky);border:3px solid var(--line);border-radius:14px;
     padding:11px 13px;margin:14px 0 0;font-family:var(--display);font-size:16px;
     font-weight:bold;color:var(--navy);text-align:center;word-break:break-word}
@@ -322,8 +305,6 @@
     text-transform:uppercase;color:var(--navy2);border-top:2px dashed #A9C4E4;
     padding-top:9px;margin-top:2px;width:100%}
   .cardwords{font-family:var(--display);font-size:17px;font-weight:bold;color:var(--navy2)}
-  .cardcount{text-align:center;font-family:var(--display);font-size:22px;
-    font-weight:bold;margin:6px 0 2px}
   /* ===== contextual hint ===== */
   .hintline{background:#fff;border-radius:12px;padding:8px 12px;margin-top:7px;
     font-family:var(--display);font-size:16px;font-weight:bold;line-height:1.4;
@@ -341,6 +322,14 @@
     .cardsub,.cardwords{font-size:15px}
     .hintline{font-size:15px;padding:7px 10px;margin-top:6px}
   }
+  .ask{text-align:center;font-family:var(--display);font-size:23px;margin:2px 0 4px}
+  .context{text-align:center;font-family:var(--display);font-size:16px;font-weight:bold;
+    color:var(--navy);background:var(--sky);border-radius:14px;padding:10px 12px;
+    margin:0 0 16px;word-break:break-word}
+  .cardnav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .cardnav .btn{margin-top:0;font-size:17px;padding:14px 10px}
+  @media (max-width:365px){ .cardnav{gap:8px} .cardnav .btn{font-size:15px;padding:13px 6px}
+    .ask{font-size:20px} .context{font-size:15px} }
   .hidden{display:none}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   /* ---- tablet: roomier targets, no stretched keypad ---- */
@@ -462,51 +451,43 @@
       <h2 id="hello">Pick a number</h2>
       <button class="badge link" id="signOut">I'm all done</button>
     </div>
-    <div class="stepper" aria-label="Step 1 of 2">
-      <span class="stepitem now"><b>1</b> Choose Numbers</span>
-      <span class="steparrow" aria-hidden="true">&rarr;</span>
-      <span class="stepitem next"><b>2</b> Choose How to Learn</span>
-    </div>
-    <p class="leadin">Pick one or more numbers you want to practice.</p>
+    <h3 class="ask">What do you want to practice?</h3>
+    <p class="leadin">Pick one or more numbers.</p>
     <div class="grid" id="tiles"></div>
     <div class="selrow">
       <button class="btn pickall" id="selectAll">Select All</button>
-      <button class="btn pickclear" id="clearSel">Clear Selection</button>
+      <button class="btn pickclear" id="clearSel">Clear</button>
     </div>
     <p class="summary none" id="selSummary">Pick at least one number to continue.</p>
-    <button class="btn block" id="beginMission" disabled>Continue &#128640;</button>
-    <p class="nexthint">Next: choose how you want to learn</p>
+    <button class="btn block" id="beginMission" disabled>Next &rarr;</button>
   </section>
 
   <!-- ===== PRACTICE OR TEST ===== -->
   <section id="hub" class="card hidden">
     <div class="banner">
-      <h2 id="hubTitle">The 2s</h2>
-      <button class="badge link" data-go="menu">&larr; Menu</button>
+      <h2>What do you want to do?</h2>
+      <button class="badge link" data-go="menu">&larr; Back</button>
     </div>
-    <div class="stepper" aria-label="Step 2 of 2">
-      <span class="stepitem done"><b>&#10003;</b> Choose Numbers</span>
-      <span class="steparrow" aria-hidden="true">&rarr;</span>
-      <span class="stepitem now"><b>2</b> Choose How to Learn</span>
-    </div>
-    <div id="ruleReview" class="hidden">
-      <label style="margin-top:0">Review your rules</label>
-      <div class="chips" id="ruleChips"></div>
-    </div>
-    <div class="hint"><b id="hubRuleHead"></b><span id="hubRuleBody"></span>
-      <div class="example" id="hubExample"></div></div>
+    <p class="context" id="hubTitle">Practicing: the 2s &middot; 12 facts</p>
     <button class="btn block mode learn" id="toMemorize">
       <span class="lbl">Memorize</span>
-      <span class="tip">Flip flashcards until you know them.</span></button>
+      <span class="tip">Flip flashcards.</span></button>
     <button class="btn block mode choice-mode" id="toQuick">
       <span class="lbl">Multiple Choice</span>
       <span class="tip">Choose the correct answer.</span></button>
     <button class="btn block mode" id="toPractice">
       <span class="lbl">Practice</span>
-      <span class="tip">Type the answer. Get a hint if you need one.</span></button>
+      <span class="tip">Type the answer. Get a hint.</span></button>
     <button class="btn block mode quiet" id="toTest">
       <span class="lbl">Test Me</span>
-      <span class="tip">No hints. See your results at the end.</span></button>
+      <span class="tip">No hints.</span></button>
+
+    <div id="ruleReview" class="hidden">
+      <label>Review your rules</label>
+      <div class="chips" id="ruleChips"></div>
+    </div>
+    <div class="hint" style="margin-top:16px"><b id="hubRuleHead"></b><span id="hubRuleBody"></span>
+      <div class="example" id="hubExample"></div></div>
   </section>
 
   <!-- ===== QUIZ ===== -->
@@ -556,42 +537,28 @@
   <section id="memo" class="card hidden">
     <div class="banner">
       <h2><span class="rocket" aria-hidden="true">&#128640;</span><span id="memoTitle">Memorize</span></h2>
-      <span class="badge" id="memoBadge">0 learned &middot; 8 to go</span>
+      <span class="badge" id="memoBadge">Card 1 of 24</span>
     </div>
     <div class="track"><div class="fill" id="memoFill"></div></div>
-    <p class="step" id="memoLine">0 of 8 learned</p>
 
-    <button type="button" class="flashcard" id="card" aria-describedby="cardTap">
+    <button type="button" class="flashcard" id="card">
       <span class="cardface" id="cardFront">
         <span class="fact" id="cardFact">2 <span class="eq">&times;</span> 7 = ?</span>
-        <span class="cardsub">Think of the answer. Say it out loud.</span>
-        <span class="cardtap" id="cardTap">Tap the card to flip</span>
+        <span class="cardsub">Think of the answer.</span>
+        <span class="cardtap">Tap the card to flip</span>
       </span>
       <span class="cardface hidden" id="cardBack">
-        <span class="cardlabel">Answer</span>
         <span class="fact" id="cardAnswer">2 <span class="eq">&times;</span> 7 = 14</span>
         <span class="cardwords" id="cardWords">Two times seven equals fourteen.</span>
         <span class="cardtap">Tap again to flip back</span>
       </span>
     </button>
 
-    <div id="cardActions" class="hidden">
-      <button class="btn block learn" id="knewIt">&#10003; I knew it</button>
-      <button class="btn block quiet" id="againIt">&#8635; Practice again</button>
+    <div class="cardnav">
+      <button class="btn quiet" id="cardPrev">&larr; Previous</button>
+      <button class="btn" id="cardNext">Next &rarr;</button>
     </div>
-
-    <button class="btn block ghost" data-go="menu" style="margin-top:16px">&#127968; Home</button>
-  </section>
-
-  <!-- ===== MEMORIZE COMPLETE ===== -->
-  <section id="memoDone" class="card hidden">
-    <div class="banner"><h2 id="memoDoneTitle">Memory Mission Complete! &#128640;</h2></div>
-    <p class="cardcount" id="memoDoneCount">8 cards practiced</p>
-    <p class="sub center" id="memoDoneDetail"></p>
-    <button class="btn block choice-mode" id="memoToQuick">Multiple Choice</button>
-    <button class="btn block" id="memoToPractice">Practice</button>
-    <button class="btn block quiet" id="memoBack">Back to Mission Menu</button>
-    <button class="btn block ghost" data-go="menu">Pick a Different Number</button>
+    <button class="btn block ghost" data-go="menu">&#127968; Home</button>
   </section>
 
   <!-- ===== MULTIPLE CHOICE ===== -->
@@ -645,7 +612,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b15 &middot; 2026-08-13</span>
+    <span class="build" title="build version">b16 &middot; 2026-08-14</span>
   </p>
 </div>
 
@@ -717,10 +684,6 @@
     if (list.length<=4) return n.slice(0,-1).join(", ")+" & "+n[n.length-1];
     return list.length+" tables";
   }
-  function missionTitle(){
-    return S.tables.length===1 ? "The "+S.tables[0]+"s"
-                               : "Your Mission: "+tablesPhrase(S.tables);
-  }
   function shortTitle(){
     return S.tables.length===1 ? "The "+S.tables[0]+"s" : tablesPhrase(S.tables);
   }
@@ -755,7 +718,7 @@
     r.setProperty("--on-theme", LIGHT[t] ? "#0B1F5B" : "#FFFFFF");
   }
   function show(id){
-    ["welcome","menu","hub","quiz","memo","memoDone","qc","done"].forEach(function(s){
+    ["welcome","menu","hub","quiz","memo","qc","done"].forEach(function(s){
       el(s).classList.toggle("hidden", s !== id);
     });
     window.scrollTo(0,0);
@@ -842,9 +805,7 @@
       /* 12 problems for every selected table — the same rule the modes use */
       var probs = SEL.length*12;
       sum.className="summary";
-      sum.textContent = (SEL.length<=4
-        ? ("Selected: "+tablesPhrase(SEL))
-        : (SEL.length+" tables selected")) + " \u00B7 "+probs+" problems";
+      sum.textContent = tablesPhrase(SEL)+" selected \u00B7 "+probs+" problems";
     }
     el("beginMission").disabled = SEL.length===0;
     el("selectAll").textContent = SEL.length===13 ? "Unselect All" : "Select All";
@@ -870,7 +831,8 @@
   /* Step 2. Reads S.tables; never writes to it. */
   function openHub(){
     theme(S.tables.length===1 ? S.tables[0] : "mixall");
-    el("hubTitle").textContent = missionTitle();
+    el("hubTitle").textContent = "Practicing: "+tablesPhrase(S.tables)+
+      " \u00B7 "+(S.tables.length*12)+" facts";
     buildRuleChips();
     showRule(S.tables[0]);
     show("hub");
@@ -1046,12 +1008,11 @@
 
 
   /* ================= MEMORIZE — flashcards =================
-     See the problem -> think -> flip -> "I knew it" or "Practice again".
-     No keypad, no score, no stars. A card that needs another look is MOVED
-     back down the queue (never duplicated), so the queue can shrink but
-     never grow, and the session always ends. ========================= */
-  var M = {queue:[], cur:null, flipped:false, seen:false, learned:0,
-           total:0, repeats:0, busy:false};
+     A study tool, not a scored activity. The deck is built once and shuffled
+     once when the session starts, then never regenerated: Previous and Next
+     walk that same fixed array, so a card keeps its operands, its orientation
+     and its answer for the whole session. No self-scoring of any kind. */
+  var M = {deck:[], idx:0, flipped:false, navLock:false};
 
   var ONES=["zero","one","two","three","four","five","six","seven","eight","nine","ten",
             "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen",
@@ -1067,98 +1028,67 @@
   function sayLine(a,b){ return cap(words(a))+" times "+words(b)+" equals "+words(a*b)+"."; }
   function factHTML(a,b,tail){ return a+' <span class="eq">\u00D7</span> '+b+" = "+tail; }
 
-  /* Memorize uses exactly the same deck as every other mode: each selected
-     table contributes all 12 of its facts, shuffled together. No cap and no
-     de-duplication — a card's identity is the (table, multiplier) slot it came
-     from, not the pair of digits on its face, so the 2s x5 card and the 5s x2
-     card are two different cards even when orientation makes them look alike. */
   function startMemorize(){
-    M.queue = buildFrom(S.tables);
-    M.total = M.queue.length; M.learned = 0; M.repeats = 0;
-    M.cur = null; M.flipped = false; M.seen = false; M.busy = false;
+    M.deck = buildFrom(S.tables);      /* full 12 per selected table, shuffled once */
+    M.idx = 0; M.flipped = false; M.navLock = false;
     el("memoTitle").textContent = "Memorize " +
       (S.tables.length===1 ? "the "+S.tables[0]+"s" : tablesPhrase(S.tables));
     show("memo");
-    nextCard();
+    renderCard();
   }
 
-  function memoProgress(){
-    el("memoBadge").textContent = M.learned+" learned \u00B7 "+M.queue.length+" to go";
-    el("memoLine").textContent  = M.learned+" of "+M.total+" learned";
-    el("memoFill").style.width  = (M.total ? (M.learned/M.total*100) : 0)+"%";
-  }
-
-  function nextCard(){
-    if (!M.queue.length){ finishMemorize(); return; }
-    M.cur = M.queue[0];
-    M.flipped = false; M.seen = false; M.busy = false;
-    var a=M.cur[0], b=M.cur[1];
-    el("cardFact").innerHTML = factHTML(a,b,"?");
+  function renderCard(){
+    var c = M.deck[M.idx];
+    if (!c) return;
+    var a=c[0], b=c[1];
+    M.flipped = false;
+    el("cardFact").innerHTML   = factHTML(a,b,"?");
     el("cardAnswer").innerHTML = factHTML(a,b,(a*b));
     el("cardWords").textContent = sayLine(a,b);
     el("card").classList.remove("back");
     el("cardFront").classList.remove("hidden");
     el("cardBack").classList.add("hidden");
-    el("cardActions").classList.add("hidden");
     el("card").setAttribute("aria-label", a+" times "+b+". Tap to see the answer.");
-    memoProgress();
+    el("memoBadge").textContent = "Card "+(M.idx+1)+" of "+M.deck.length;
+    el("memoFill").style.width = ((M.idx+1)/M.deck.length*100)+"%";
+    el("cardPrev").disabled = (M.idx===0);
+    el("cardNext").innerHTML = (M.idx===M.deck.length-1) ? "Finish &rarr;" : "Next &rarr;";
   }
 
-  /* A real flashcard: front <-> back as many times as the child likes.
-     Flipping never advances the deck; only the two buttons do that. */
+  /* flipping never advances, never changes the card, and can repeat forever */
   function flipCard(){
-    if (!M.cur || M.busy) return;
+    var c = M.deck[M.idx];
+    if (!c) return;
     M.flipped = !M.flipped;
-    var face = M.flipped ? el("cardBack") : el("cardFront");
+    var face = M.flipped ? el("cardBack")  : el("cardFront");
     var hide = M.flipped ? el("cardFront") : el("cardBack");
     el("card").classList.toggle("back", M.flipped);
     hide.classList.add("hidden");
     face.classList.remove("hidden");
     face.classList.add("flip");
     setTimeout(function(){ face.classList.remove("flip"); }, 320);
-    /* once the answer has been seen, the two choices stay available */
-    if (M.flipped) M.seen = true;
-    el("cardActions").classList.toggle("hidden", !M.seen);
     el("card").setAttribute("aria-label", M.flipped
-      ? (M.cur[0]+" times "+M.cur[1]+" equals "+(M.cur[0]*M.cur[1])+". Tap to flip back.")
-      : (M.cur[0]+" times "+M.cur[1]+". Tap to see the answer."));
+      ? (c[0]+" times "+c[1]+" equals "+(c[0]*c[1])+". Tap to flip back.")
+      : (c[0]+" times "+c[1]+". Tap to see the answer."));
   }
   el("card").onclick = function(){ flipCard(); };
 
-  function knewIt(){
-    if (!M.seen || M.busy) return;            /* only after the answer has been seen */
-    M.busy = true;
-    M.queue.shift();                           /* learned: leaves the deck for good */
-    M.learned++;
-    nextCard();
+  /* a short lock so a rapid double tap cannot jump two cards */
+  function navGuard(){
+    if (M.navLock) return false;
+    M.navLock = true;
+    setTimeout(function(){ M.navLock = false; }, 220);
+    return true;
   }
-  function practiceAgain(){
-    if (!M.seen || M.busy) return;
-    M.busy = true;
-    var card = M.queue.shift();
-    M.repeats++;
-    /* move it down the deck so other cards come first; never duplicated */
-    var at = Math.min(3, M.queue.length);
-    M.queue.splice(at, 0, card);
-    nextCard();
-  }
-  el("knewIt").onclick  = function(){ knewIt(); };
-  el("againIt").onclick = function(){ practiceAgain(); };
-
-  function finishMemorize(){
-    el("memoDoneTitle").textContent = S.name
-      ? ("Memory Mission Complete, "+S.name+"! \uD83D\uDE80")
-      : "Memory Mission Complete! \uD83D\uDE80";
-    el("memoDoneCount").textContent = M.total+" card"+(M.total===1?"":"s")+" practiced";
-    el("memoDoneDetail").textContent = M.repeats
-      ? (M.repeats+" card"+(M.repeats===1?"":"s")+" needed another look. That is how it sticks.")
-      : "You knew every card on the first flip.";
-    show("memoDone");
-  }
-
-  el("memoToQuick").onclick    = function(){ start("qc"); };
-  el("memoToPractice").onclick = function(){ start("practice"); };
-  el("memoBack").onclick       = function(){ openHub(); };
+  el("cardPrev").onclick = function(){
+    if (M.idx===0 || !navGuard()) return;
+    M.idx--; renderCard();
+  };
+  el("cardNext").onclick = function(){
+    if (!navGuard()) return;
+    if (M.idx >= M.deck.length-1){ openHub(); return; }   /* Finish -> activity screen */
+    M.idx++; renderCard();
+  };
 
   /* ================= CONTEXTUAL HINTS (Practice only) =================
      Picks the most useful rule for the problem on screen, preferring a
@@ -1204,20 +1134,20 @@
     if (h===null){ return {head:"Work it out in groups",
       lines:[a+" \u00D7 "+b+" means "+a+" groups of "+b+".",
              "Count by "+b+"s: "+skipChain(b,a), {answer:a+" \u00D7 "+b+" = "+prod}]}; }
-    var other = (a===h) ? b : a;
+    var other2 = (a===h) ? b : a;
     head = RULES[h].h;
     if (b===h && a!==b) lines.push("Turn it around: "+a+" \u00D7 "+b+" = "+b+" \u00D7 "+a+".");
 
-    if (h===2)       lines.push(other+" + "+other+" = "+prod+".");
-    else if (h===3)  lines.push(other+" + "+other+" + "+other+" = "+prod+".");
-    else if (h===4)  lines.push("Double "+other+" is "+(other*2)+", double again is "+prod+".");
-    else if (h===5)  lines.push("Count by 5s "+other+" times: "+skipChain(5,other)+".");
-    else if (h===10) lines.push("Write "+other+", then put a 0 after it: "+prod+".");
-    else if (h===11 && other<=9) lines.push("Write the "+other+" twice: "+prod+".");
-    else if (h===11) lines.push("Ten "+other+"s is "+(other*10)+", plus one more "+other+" = "+prod+".");
-    else if (h===9)  lines.push("Ten "+other+"s is "+(other*10)+", take away one "+other+": "+prod+".");
-    else if (h===12) lines.push("Ten "+other+"s is "+(other*10)+", plus two more "+other+"s = "+prod+".");
-    else             lines.push("Count by "+other+"s "+h+" times: "+skipChain(other,h)+".");
+    if (h===2)       lines.push(other2+" + "+other2+" = "+prod+".");
+    else if (h===3)  lines.push(other2+" + "+other2+" + "+other2+" = "+prod+".");
+    else if (h===4)  lines.push("Double "+other2+" is "+(other2*2)+", double again is "+prod+".");
+    else if (h===5)  lines.push("Count by 5s "+other2+" times: "+skipChain(5,other2)+".");
+    else if (h===10) lines.push("Write "+other2+", then put a 0 after it: "+prod+".");
+    else if (h===11 && other2<=9) lines.push("Write the "+other2+" twice: "+prod+".");
+    else if (h===11) lines.push("Ten "+other2+"s is "+(other2*10)+", plus one more "+other2+" = "+prod+".");
+    else if (h===9)  lines.push("Ten "+other2+"s is "+(other2*10)+", take away one "+other2+": "+prod+".");
+    else if (h===12) lines.push("Ten "+other2+"s is "+(other2*10)+", plus two more "+other2+"s = "+prod+".");
+    else             lines.push("Count by "+other2+"s "+h+" times: "+skipChain(other2,h)+".");
 
     lines.push({answer:a+" \u00D7 "+b+" = "+prod});
     return {head:head, lines:lines};
