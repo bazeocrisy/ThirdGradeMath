@@ -263,6 +263,28 @@
     .choices2{gap:8px;margin-top:12px}
     .phase{margin-bottom:10px}
   }
+  /* ===== multi-select ===== */
+  .tile .tick{display:block;font-family:var(--ui);font-size:11px;font-weight:bold;
+    letter-spacing:.06em;margin-top:3px}
+  .tile.sel{border-width:4px;box-shadow:0 5px 0 #0E9B98}
+  .summary{background:var(--sky);border:3px solid var(--line);border-radius:14px;
+    padding:11px 13px;margin:14px 0 0;font-family:var(--display);font-size:16px;
+    font-weight:bold;color:var(--navy);text-align:center;word-break:break-word}
+  .summary.none{color:var(--ink-soft);font-weight:normal;font-family:var(--ui);font-size:14px}
+  .btn[disabled]{background:#E4EAF3;color:#7C8CA8;border-color:#AFC0D8;
+    box-shadow:none;cursor:default}
+  .btn[disabled]:hover{background:#E4EAF3;filter:none}
+  .btn[disabled]:active{transform:none;box-shadow:none}
+  .selrow{display:flex;gap:9px;margin-top:12px}
+  .selrow .btn{flex:1;margin-top:0;font-size:15px;padding:12px 10px}
+  /* ===== rule review chips ===== */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .rchip{font-family:var(--display);font-size:16px;font-weight:bold;cursor:pointer;
+    padding:9px 14px;border:3px solid var(--navy);border-radius:999px;
+    background:#fff;color:var(--navy);box-shadow:0 3px 0 rgba(11,31,91,.2)}
+  .rchip:hover{background:var(--sky)}
+  .rchip[aria-pressed=true]{background:var(--teal);color:var(--navy)}
+  .rchip:focus-visible{outline:4px solid var(--teal);outline-offset:3px}
   .hidden{display:none}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   /* ---- tablet: roomier targets, no stretched keypad ---- */
@@ -305,7 +327,13 @@
     .bubbles{gap:6px;margin:10px 0 2px}
     .stack{font-size:46px;min-width:150px}
     .answer{font-size:42px}
-    .tile{font-size:27px;padding:17px 4px}
+    .tile{font-size:24px;padding:12px 3px}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:8px}
+    .tile .tick{font-size:10px;margin-top:2px}
+    .summary{font-size:15px;padding:9px 11px;margin-top:11px}
+    .selrow{gap:8px;margin-top:10px}
+    .selrow .btn{font-size:14px;padding:11px 8px}
+    .rchip{font-size:15px;padding:8px 12px}
     .mathline{font-size:18px}
     .bar{font-size:12px}
     .pad{gap:8px}
@@ -319,8 +347,8 @@
     .banner{margin:-13px -13px 14px;padding:12px 13px}
     .banner h1,.banner h2{font-size:17px}
     .badge{padding:5px 10px;font-size:12px}
-    .grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
-    .tile{font-size:24px;padding:15px 3px}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:7px}
+    .tile{font-size:22px;padding:11px 2px}
     .stack{font-size:40px;min-width:132px}
     .answer{font-size:38px}
     .key{padding:13px 0;font-size:21px}
@@ -381,8 +409,14 @@
       <h2 id="hello">Pick a number</h2>
       <button class="badge link" id="signOut">I'm all done</button>
     </div>
-    <p class="step">Step 1 of 2 &middot; Choose a number</p>
+    <p class="step">Step 1 of 2 &middot; Choose your numbers</p>
     <div class="grid" id="tiles"></div>
+    <div class="selrow">
+      <button class="btn quiet" id="selectAll">Select All</button>
+      <button class="btn quiet" id="clearSel">Clear Selection</button>
+    </div>
+    <p class="summary none" id="selSummary">Tap the numbers you want to work on.</p>
+    <button class="btn block" id="beginMission" disabled>&#128640; Begin Mission</button>
   </section>
 
   <!-- ===== PRACTICE OR TEST ===== -->
@@ -391,7 +425,11 @@
       <h2 id="hubTitle">The 2s</h2>
       <button class="badge link" data-go="menu">&larr; Menu</button>
     </div>
-    <p class="step">Step 2 of 2 &middot; Practice or test</p>
+    <p class="step">Step 2 of 2 &middot; Pick how you want to learn</p>
+    <div id="ruleReview" class="hidden">
+      <label style="margin-top:0">Review your rules</label>
+      <div class="chips" id="ruleChips"></div>
+    </div>
     <div class="hint"><b id="hubRuleHead"></b><span id="hubRuleBody"></span>
       <div class="example" id="hubExample"></div></div>
     <button class="btn block mode learn" id="toMemorize">
@@ -545,7 +583,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b10 &middot; 2026-08-13</span>
+    <span class="build" title="build version">b11 &middot; 2026-08-13</span>
   </p>
 </div>
 
@@ -588,9 +626,7 @@
     11:{h:"The 11s repeat the digit",b:"For 1 through 9, write the digit two times.",
        e:"11 \u00D7 3 means 11 groups of 3. Write the 3 twice: 33."},
     12:{h:"Count by 12s, or use 10 and 2",b:"Twelve groups. Take ten groups, then add two more groups.",
-       e:"12 \u00D7 2 means 12 groups of 2: 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24."},
-    mixall:{h:"Everything mixed together",b:"Problems come from all the tables, 0 through 12, in random order.",
-       e:"The first number is how many groups. The second is what is in each group."}
+       e:"12 \u00D7 2 means 12 groups of 2: 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24."}
   };
 
   var PRACTICE_LEN = 12, TEST_LEN = 20;
@@ -605,8 +641,48 @@
   var el=function(id){return document.getElementById(id);};
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var TOUCH = window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-  var S = {name:"", table:2, mode:"practice", problems:[], idx:0, correct:0, streak:0,
+  /* S.tables is the single source of truth for which tables are in play.
+     It is set once, when Begin Mission is tapped, and only read after that —
+     no mode writes to it, so a retry or a fix-it round cannot change the set. */
+  var S = {name:"", tables:[2], mode:"practice", problems:[], idx:0, correct:0, streak:0,
            best:0, misses:[], answered:false, start:0, retry:false, fix:false, fixPool:[]};
+  var SEL = [];   /* what the child has ticked on the selection screen */
+
+  function tblNames(list){ return list.map(function(t){ return t+"s"; }); }
+  function tablesPhrase(list){
+    var n=tblNames(list);
+    if (!list.length) return "no tables";
+    if (list.length===1) return n[0];
+    if (list.length<=4) return n.slice(0,-1).join(", ")+" & "+n[n.length-1];
+    return list.length+" tables";
+  }
+  function missionTitle(){
+    return S.tables.length===1 ? "The "+S.tables[0]+"s"
+                               : "Your Mission: "+tablesPhrase(S.tables);
+  }
+  function shortTitle(){
+    return S.tables.length===1 ? "The "+S.tables[0]+"s" : tablesPhrase(S.tables);
+  }
+  /* both orientations of every fact in one table */
+  function factsFor(t){
+    var out=[];
+    for (var i=0;i<=12;i++){ out.push([t,i]); out.push([i,t]); }
+    return out;
+  }
+  /* Even split across the selected tables; leftovers go one each to a random
+     subset, then the whole set is shuffled so tables never arrive in blocks. */
+  function buildFrom(list, len){
+    if (!list.length) return [];
+    var per=Math.floor(len/list.length), extra=len%list.length;
+    var order=shuffle(list.slice()), out=[];
+    order.forEach(function(t, idx){
+      var quota=per+(idx<extra ? 1 : 0);
+      var pool=shuffle(factsFor(t));
+      while (pool.length<quota) pool=pool.concat(shuffle(factsFor(t)));
+      out=out.concat(pool.slice(0,quota));
+    });
+    return shuffle(out);
+  }
   var LAST = null;   /* snapshot of the last full mission — fix-it rounds never overwrite it */
 
   /* if the logo file is missing, fall back to a text wordmark */
@@ -615,7 +691,6 @@
     el("wordmark").style.display="block";
   };
 
-  function label(t){ return t==="mixall" ? "All mixed" : "The " + t + "s"; }
   function theme(t){
     var c = COLORS[t] || "#20D6D2", r = document.documentElement.style;
     r.setProperty("--theme", c);
@@ -674,35 +749,96 @@
   });
 
   /* ---------- menu ---------- */
-  var tiles = el("tiles");
+  var tiles = el("tiles"), tileBtns = [];
   for (var n=0;n<=12;n++){
     (function(num){
       var b=document.createElement("button");
-      b.className="tile"; b.style.background=COLORS[num]; b.textContent=num;
-      if (LIGHT[num]) b.style.color="#0B1F5B";
-      b.setAttribute("aria-label","Practice the "+num+"s");
-      b.onclick=function(){ openHub(num); };
+      b.className="tile"; b.type="button"; b.setAttribute("data-num", num);
+      b.setAttribute("aria-pressed","false");
+      b.onclick=function(){ toggleTable(num); };
       tiles.appendChild(b);
+      tileBtns.push(b);
     })(n);
   }
-  var mix=document.createElement("button");
-  mix.className="tile wide"; mix.style.background=COLORS.mixall; mix.textContent="All mixed";
-  mix.onclick=function(){ openHub("mixall"); };
-  tiles.appendChild(mix);
+
+  function toggleTable(num){
+    var i=SEL.indexOf(num);
+    if (i>=0) SEL.splice(i,1); else SEL.push(num);
+    SEL.sort(function(a,b){ return a-b; });
+    paintSelection();
+  }
+  function paintSelection(){
+    tileBtns.forEach(function(b){
+      var num=Number(b.getAttribute("data-num")), on=SEL.indexOf(num)>=0;
+      b.classList.toggle("sel", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.setAttribute("aria-label", (on ? "Selected: the " : "Choose the ")+num+"s");
+      b.style.background = on ? "#20D6D2" : COLORS[num];
+      b.style.color = (on || LIGHT[num]) ? "#0B1F5B" : "#FFFFFF";
+      b.innerHTML = num + '<span class="tick">' + (on ? "\u2713 PICKED" : "&nbsp;") + '</span>';
+    });
+    var sum=el("selSummary");
+    if (!SEL.length){
+      sum.className="summary none";
+      sum.textContent="Tap the numbers you want to work on.";
+    } else {
+      sum.className="summary";
+      sum.textContent = SEL.length<=4 ? ("Selected: "+tblNames(SEL).join(", "))
+                                      : (SEL.length+" tables selected");
+    }
+    el("beginMission").disabled = SEL.length===0;
+    el("selectAll").textContent = SEL.length===13 ? "Unselect All" : "Select All";
+  }
+
+  el("selectAll").onclick=function(){
+    SEL = SEL.length===13 ? [] : [0,1,2,3,4,5,6,7,8,9,10,11,12];
+    paintSelection();
+  };
+  el("clearSel").onclick=function(){ SEL=[]; paintSelection(); };
+  el("beginMission").onclick=function(){
+    if (!SEL.length) return;
+    S.tables = SEL.slice();          /* copied, never shared by reference */
+    openHub();
+  };
 
   function openMenu(){
-    el("hello").textContent = S.name ? ("Hi, " + S.name + "!") : "Pick a number";
-    theme(2); show("menu");
+    el("hello").textContent = S.name ? ("Hi, " + S.name + "!") : "Pick your numbers";
+    theme(2); paintSelection(); show("menu");
   }
 
   /* ---------- practice or test ---------- */
-  function openHub(t){
-    S.table=t; theme(t);
-    el("hubTitle").textContent=label(t);
-    el("hubRuleHead").textContent=RULES[t].h;
-    el("hubRuleBody").textContent=RULES[t].b;
-    el("hubExample").textContent="Example: "+RULES[t].e;
+  /* Step 2. Reads S.tables; never writes to it. */
+  function openHub(){
+    theme(S.tables.length===1 ? S.tables[0] : "mixall");
+    el("hubTitle").textContent = missionTitle();
+    buildRuleChips();
+    showRule(S.tables[0]);
     show("hub");
+  }
+  /* one rule visible at a time, driven by chips — the rule text itself is
+     never duplicated, it always comes from the shared RULES table */
+  function buildRuleChips(){
+    var wrap=el("ruleReview"), box=el("ruleChips");
+    box.innerHTML="";
+    if (S.tables.length<2){ wrap.classList.add("hidden"); return; }
+    wrap.classList.remove("hidden");
+    S.tables.forEach(function(t){
+      var c=document.createElement("button");
+      c.className="rchip"; c.type="button"; c.textContent=t+"s";
+      c.setAttribute("aria-pressed","false");
+      c.onclick=function(){ showRule(t); };
+      box.appendChild(c);
+    });
+  }
+  function showRule(t){
+    var r=RULES[t];
+    el("hubRuleHead").textContent=r.h;
+    el("hubRuleBody").textContent=r.b;
+    el("hubExample").textContent="Example: "+r.e;
+    var kids=el("ruleChips").children;
+    for (var i=0;i<kids.length;i++){
+      kids[i].setAttribute("aria-pressed", kids[i].textContent===(t+"s") ? "true" : "false");
+    }
   }
   el("toMemorize").onclick=function(){ startMemorize(); };
   el("toQuick").onclick=function(){ start("qc"); };
@@ -710,19 +846,7 @@
   el("toTest").onclick=function(){ start("test"); };
 
   /* ---------- problems ---------- */
-  function build(len){
-    var list=[], i, n;
-    if (S.table==="mixall"){
-      for (n=0;n<=12;n++) for (i=0;i<=12;i++) list.push([n,i]);
-    } else {
-      n=S.table;
-      for (i=0;i<=12;i++){ list.push([n,i]); list.push([i,n]); }
-    }
-    shuffle(list);
-    var out=[];
-    while (out.length<len) out=out.concat(list);
-    S.problems=out.slice(0,len);
-  }
+  function build(len){ S.problems = buildFrom(S.tables, len); }
   function start(mode){
     S.mode=mode; S.fix=false;
     build(mode==="test" ? TEST_LEN : (mode==="qc" ? QC_LEN : PRACTICE_LEN));
@@ -730,14 +854,15 @@
   }
   function run(){
     S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.retry=false;
-    el("quizTitle").textContent=label(S.table);
+    el("quizTitle").textContent=shortTitle();
     el("modeBadge").textContent = S.fix ? "Fix-it round" : (S.mode==="test" ? "Test" : "Practice");
     el("peekBtn").classList.toggle("hidden", S.mode==="test");
     el("peek").classList.add("hidden");
     el("peekBtn").textContent="Need a hint?";
-    el("peekHead").textContent=RULES[S.table].h;
-    el("peekBody").textContent=RULES[S.table].b;
-    el("peekExample").textContent="Example: "+RULES[S.table].e;
+    var rt=RULES[S.tables[0]];
+    el("peekHead").textContent=rt.h;
+    el("peekBody").textContent=rt.b;
+    el("peekExample").textContent="Example: "+rt.e;
     show("quiz"); render();
   }
   function render(){
@@ -888,20 +1013,20 @@
   }
 
   function startMemorize(){
-    var all=[], i;
-    if (S.table==="mixall"){
-      for (var x=0;x<=12;x++) for (i=0;i<=12;i++) all.push([x,i]);
-    } else {
-      for (i=0;i<=12;i++) all.push([S.table,i]);
-    }
-    shuffle(all);
-    M.facts = all.slice(0, Math.min(MEMO_LEN, all.length)).map(function(f){
+    /* balanced across the selected tables, then de-duplicated */
+    var candidates = buildFrom(S.tables, Math.max(MEMO_LEN*4, 24));
+    var seen={}, picked=[];
+    candidates.forEach(function(f){
+      var k=f[0]+"x"+f[1];
+      if (!seen[k] && picked.length<MEMO_LEN){ seen[k]=1; picked.push(f); }
+    });
+    M.facts = picked.map(function(f){
       return {a:f[0], b:f[1], stars:0, lastTurn:-99, lastWinTurn:-99,
               introduced:false, sawOther:false};
     });
     M.turn=0; M.done=0; M.answered=false; M.cur=null; M.lastKey=null;
     el("memoTitle").textContent = "Memorize " +
-      (S.table==="mixall" ? "mixed facts" : "the "+S.table+"s");
+      (S.tables.length===1 ? "the "+S.tables[0]+"s" : tablesPhrase(S.tables));
     show("memo");
     nextMemoFact();
   }
@@ -1019,10 +1144,10 @@
       ? ("Memory Mission Complete, "+S.name+"! \uD83D\uDE80")
       : "Memory Mission Complete! \uD83D\uDE80";
     el("memoDoneDetail").textContent = "You mastered "+M.facts.length+" facts in "+
-      (S.table==="mixall" ? "mixed practice" : "the "+S.table+"s")+
+      (S.tables.length===1 ? "the "+S.tables[0]+"s" : tablesPhrase(S.tables))+
       " \u2014 each one recalled twice.";
-    el("memoBack").textContent = "Back to " +
-      (S.table==="mixall" ? "mixed facts" : "the "+S.table+"s");
+    el("memoBack").textContent = S.tables.length===1
+      ? ("Back to the "+S.tables[0]+"s") : "Back to your mission";
     show("memoDone");
   }
 
@@ -1030,7 +1155,7 @@
   el("memoAgainBtn").onclick = function(){ nextMemoFact(); };
   el("memoToQuick").onclick  = function(){ start("qc"); };
   el("memoToPractice").onclick = function(){ start("practice"); };
-  el("memoBack").onclick     = function(){ openHub(S.table); };
+  el("memoBack").onclick     = function(){ openHub(); };
 
 
   /* ================= QUICK CHOICE =================
@@ -1069,8 +1194,7 @@
 
   function runQC(){
     S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.fix=false;
-    el("qcTitle").textContent = "Quick Choice \u2014 " +
-      (S.table==="mixall" ? "mixed facts" : "the "+S.table+"s");
+    el("qcTitle").textContent = "Quick Choice \u2014 " + shortTitle();
     show("qc");
     renderQC();
   }
@@ -1163,12 +1287,12 @@
 
     /* the original mission result is captured once and never overwritten by a fix-it round */
     if (!isFix){
-      LAST = {mode:S.mode, table:S.table, correct:S.correct, total:total,
+      LAST = {mode:S.mode, tables:S.tables.slice(), correct:S.correct, total:total,
               pct:pct, timeStr:timeStr, best:S.best};
       el("origNote").classList.add("hidden");
     } else if (LAST){
       el("origNote").textContent = "Your mission score is still "+LAST.correct+" / "+LAST.total+
-        " ("+LAST.pct+"%) on the "+(LAST.table==="mixall" ? "mixed facts" : LAST.table+"s")+".";
+        " ("+LAST.pct+"%) on "+tablesPhrase(LAST.tables)+".";
       el("origNote").classList.remove("hidden");
     }
 
@@ -1192,8 +1316,10 @@
       burst();
     }
 
-    el("practiceNum").textContent = "Practice the " +
-      (S.table==="mixall" ? "mixed facts" : S.table+"s");
+    el("practiceNum").textContent = S.tables.length===1
+      ? ("Practice the "+S.tables[0]+"s Again")
+      : (S.tables.length<=3 ? ("Practice "+tablesPhrase(S.tables)+" Again")
+                            : "Practice Selected Tables Again");
     show("done");
   }
 
@@ -1254,10 +1380,14 @@
   }
   document.addEventListener("click", function(e){
     var b=e.target.closest("[data-go]"); if(!b) return;
-    if (b.getAttribute("data-go")==="menu") openMenu();
+    if (b.getAttribute("data-go")==="menu"){
+      SEL = S.tables.slice();   /* re-open the picker on the current set */
+      openMenu();
+    }
   });
 
   /* ---------- boot ---------- */
+  paintSelection();
   var saved=store.get("mm_name");
   if (saved){ S.name=saved; el("name").value=saved; openMenu(); }
   else show("welcome");
