@@ -60,8 +60,6 @@
   p{line-height:1.55;margin:0 0 12px}
   .sub{color:var(--ink-soft);font-size:14px}
   .center{text-align:center}
-  .step{font-size:12px;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink-soft);margin-bottom:10px}
   label{display:block;font-size:12px;font-weight:bold;letter-spacing:.08em;
     text-transform:uppercase;color:var(--ink-soft);margin:16px 0 8px}
   input[type=text]{width:100%;font-family:var(--display);font-size:21px;padding:14px;
@@ -114,7 +112,6 @@
     box-shadow:0 5px 0 rgba(11,31,91,.35);transition:transform .08s ease}
   .tile:hover{transform:translateY(-2px)}
   .tile:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(11,31,91,.35)}
-  .tile.wide{grid-column:span 2;font-size:21px}
   @media (min-width:1025px){ .grid{gap:10px} }
   /* ---------- panels ---------- */
   .hint{background:var(--sky);border:3px solid var(--teal);border-radius:18px;padding:16px 18px}
@@ -297,9 +294,6 @@
   .cardface{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
   .cardface.flip{animation:flipin .3s ease}
   @keyframes flipin{0%{transform:scaleX(.25);opacity:.3}100%{transform:scaleX(1);opacity:1}}
-  .cardlabel{font-family:var(--ui);font-size:11px;font-weight:bold;letter-spacing:.18em;
-    color:var(--navy);background:var(--yellow);border:2px solid var(--navy);
-    border-radius:999px;padding:3px 12px}
   .cardsub{font-family:var(--display);font-size:17px;font-weight:bold;color:var(--navy)}
   .cardtap{font-family:var(--ui);font-size:12px;font-weight:bold;letter-spacing:.08em;
     text-transform:uppercase;color:var(--navy2);border-top:2px dashed #A9C4E4;
@@ -656,7 +650,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b23 &middot; 2026-08-15</span>
+    <span class="build" title="build version">b24 &middot; 2026-08-15</span>
   </p>
 </div>
 
@@ -1045,6 +1039,8 @@
 
   el("tryAgain").onclick=function(){
     S.retry = true; S.pendingTeach = false;
+    /* the retry has not been attempted yet, so forward navigation locks again */
+    el("quizNext").disabled = true;
     el("teach").classList.add("hidden");
     el("askWrap").classList.remove("hidden");
     S.answered=false;
@@ -1068,8 +1064,10 @@
     /* an answered question is locked, EXCEPT for the try-again attempt that
        follows the teaching panel — that attempt is checked but never re-scored */
     if (st.submitted && !S.retry) return;
+    var wasRetry = S.retry;      /* this attempt IS the retry */
+    S.retry = false;             /* ...and it has now been made */
     var p=S.problems[S.idx], right=p[0]*p[1], ok=Number(raw)===right;
-    if (!S.retry){ st.ans=raw; st.submitted=true; st.right=ok; }
+    if (!wasRetry){ st.ans=raw; st.submitted=true; st.right=ok; }
 
     if (S.mode==="test"){
       S.answered=true; a.readOnly=true;
@@ -1081,21 +1079,21 @@
 
     if (ok){
       S.answered=true; a.readOnly=true;
-      if (!S.retry){
+      if (!wasRetry){
         S.correct++; S.streak++;
         if (S.streak>S.best) S.best=S.streak;
       }
       a.className="answer ok pop";
-      el("verdict").textContent = S.retry ? "That's it! Now you've got it."
+      el("verdict").textContent = wasRetry ? "That's it! Now you've got it."
         : (S.streak>=5 ? (S.streak+" in a row!") : "Correct");
       el("verdict").className="verdict ok";
-      if (!S.retry && S.streak % 5 === 0) burst();
+      if (!wasRetry && S.streak % 5 === 0) burst();
       /* Practice no longer advances by itself — the child presses Next.
          Both the keypad Next and the navigation Next must become live. */
       el("enterKey").textContent="Next";
       unlockForward();
     } else {
-      if (!S.retry){
+      if (!wasRetry){
         S.streak=0;
         S.misses.push(p[0]+"\u00D7"+p[1]);
         /* the mission length is fixed at 12 per selected table; missed facts are
@@ -1537,6 +1535,8 @@
     if (S.idx>0){ S.idx--; render(); }
   };
   el("quizNext").onclick=function(){
+    /* never move forward mid-retry or while teaching is still pending */
+    if (S.retry || S.pendingTeach) return;
     if (!S.qState[S.idx].submitted) return;
     S.retry=false;
     if (S.idx>=S.problems.length-1){ finish(); return; }
