@@ -309,7 +309,7 @@
   .hintline{background:#fff;border-radius:12px;padding:8px 12px;margin-top:7px;
     font-family:var(--display);font-size:16px;font-weight:bold;line-height:1.4;
     word-break:break-word;color:var(--navy)}
-  .hintline.answer{background:#E9FBF4;color:var(--right)}
+  .hintline.result{background:#E9FBF4;color:var(--right)}
   @media (max-width:365px){
     .flashcard{padding:20px 10px;min-height:180px}
     .flashcard .fact{font-size:30px}
@@ -656,7 +656,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b22 &middot; 2026-08-15</span>
+    <span class="build" title="build version">b23 &middot; 2026-08-15</span>
   </p>
 </div>
 
@@ -720,8 +720,19 @@
   function clearTestTimer(){
     if (testAdvanceTimer!==null){ clearTimeout(testAdvanceTimer); testAdvanceTimer=null; }
   }
+  /* the single place Test forward movement is scheduled */
+  function scheduleTestAdvance(){
+    clearTestTimer();
+    var atTest = S.idx;
+    testAdvanceTimer = setTimeout(function(){
+      testAdvanceTimer = null;
+      if (S.mode==="test" && S.idx===atTest
+          && !el("quiz").classList.contains("hidden")
+          && el("confirm").classList.contains("hidden")) next();
+    }, 120);
+  }
   var S = {name:"", tables:[2], mode:"practice", problems:[], qState:[], qcState:[], idx:0, correct:0, streak:0,
-           best:0, misses:[], answered:false, start:0, retry:false, fix:false, fixPool:[]};
+           best:0, misses:[], answered:false, start:0, retry:false, pendingTeach:false, fix:false, fixPool:[]};
   var SEL = [];   /* what the child has ticked on the selection screen */
 
   function tblNames(list){ return list.map(function(t){ return t+"s"; }); }
@@ -938,6 +949,7 @@
   function render(){
     var p=S.problems[S.idx], st=S.qState[S.idx];
     S.answered = st.submitted;
+    S.pendingTeach = false;
     el("teach").classList.add("hidden");
     el("askWrap").classList.remove("hidden");
     el("top").textContent=p[0];
@@ -956,7 +968,7 @@
       closeHint();
     }
     mountPad("padSlotQuiz","answer",
-      function(){ if (S.answered) next(); else check(); },
+      function(){ if (S.pendingTeach) return; if (S.answered) next(); else check(); },
       function(){ return S.answered; }, "Check");
     var a=el("answer");
     if (st.submitted){
@@ -1026,11 +1038,13 @@
 
     el("askWrap").classList.add("hidden");
     el("teach").classList.remove("hidden");
+    S.pendingTeach = false;
+    unlockForward();                 /* Next / Finish become available here */
     el("tryAgain").focus();
   }
 
   el("tryAgain").onclick=function(){
-    S.retry = true;
+    S.retry = true; S.pendingTeach = false;
     el("teach").classList.add("hidden");
     el("askWrap").classList.remove("hidden");
     S.answered=false;
@@ -1061,15 +1075,7 @@
       S.answered=true; a.readOnly=true;
       if (ok){ S.correct++; S.streak++; if (S.streak>S.best) S.best=S.streak; }
       else { S.streak=0; S.misses.push(p[0]+"\u00D7"+p[1]); }
-      var atTest=S.idx;
-      clearTestTimer();
-      testAdvanceTimer = setTimeout(function(){
-        testAdvanceTimer = null;
-        /* only advance if we are still on the same question, still in the
-           quiz, and no leave confirmation has opened in the meantime */
-        if (S.idx===atTest && !el("quiz").classList.contains("hidden")
-            && el("confirm").classList.contains("hidden")) next();
-      }, 120);
+      scheduleTestAdvance();
       return;
     }
 
@@ -1096,11 +1102,17 @@
            revisited through Practice My Misses, never by growing this array */
       }
       a.className="answer no shake";
-      unlockForward();
+      /* the question is scored and locked, but nothing moves forward until the
+         teaching panel is actually on screen — no dead Check, no skipping it */
+      S.answered = true; a.readOnly = true;
+      S.pendingTeach = true;
       var wrong = raw, atIdx = S.idx;
-      /* the panel only opens if the child is still on this question */
       setTimeout(function(){
-        if (S.idx===atIdx && !el("quiz").classList.contains("hidden")) teach(p[0], p[1], wrong);
+        if (S.idx===atIdx && S.mode!=="test" && !el("quiz").classList.contains("hidden")){
+          teach(p[0], p[1], wrong);
+        } else {
+          S.pendingTeach = false;      /* child navigated away: nothing to show */
+        }
       }, 450);
     }
   }
@@ -1266,7 +1278,7 @@
     var box=el("hintLines"); box.innerHTML="";
     h.lines.forEach(function(l){
       var d=document.createElement("div");
-      if (typeof l === "object"){ d.className="hintline answer"; d.textContent=l.answer; }
+      if (typeof l === "object"){ d.className="hintline result"; d.textContent=l.answer; }
       else { d.className="hintline"; d.textContent=l; }
       box.appendChild(d);
     });
@@ -1380,7 +1392,7 @@
     var box=el("qcTeachLines"); box.innerHTML="";
     h.lines.forEach(function(l){
       var d=document.createElement("div");
-      if (typeof l === "object"){ d.className="hintline answer"; d.textContent=l.answer; }
+      if (typeof l === "object"){ d.className="hintline result"; d.textContent=l.answer; }
       else { d.className="hintline"; d.textContent=l; }
       box.appendChild(d);
     });
@@ -1495,7 +1507,9 @@
 
   /* ---------- input ---------- */
   el("answer").addEventListener("keydown", function(e){
-    if (e.key==="Enter"){ e.preventDefault(); if (S.answered) next(); else check(); }
+    if (e.key==="Enter"){ e.preventDefault();
+      if (S.pendingTeach) return;
+      if (S.answered) next(); else check(); }
   });
   /* The keypad is a single element moved between Practice/Test and Memorize.
      padCtx says which input it types into and what Check should do. */
@@ -1558,7 +1572,7 @@
     S.problems=[]; S.qState=[]; S.qcState=[];
     S.idx=0; S.correct=0; S.streak=0; S.best=0;
     S.misses=[]; S.answered=false; S.start=0;
-    S.retry=false; S.fix=false; S.fixPool=[];
+    S.retry=false; S.pendingTeach=false; S.fix=false; S.fixPool=[];
     LAST=null;
     M.deck=[]; M.idx=0; M.flipped=false; M.navLock=false;
     SEL=[];
@@ -1602,6 +1616,12 @@
     pendingLeave=null;                   /* the test is exactly where it was */
     if (leaveOpener && leaveOpener.focus) leaveOpener.focus();   /* focus goes back */
     leaveOpener=null;
+    /* the answer was already submitted and scored before the dialog opened,
+       so resume the cancelled forward move — scheduling only, never re-scoring */
+    if (S.mode==="test" && !el("quiz").classList.contains("hidden")
+        && S.qState[S.idx] && S.qState[S.idx].submitted){
+      scheduleTestAdvance();
+    }
   };
   el("confirmGo").onclick=function(){
     el("confirm").classList.add("hidden");
