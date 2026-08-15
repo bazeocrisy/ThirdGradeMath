@@ -656,7 +656,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b21 &middot; 2026-08-15</span>
+    <span class="build" title="build version">b22 &middot; 2026-08-15</span>
   </p>
 </div>
 
@@ -680,26 +680,26 @@
        e:"8 \u00D7 1 means 8 groups of 1. Count them: 1, 2, 3, 4, 5, 6, 7, 8. So 8 \u00D7 1 = 8."},
     2:{h:"The 2s are doubles",b:"Two groups means you add the number to itself. You already know your doubles from adding.",
        e:"2 \u00D7 7 means 2 groups of 7. Put them together: 7 + 7 = 14."},
-    3:{h:"Count by 3s",b:"Three groups. Skip count by 3, or add the number three times.",
-       e:"3 \u00D7 6 means 3 groups of 6. Count by 6s: 6, 12, 18. So 3 \u00D7 6 = 18."},
-    4:{h:"Count by 4s",b:"Four groups. Skip count by 4, or double the number and then double your answer.",
-       e:"4 \u00D7 6 means 4 groups of 6. Count by 6s: 6, 12, 18, 24. So 4 \u00D7 6 = 24."},
-    5:{h:"Count by 5s \u2014 answers end in 5 or 0",b:"Skip counting by 5 is quick, and every answer ends in 5 or 0. Order does not change the answer, so count whichever way is easier.",
-       e:"5 \u00D7 4 means 5 groups of 4: 4, 8, 12, 16, 20. Counting by 5s four times gets there too: 5, 10, 15, 20."},
-    6:{h:"Count by 6s",b:"Six groups. Skip count by 6, or take five groups and add one more group.",
-       e:"6 \u00D7 3 means 6 groups of 3. Count by 3s: 3, 6, 9, 12, 15, 18. So 6 \u00D7 3 = 18."},
-    7:{h:"Count by 7s \u2014 go slow",b:"Seven groups. The 7s are the hardest set, so skip count carefully and keep track of where you are.",
-       e:"7 \u00D7 2 means 7 groups of 2. Count by 2s: 2, 4, 6, 8, 10, 12, 14. So 7 \u00D7 2 = 14."},
-    8:{h:"Count by 8s",b:"Eight groups. Skip count by 8, or double the number three times.",
-       e:"8 \u00D7 2 means 8 groups of 2. Count by 2s: 2, 4, 6, 8, 10, 12, 14, 16. So 8 \u00D7 2 = 16."},
+    3:{h:"Count by 3s",b:"Skip count by 3 until you have counted the other number of times.",
+       e:"3 \u00D7 6: count by 3s six times \u2014 3, 6, 9, 12, 15, 18. So 3 \u00D7 6 = 18."},
+    4:{h:"The 4s: double, then double again",b:"Four groups is two groups doubled. Double the number, then double your answer.",
+       e:"4 \u00D7 6: double 6 to get 12, then double again to get 24."},
+    5:{h:"Count by 5s \u2014 answers end in 5 or 0",b:"Skip count by 5. Every answer ends in 5 or 0, so you can check yourself.",
+       e:"5 \u00D7 4: count by 5s four times \u2014 5, 10, 15, 20. So 5 \u00D7 4 = 20."},
+    6:{h:"Count by 6s",b:"Skip count by 6 until you have counted the other number of times.",
+       e:"6 \u00D7 3: count by 6s three times \u2014 6, 12, 18. So 6 \u00D7 3 = 18."},
+    7:{h:"Count by 7s \u2014 go slow",b:"Skip count by 7. The 7s are the hardest set, so count carefully and keep track of where you are.",
+       e:"7 \u00D7 2: count by 7s two times \u2014 7, 14. So 7 \u00D7 2 = 14."},
+    8:{h:"Count by 8s",b:"Skip count by 8 until you have counted the other number of times.",
+       e:"8 \u00D7 2: count by 8s two times \u2014 8, 16. So 8 \u00D7 2 = 16."},
     9:{h:"The 9s are one group less than the 10s",b:"Nine groups is ten groups with one group taken away. This works for every fact in the table.",
        e:"9 \u00D7 7 means 9 groups of 7. Ten 7s is 70, take away one 7: 63."},
     10:{h:"The 10s put a 0 on the end",b:"Ten groups. Write the number, then put a zero after it.",
        e:"10 \u00D7 4 means 10 groups of 4. Write the 4, then add a 0: 40."},
     11:{h:"For 1\u20139, the 11s repeat the digit",b:"For 1 through 9, write the digit two times. For 10, 11 and 12, take ten groups and add one more group.",
        e:"11 \u00D7 3 means 11 groups of 3. Write the 3 twice: 33."},
-    12:{h:"Count by 12s, or use 10 and 2",b:"Twelve groups. Take ten groups, then add two more groups.",
-       e:"12 \u00D7 2 means 12 groups of 2: 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24."}
+    12:{h:"The 12s: ten groups plus two more",b:"Take ten groups, then add two more groups.",
+       e:"12 \u00D7 7: ten 7s is 70, plus two more 7s = 84."}
   };
 
 
@@ -716,6 +716,10 @@
   /* S.tables is the single source of truth for which tables are in play.
      It is set once, when Continue is tapped, and only read after that —
      no mode writes to it, so a retry or a fix-it round cannot change the set. */
+  var testAdvanceTimer = null;
+  function clearTestTimer(){
+    if (testAdvanceTimer!==null){ clearTimeout(testAdvanceTimer); testAdvanceTimer=null; }
+  }
   var S = {name:"", tables:[2], mode:"practice", problems:[], qState:[], qcState:[], idx:0, correct:0, streak:0,
            best:0, misses:[], answered:false, start:0, retry:false, fix:false, fixPool:[]};
   var SEL = [];   /* what the child has ticked on the selection screen */
@@ -914,6 +918,7 @@
   /* ---------- problems ---------- */
   function build(){ S.problems = buildFrom(S.tables); }
   function start(mode){
+    clearTestTimer();
     S.mode=mode; S.fix=false;
     build();                       /* 12 facts per selected table, shuffled */
     if (mode==="qc") runQC(); else run();
@@ -1036,6 +1041,12 @@
   };
 
   /* ---------- checking ---------- */
+  /* one place that unlocks forward navigation once a question is complete */
+  function unlockForward(){
+    el("quizNext").disabled = false;
+    el("quizNext").innerHTML = (S.idx===S.problems.length-1) ? "Finish &rarr;" : "Next &rarr;";
+  }
+
   function check(){
     var a=el("answer"), raw=a.value.trim();
     if (raw===""){ if(!TOUCH) a.focus(); return; }
@@ -1051,7 +1062,14 @@
       if (ok){ S.correct++; S.streak++; if (S.streak>S.best) S.best=S.streak; }
       else { S.streak=0; S.misses.push(p[0]+"\u00D7"+p[1]); }
       var atTest=S.idx;
-      setTimeout(function(){ if (S.idx===atTest) next(); }, 120);
+      clearTestTimer();
+      testAdvanceTimer = setTimeout(function(){
+        testAdvanceTimer = null;
+        /* only advance if we are still on the same question, still in the
+           quiz, and no leave confirmation has opened in the meantime */
+        if (S.idx===atTest && !el("quiz").classList.contains("hidden")
+            && el("confirm").classList.contains("hidden")) next();
+      }, 120);
       return;
     }
 
@@ -1067,8 +1085,9 @@
       el("verdict").className="verdict ok";
       if (!S.retry && S.streak % 5 === 0) burst();
       /* Practice no longer advances by itself — the child presses Next.
-         Auto-advance could fire after a Back press and shove them forward. */
+         Both the keypad Next and the navigation Next must become live. */
       el("enterKey").textContent="Next";
+      unlockForward();
     } else {
       if (!S.retry){
         S.streak=0;
@@ -1077,6 +1096,7 @@
            revisited through Practice My Misses, never by growing this array */
       }
       a.className="answer no shake";
+      unlockForward();
       var wrong = raw, atIdx = S.idx;
       /* the panel only opens if the child is still on this question */
       setTimeout(function(){
@@ -1226,15 +1246,14 @@
     if (b===h && a!==b) lines.push("Turn it around: "+a+" \u00D7 "+b+" = "+b+" \u00D7 "+a+".");
 
     if (h===2)       lines.push(other2+" + "+other2+" = "+prod+".");
-    else if (h===3)  lines.push(other2+" + "+other2+" + "+other2+" = "+prod+".");
     else if (h===4)  lines.push("Double "+other2+" is "+(other2*2)+", double again is "+prod+".");
-    else if (h===5)  lines.push("Count by 5s "+other2+" times: "+skipChain(5,other2)+".");
     else if (h===10) lines.push("Write "+other2+", then put a 0 after it: "+prod+".");
     else if (h===11 && other2<=9) lines.push("Write the "+other2+" twice: "+prod+".");
     else if (h===11) lines.push("Ten "+other2+"s is "+(other2*10)+", plus one more "+other2+" = "+prod+".");
     else if (h===9)  lines.push("Ten "+other2+"s is "+(other2*10)+", take away one "+other2+": "+prod+".");
     else if (h===12) lines.push("Ten "+other2+"s is "+(other2*10)+", plus two more "+other2+"s = "+prod+".");
-    else             lines.push("Count by "+other2+"s "+h+" times: "+skipChain(other2,h)+".");
+    /* count by the table the child is studying, so the words match the heading */
+    else             lines.push("Count by "+h+"s "+other2+" times: "+skipChain(h,other2)+".");
 
     lines.push({answer:a+" \u00D7 "+b+" = "+prod});
     return {head:head, lines:lines};
@@ -1393,6 +1412,7 @@
   function starCount(pct){ return pct>=90 ? 3 : pct>=75 ? 2 : 1; }
 
   function finish(){
+    clearTestTimer();
     var total=S.problems.length;
     var secs=Math.round((Date.now()-S.start)/1000);
     var mins=Math.floor(secs/60), rem=secs%60;
@@ -1528,20 +1548,37 @@
   el("fixBtn").onclick=function(){ startMisses(); };
   el("allDone").onclick=function(){ signOut(); };
   el("signOut").onclick=function(){ signOut(); };
+  /* One reset used by "I'm All Done": the next child starts from nothing. */
+  function resetSession(){
+    clearTestTimer();
+    el("confirm").classList.add("hidden");
+    pendingLeave=null; leaveOpener=null;
+    store.clear("mm_name");
+    S.name=""; S.tables=[]; S.mode="practice";
+    S.problems=[]; S.qState=[]; S.qcState=[];
+    S.idx=0; S.correct=0; S.streak=0; S.best=0;
+    S.misses=[]; S.answered=false; S.start=0;
+    S.retry=false; S.fix=false; S.fixPool=[];
+    LAST=null;
+    M.deck=[]; M.idx=0; M.flipped=false; M.navLock=false;
+    SEL=[];
+    paintSelection();                 /* the picker shows nothing selected */
+    el("name").value="";
+  }
   function signOut(){
-    store.clear("mm_name"); S.name="";
-    el("name").value=""; show("welcome");
+    resetSession();
+    show("welcome");
   }
   /* ---------- navigation: three distinct meanings ----------
      Back / Previous : move within the current activity
      Activities      : back to "What do you want to do?", tables kept
      Home            : all the way back to number selection            */
   function leaveToActivities(){
-    S.retry=false;                       /* no mode state follows the child out */
+    clearTestTimer(); S.retry=false;                       /* no mode state follows the child out */
     openHub();                           /* reads S.tables, never writes it */
   }
   function leaveToHome(){
-    S.retry=false;
+    clearTestTimer(); S.retry=false;
     SEL = S.tables.slice();              /* re-open the picker on the same set */
     openMenu();
   }
@@ -1551,6 +1588,7 @@
   }
   var pendingLeave = null, leaveOpener = null;
   function askLeave(dest, opener){
+    clearTestTimer();                    /* nothing may advance behind the dialog */
     pendingLeave = dest;
     leaveOpener = opener || null;
     el("confirmTitle").textContent = dest==="acts" ? "Leave this test?" : "Go Home?";
