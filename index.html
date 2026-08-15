@@ -529,7 +529,11 @@
       <button class="btn block go" id="tryAgain">Try it again</button>
     </div>
 
-    <button class="btn block quiet" data-go="menu" style="margin-top:16px">&#127968; Home</button>
+    <div class="cardnav" id="quizNav">
+      <button class="btn quiet" id="quizPrev">&larr; Back</button>
+      <button class="btn" id="quizNext">Next &rarr;</button>
+    </div>
+    <button class="btn block ghost" data-go="menu">&#127968; Home</button>
   </section>
 
 
@@ -573,8 +577,15 @@
     </div>
     <div class="choices2" id="qcChoices"></div>
     <div class="verdict" id="qcVerdict"></div>
-    <button class="btn block hidden" id="qcNext">Next</button>
-    <button class="btn block ghost" data-go="menu" style="margin-top:12px">&#127968; Home</button>
+    <div id="qcTeach" class="hint hidden" style="margin-top:12px">
+      <b id="qcTeachHead"></b>
+      <div id="qcTeachLines"></div>
+    </div>
+    <div class="cardnav">
+      <button class="btn quiet" id="qcPrev">&larr; Back</button>
+      <button class="btn" id="qcNext">Next &rarr;</button>
+    </div>
+    <button class="btn block ghost" data-go="menu">&#127968; Home</button>
   </section>
 
   <!-- ===== RESULTS ===== -->
@@ -612,7 +623,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b16 &middot; 2026-08-14</span>
+    <span class="build" title="build version">b18 &middot; 2026-08-14</span>
   </p>
 </div>
 
@@ -672,7 +683,7 @@
   /* S.tables is the single source of truth for which tables are in play.
      It is set once, when Continue is tapped, and only read after that —
      no mode writes to it, so a retry or a fix-it round cannot change the set. */
-  var S = {name:"", tables:[2], mode:"practice", problems:[], idx:0, correct:0, streak:0,
+  var S = {name:"", tables:[2], mode:"practice", problems:[], qState:[], qcState:[], idx:0, correct:0, streak:0,
            best:0, misses:[], answered:false, start:0, retry:false, fix:false, fixPool:[]};
   var SEL = [];   /* what the child has ticked on the selection screen */
 
@@ -881,11 +892,14 @@
     /* hints exist in Practice only — never in Test, Multiple Choice or Memorize */
     el("peekBtn").classList.toggle("hidden", S.mode==="test");
     closeHint();
+    S.qState = S.problems.map(function(){
+      return {ans:"", submitted:false, right:null, hint:false};
+    });
     show("quiz"); render();
   }
   function render(){
-    var p=S.problems[S.idx];
-    S.answered=false;
+    var p=S.problems[S.idx], st=S.qState[S.idx];
+    S.answered = st.submitted;
     el("teach").classList.add("hidden");
     el("askWrap").classList.remove("hidden");
     el("top").textContent=p[0];
@@ -894,12 +908,36 @@
     el("fill").style.width=(S.idx/S.problems.length*100)+"%";
     el("verdict").textContent=""; el("verdict").className="verdict";
     el("enterKey").textContent="Check";
-    closeHint();
+    /* the hint follows the question: reopened if it was open here before,
+       and always rebuilt for THIS question so it can never go stale */
+    if (st.hint && S.mode!=="test"){
+      renderHint();
+      el("peek").classList.remove("hidden");
+      el("peekBtn").textContent="Hide the hint";
+    } else {
+      closeHint();
+    }
     mountPad("padSlotQuiz","answer",
       function(){ if (S.answered) next(); else check(); },
       function(){ return S.answered; }, "Check");
-    var a=el("answer"); a.value=""; a.className="answer";
-    a.readOnly=TOUCH; if(!TOUCH) a.focus();
+    var a=el("answer");
+    if (st.submitted){
+      /* an already-answered question is shown as it was left, never re-scored */
+      a.value = st.ans; a.readOnly = true;
+      a.className = "answer " + (st.right ? "ok" : "no");
+      el("verdict").textContent = st.right ? "Correct"
+        : (p[0]+" \u00D7 "+p[1]+" = "+(p[0]*p[1]));
+      el("verdict").className = "verdict " + (st.right ? "ok" : "no");
+      el("enterKey").textContent = "Next";
+    } else {
+      a.value=""; a.className="answer"; a.readOnly=TOUCH;
+      if(!TOUCH) a.focus();
+    }
+    /* Test Me is forward-only: no back navigation, no revisiting */
+    el("quizNav").classList.toggle("hidden", S.mode==="test");
+    el("quizPrev").disabled = (S.idx===0);
+    el("quizNext").disabled = !st.submitted;
+    el("quizNext").innerHTML = (S.idx===S.problems.length-1) ? "Finish &rarr;" : "Next &rarr;";
   }
 
   /* ---------- teaching panel ---------- */
@@ -968,7 +1006,12 @@
   function check(){
     var a=el("answer"), raw=a.value.trim();
     if (raw===""){ if(!TOUCH) a.focus(); return; }
+    var st=S.qState[S.idx];
+    /* an answered question is locked, EXCEPT for the try-again attempt that
+       follows the teaching panel — that attempt is checked but never re-scored */
+    if (st.submitted && !S.retry) return;
     var p=S.problems[S.idx], right=p[0]*p[1], ok=Number(raw)===right;
+    if (!S.retry){ st.ans=raw; st.submitted=true; st.right=ok; }
 
     if (S.mode==="test"){
       S.answered=true; a.readOnly=true;
@@ -1002,8 +1045,9 @@
     }
   }
   function next(){
-    S.retry=false; S.idx++;
-    if (S.idx>=S.problems.length) finish(); else render();
+    S.retry=false;
+    if (S.idx>=S.problems.length-1){ finish(); return; }
+    S.idx++; render();
   }
 
 
@@ -1203,62 +1247,94 @@
     return shuffle(list);
   }
 
+  /* Every question's four choices — and their order — are built once, when the
+     session starts, and stored alongside the child's answer. Navigating back
+     and forward re-renders that stored state; nothing is ever regenerated and
+     nothing is ever scored twice. */
   function runQC(){
     S.idx=0; S.correct=0; S.streak=0; S.best=0; S.misses=[]; S.start=Date.now(); S.fix=false;
+    S.qcState = S.problems.map(function(p){
+      return {choices:buildChoices(p[0],p[1]), picked:null, right:null};
+    });
     el("qcTitle").textContent = "Multiple Choice \u2014 " + shortTitle();
     show("qc");
     renderQC();
   }
   function renderQC(){
-    var p=S.problems[S.idx];
-    S.answered=false;
+    var p=S.problems[S.idx], st=S.qcState[S.idx], right=p[0]*p[1];
+    S.answered = st.picked!==null;
     el("qcBadge").textContent = (S.idx+1)+" of "+S.problems.length;
-    el("qcFill").style.width = (S.idx/S.problems.length*100)+"%";
+    el("qcFill").style.width = ((S.idx+1)/S.problems.length*100)+"%";
     el("qcFact").innerHTML = p[0]+' <span class="eq">\u00D7</span> '+p[1]+" = ?";
-    el("qcVerdict").textContent=""; el("qcVerdict").className="verdict";
-    el("qcNext").classList.add("hidden");
+
     var box=el("qcChoices"); box.innerHTML="";
-    buildChoices(p[0],p[1]).forEach(function(v){
+    st.choices.forEach(function(v){
       var b=document.createElement("button");
-      b.className="choice"; b.type="button"; b.textContent=v;
+      b.className="choice"; b.type="button";
       b.setAttribute("aria-label","Answer "+v);
-      b.onclick=function(){ answerQC(v, b); };
+      if (st.picked===null){
+        b.textContent=v;
+        b.onclick=function(){ answerQC(v); };
+      } else {
+        b.disabled=true;
+        if (v===right){ b.className="choice right"; b.innerHTML=v+'<span class="mark">\u2713 correct</span>'; }
+        else if (v===st.picked){ b.className="choice wrong"; b.innerHTML=v+'<span class="mark">\u2717 not this one</span>'; }
+        else b.textContent=v;
+      }
       box.appendChild(b);
     });
-  }
-  function answerQC(picked, node){
-    if (S.answered) return;
-    S.answered=true;
-    var p=S.problems[S.idx], right=p[0]*p[1], ok=picked===right;
-    var kids=el("qcChoices").children, i;
-    for (i=0;i<kids.length;i++){
-      kids[i].disabled=true;
-      if (Number(kids[i].textContent)===right){
-        kids[i].classList.add("right");
-        kids[i].innerHTML = right+'<span class="mark">\u2713 correct</span>';
-      }
+
+    if (st.picked===null){
+      el("qcVerdict").textContent=""; el("qcVerdict").className="verdict";
+      el("qcTeach").classList.add("hidden");
+    } else if (st.right){
+      el("qcVerdict").textContent = "\u2713 Correct! "+p[0]+" \u00D7 "+p[1]+" = "+right;
+      el("qcVerdict").className="verdict ok";
+      el("qcTeach").classList.add("hidden");
+    } else {
+      el("qcVerdict").textContent = p[0]+" \u00D7 "+p[1]+" = "+right;
+      el("qcVerdict").className="verdict no";
+      showQCTeach(p[0],p[1]);            /* always rebuilt for THIS question */
     }
+    el("qcPrev").disabled = (S.idx===0);
+    el("qcNext").disabled = (st.picked===null);
+    el("qcNext").innerHTML = (S.idx===S.problems.length-1) ? "Finish &rarr;" : "Next &rarr;";
+  }
+
+  /* a wrong answer gets the same teaching rules Practice uses */
+  function showQCTeach(a,b){
+    var h=hintFor(a,b);
+    el("qcTeachHead").textContent = h.head;
+    var box=el("qcTeachLines"); box.innerHTML="";
+    h.lines.forEach(function(l){
+      var d=document.createElement("div");
+      if (typeof l === "object"){ d.className="hintline answer"; d.textContent=l.answer; }
+      else { d.className="hintline"; d.textContent=l; }
+      box.appendChild(d);
+    });
+    el("qcTeach").classList.remove("hidden");
+  }
+
+  function answerQC(picked){
+    var st=S.qcState[S.idx];
+    if (st.picked!==null) return;              /* already answered: never re-score */
+    var p=S.problems[S.idx], right=p[0]*p[1], ok=picked===right;
+    st.picked=picked; st.right=ok;
     if (ok){
       S.correct++; S.streak++; if (S.streak>S.best) S.best=S.streak;
-      el("qcVerdict").textContent = "Correct! "+p[0]+" \u00D7 "+p[1]+" = "+right;
-      el("qcVerdict").className="verdict ok";
       if (S.streak % 5 === 0) burst();
-      setTimeout(nextQC, 850);
     } else {
       S.streak=0;
       S.misses.push(p[0]+"\u00D7"+p[1]);
-      node.classList.add("wrong");
-      node.innerHTML = picked+'<span class="mark">\u2717 not this one</span>';
-      el("qcVerdict").textContent = p[0]+" \u00D7 "+p[1]+" = "+right;
-      el("qcVerdict").className="verdict no";
-      el("qcNext").classList.remove("hidden");
     }
+    renderQC();
   }
-  function nextQC(){
-    S.idx++;
-    if (S.idx>=S.problems.length) finish(); else renderQC();
-  }
-  el("qcNext").onclick=function(){ nextQC(); };
+  el("qcPrev").onclick=function(){ if (S.idx>0){ S.idx--; renderQC(); } };
+  el("qcNext").onclick=function(){
+    if (S.qcState[S.idx].picked===null) return;
+    if (S.idx>=S.problems.length-1){ finish(); return; }
+    S.idx++; renderQC();
+  };
 
   /* ---------- results ---------- */
   function starCount(pct){ return pct>=90 ? 3 : pct>=75 ? 2 : 1; }
@@ -1371,9 +1447,16 @@
     else if (a.value.length<4) a.value+=b.textContent;
     if(!TOUCH) a.focus();
   });
+  el("quizPrev").onclick=function(){ if (S.idx>0){ S.idx--; render(); } };
+  el("quizNext").onclick=function(){
+    if (!S.qState[S.idx].submitted) return;
+    if (S.idx>=S.problems.length-1){ finish(); return; }
+    S.idx++; render();
+  };
   el("peekBtn").onclick=function(){
     if (S.mode==="test") return;                  /* belt and braces */
     var hidden=el("peek").classList.toggle("hidden");
+    S.qState[S.idx].hint = !hidden;               /* remembered per question */
     if (!hidden){
       renderHint();                               /* always the current problem */
       var pk=el("peek");
