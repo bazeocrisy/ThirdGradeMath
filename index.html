@@ -330,6 +330,17 @@
   .cardnav .btn{margin-top:0;font-size:17px;padding:14px 10px}
   @media (max-width:365px){ .cardnav{gap:8px} .cardnav .btn{font-size:15px;padding:13px 6px}
     .ask{font-size:20px} .context{font-size:15px} }
+  .btn.acts{background:var(--cyan);color:var(--navy);box-shadow:0 4px 0 #4FB8D6}
+  .btn.acts:hover{background:#A6F2FF}
+  .btn.acts:active{box-shadow:0 1px 0 #4FB8D6}
+  .cardnav .btn.acts,.cardnav .btn.ghost{font-size:15px;padding:12px 8px}
+  .confirm{position:fixed;inset:0;z-index:20;display:flex;align-items:center;
+    justify-content:center;padding:18px;background:rgba(11,31,91,.72)}
+  .confirmbox{background:#fff;border:4px solid var(--navy);border-radius:22px;
+    padding:22px 20px;max-width:420px;width:100%;box-shadow:0 10px 0 rgba(11,31,91,.35)}
+  .confirmbox h3{font-family:var(--display);font-size:24px;margin:0 0 8px;text-align:center}
+  .confirmbox p{text-align:center;font-family:var(--display);font-size:17px;
+    color:var(--ink-soft);margin:0 0 16px}
   .hidden{display:none}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   /* ---- tablet: roomier targets, no stretched keypad ---- */
@@ -533,7 +544,10 @@
       <button class="btn quiet" id="quizPrev">&larr; Back</button>
       <button class="btn" id="quizNext">Next &rarr;</button>
     </div>
-    <button class="btn block ghost" data-go="menu">&#127968; Home</button>
+    <div class="cardnav">
+      <button class="btn acts" data-go="acts">&#127919; Activities</button>
+      <button class="btn ghost" data-go="menu">&#127968; Home</button>
+    </div>
   </section>
 
 
@@ -562,7 +576,10 @@
       <button class="btn quiet" id="cardPrev">&larr; Previous</button>
       <button class="btn" id="cardNext">Next &rarr;</button>
     </div>
-    <button class="btn block ghost" data-go="menu">&#127968; Home</button>
+    <div class="cardnav">
+      <button class="btn acts" data-go="acts">&#127919; Activities</button>
+      <button class="btn ghost" data-go="menu">&#127968; Home</button>
+    </div>
   </section>
 
   <!-- ===== MULTIPLE CHOICE ===== -->
@@ -585,7 +602,10 @@
       <button class="btn quiet" id="qcPrev">&larr; Back</button>
       <button class="btn" id="qcNext">Next &rarr;</button>
     </div>
-    <button class="btn block ghost" data-go="menu">&#127968; Home</button>
+    <div class="cardnav">
+      <button class="btn acts" data-go="acts">&#127919; Activities</button>
+      <button class="btn ghost" data-go="menu">&#127968; Home</button>
+    </div>
   </section>
 
   <!-- ===== RESULTS ===== -->
@@ -607,6 +627,19 @@
     <button class="btn block ghost" id="allDone">I'm All Done</button>
   </section>
 
+
+  <div id="confirm" class="confirm hidden" role="dialog" aria-modal="true"
+       aria-labelledby="confirmTitle">
+    <div class="confirmbox">
+      <h3 id="confirmTitle">Leave this test?</h3>
+      <p id="confirmText">Your test isn't finished yet.</p>
+      <div class="cardnav">
+        <button class="btn quiet" id="confirmStay">Stay Here</button>
+        <button class="btn" id="confirmGo">Go to Activities</button>
+      </div>
+    </div>
+  </div>
+
   <!-- one keypad, shared by Practice/Test and Memorize -->
   <div id="padHolder" class="hidden">
     <div class="pad" id="pad">
@@ -623,7 +656,7 @@
     <span class="brandline">Multiplication <b>Mission</b></span>
     Works on a phone or a computer &middot; no accounts &middot; nothing collected<br>
     <span class="credit">Inspired by Christopher Bazemore II</span><br>
-    <span class="build" title="build version">b18 &middot; 2026-08-14</span>
+    <span class="build" title="build version">b19 &middot; 2026-08-14</span>
   </p>
 </div>
 
@@ -1477,12 +1510,48 @@
     store.clear("mm_name"); S.name="";
     el("name").value=""; show("welcome");
   }
+  /* ---------- navigation: three distinct meanings ----------
+     Back / Previous : move within the current activity
+     Activities      : back to "What do you want to do?", tables kept
+     Home            : all the way back to number selection            */
+  function leaveToActivities(){
+    S.retry=false;                       /* no mode state follows the child out */
+    openHub();                           /* reads S.tables, never writes it */
+  }
+  function leaveToHome(){
+    S.retry=false;
+    SEL = S.tables.slice();              /* re-open the picker on the same set */
+    openMenu();
+  }
+  /* a Test in progress is the only thing that asks before letting go */
+  function testInProgress(){
+    return S.mode==="test" && !el("quiz").classList.contains("hidden");
+  }
+  var pendingLeave = null;
+  function askLeave(dest){
+    pendingLeave = dest;
+    el("confirmTitle").textContent = dest==="acts" ? "Leave this test?" : "Go Home?";
+    el("confirmText").textContent  = "Your test isn't finished yet.";
+    el("confirmGo").textContent    = dest==="acts" ? "Go to Activities" : "Go Home";
+    el("confirm").classList.remove("hidden");
+    el("confirmStay").focus();
+  }
+  el("confirmStay").onclick=function(){
+    el("confirm").classList.add("hidden");
+    pendingLeave=null;                   /* the test is exactly where it was */
+  };
+  el("confirmGo").onclick=function(){
+    el("confirm").classList.add("hidden");
+    var d=pendingLeave; pendingLeave=null;
+    if (d==="acts") leaveToActivities(); else leaveToHome();
+  };
+
   document.addEventListener("click", function(e){
     var b=e.target.closest("[data-go]"); if(!b) return;
-    if (b.getAttribute("data-go")==="menu"){
-      SEL = S.tables.slice();   /* re-open the picker on the current set */
-      openMenu();
-    }
+    var dest=b.getAttribute("data-go");
+    if (dest!=="menu" && dest!=="acts") return;
+    if (testInProgress()){ askLeave(dest); return; }
+    if (dest==="acts") leaveToActivities(); else leaveToHome();
   });
 
   /* ---------- boot ---------- */
